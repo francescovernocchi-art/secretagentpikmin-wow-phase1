@@ -8,9 +8,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { getSession } from "@/lib/session";
 import { grantIngredients } from "@/lib/ingredients";
 import { collectShipPart } from "@/lib/ship";
+import { triggerGameFx } from "@/lib/game-event-fx";
 import { spendPikmin, pikminCostFor, RARITY_LABEL, RARITY_COLOR, getPikminCount } from "@/lib/pikmin";
 import { PikminCounter } from "@/components/PikminCounter";
-import { GeoBiomeAndScannerPanel } from "@/components/SecretPikminVisionPanel";
+import { BiomeMapPanel } from "@/components/game/BiomeMapPanel";
+import { RadarScannerPanel } from "@/components/game/RadarScannerPanel";
 import { EnemyLayer } from "@/components/EnemyLayer";
 import { escapeHtml } from "@/lib/escape";
 import {
@@ -615,13 +617,17 @@ function MappaPage() {
             toast.success(`🚀 Pezzo navicella recuperato: ${d.emoji} ${d.name}`, {
               description: `Squadra spedita: −${ctx.shipCost} 🌱 Pikmin`,
             });
+            triggerGameFx("ship_part");
             navigator.vibrate?.([80, 60, 80, 60, 200]);
           }
         } catch (e: any) {
           toast.error("Pezzo navicella: " + (e?.message ?? "errore"));
         }
       }
-      toast.success(`${d.emoji} Recuperato. +${d.xp} XP${d.note ? ` — "${d.note}"` : ""}`);
+      if (d.kind !== "ship_part") {
+        triggerGameFx("pickup");
+        toast.success(`${d.emoji} Recuperato. +${d.xp} XP${d.note ? ` — "${d.note}"` : ""}`);
+      }
       navigator.vibrate?.([60, 40, 120]);
       logEvent({
         id: crypto.randomUUID(),
@@ -705,9 +711,12 @@ function MappaPage() {
     <PageShell
       title="Mappa tattica"
       subtitle={isPapa ? "Biomi, basi, drop e spedizioni Pikmin" : "Trova oggetti, mostri, biomi e missioni vicine"}
+      theme="map"
       action={<PikminCounter compact />}
     >
-      <GeoBiomeAndScannerPanel />
+      <BiomeMapPanel />
+
+      <RadarScannerPanel compact />
 
       <div className="space-y-3">
         {/* Mappa */}
