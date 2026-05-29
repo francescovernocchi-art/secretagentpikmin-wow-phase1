@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "cd secretagentpikmin-main && npm install && npm run build",
+  "installCommand": "cd secretagentpikmin-main && npm install",
+  "outputDirectory": "secretagentpikmin-main/dist",
+  "framework": null,
+  "env": {
+    "NODE_OPTIONS": "--max-old-space-size=8192"
+  }
+}

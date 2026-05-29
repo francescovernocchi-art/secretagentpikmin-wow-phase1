@@ -1,9 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "tanstack-start",
   "buildCommand": "npm run build",
   "installCommand": "npm install",
+  "outputDirectory": "dist",
+  "framework": null,
   "env": {
-    "NODE_OPTIONS": "--max-old-space-size=4096"
+    "NODE_OPTIONS": "--max-old-space-size=8192"
   }
 }
