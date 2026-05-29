@@ -12,4 +12,6 @@ export default defineConfig({
   tanstackStart: {
     server: { entry: "server" },
   },
+  // Su Vercel forza Nitro con preset vercel; in locale resta build standard.
+  nitro: process.env.VERCEL ? { preset: "vercel" } : undefined,
 });
