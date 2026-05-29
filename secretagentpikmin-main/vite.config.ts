@@ -8,7 +8,11 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
 // @cloudflare/vite-plugin builds from this — wrangler.jsonc main alone is insufficient.
-const isVercelBuild = Boolean(process.env.VERCEL || process.env.VERCEL_ENV);
+// Vercel injects env before `npm run build`; NITRO_PRESET è il segnale più affidabile.
+const isVercelBuild =
+  process.env.NITRO_PRESET === "vercel" ||
+  process.env.VERCEL === "1" ||
+  Boolean(process.env.VERCEL_ENV);
 
 export default defineConfig({
   tanstackStart: {

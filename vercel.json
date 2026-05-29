@@ -5,6 +5,7 @@
   "outputDirectory": "secretagentpikmin-main/dist",
   "framework": null,
   "env": {
+    "NITRO_PRESET": "vercel",
     "NODE_OPTIONS": "--max-old-space-size=8192"
   }
 }
