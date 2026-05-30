@@ -32,6 +32,57 @@
   isolation: isolate;
 }
 
+@media (max-width: 480px) {
+  .dioramaRoot {
+    border-radius: 0.9rem;
+  }
+
+  .dioramaHeader {
+    padding: 0.55rem 0.65rem;
+  }
+
+  .dioramaScene {
+    min-height: min(43dvh, 370px);
+    aspect-ratio: 10 / 9;
+  }
+
+  .isoStage {
+    width: 98%;
+    height: 58%;
+    bottom: 9%;
+  }
+
+  .buildingHit {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .arrivalBeacon {
+    left: 7%;
+    top: 27%;
+    font-size: 7px;
+    padding: 3px 5px;
+  }
+
+  .shipHangarHero {
+    transform: scale(0.86);
+  }
+
+  .shipMissingTags {
+    width: 132px;
+  }
+
+  .shipRepairFlags {
+    top: 20px;
+    width: 116px;
+  }
+
+  .shipRepairFlags span {
+    font-size: 6px;
+    padding: 2px 5px;
+  }
+}
+
 @media (min-width: 640px) {
   .dioramaScene {
     min-height: 320px;
@@ -104,8 +155,15 @@
 }
 
 @keyframes waterShimmer {
-  0%, 100% { opacity: 0.7; transform: scale(1); }
-  50% { opacity: 0.9; transform: scale(1.03); }
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.03);
+  }
 }
 
 .rock {
@@ -117,6 +175,87 @@
   box-shadow: 2px 3px 4px rgba(0, 0, 0, 0.4);
 }
 
+.grassPatch {
+  position: absolute;
+  width: 18px;
+  height: 16px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.grassPatch span {
+  position: absolute;
+  bottom: 0;
+  width: 4px;
+  height: 14px;
+  border-radius: 999px 999px 0 0;
+  background: linear-gradient(180deg, #bbf7d0, #15803d);
+  transform-origin: center bottom;
+  animation: grassSway 2.8s ease-in-out infinite;
+}
+
+.grassPatch span:nth-child(1) {
+  left: 2px;
+  height: 10px;
+  animation-delay: 0.1s;
+}
+
+.grassPatch span:nth-child(2) {
+  left: 7px;
+  height: 15px;
+  animation-delay: 0.35s;
+}
+
+.grassPatch span:nth-child(3) {
+  left: 12px;
+  height: 12px;
+  animation-delay: 0.6s;
+}
+
+@keyframes grassSway {
+  0%,
+  100% {
+    transform: rotate(-7deg);
+  }
+  50% {
+    transform: rotate(9deg);
+  }
+}
+
+.natureDetail {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.42));
+  pointer-events: none;
+  animation: natureBob 4s ease-in-out infinite;
+}
+
+.naturebush {
+  font-size: 1.1rem;
+}
+
+.natureflower {
+  font-size: 0.95rem;
+}
+
+.naturemushroom {
+  font-size: 1rem;
+}
+
+.naturesapling {
+  font-size: 0.9rem;
+}
+
+@keyframes natureBob {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotate(-2deg);
+  }
+  50% {
+    transform: translate(-50%, calc(-50% - 2px)) rotate(2deg);
+  }
+}
+
 .decorItem {
   position: absolute;
   font-size: 1.25rem;
@@ -126,8 +265,13 @@
 }
 
 @keyframes decorSway {
-  0%, 100% { transform: rotate(-3deg) translateY(0); }
-  50% { transform: rotate(3deg) translateY(-3px); }
+  0%,
+  100% {
+    transform: rotate(-3deg) translateY(0);
+  }
+  50% {
+    transform: rotate(3deg) translateY(-3px);
+  }
 }
 
 /* Buildings */
@@ -148,6 +292,10 @@
   touch-action: manipulation;
 }
 
+.buildingHitLocked {
+  cursor: default;
+}
+
 .buildingHit:focus-visible {
   outline: 2px solid rgba(132, 255, 159, 0.75);
   outline-offset: 3px;
@@ -157,6 +305,11 @@
 .building {
   position: relative;
   cursor: pointer;
+}
+
+.buildingStageLocked,
+.buildingStageBuildable {
+  cursor: default;
 }
 
 .buildingShadow {
@@ -174,6 +327,22 @@
   position: relative;
   width: 48px;
   height: 52px;
+}
+
+.buildingStageLevel1 .buildingBody {
+  transform: scale(0.82);
+  transform-origin: center bottom;
+}
+
+.buildingStageLevel2 .buildingBody {
+  transform: scale(0.94);
+  transform-origin: center bottom;
+}
+
+.buildingStageLevel4 .buildingBody,
+.buildingStageLevel5 .buildingBody {
+  transform: scale(1.08);
+  transform-origin: center bottom;
 }
 
 .buildingRoof {
@@ -210,6 +379,138 @@
   height: 6px;
   background: rgba(0, 0, 0, 0.25);
   border-radius: 2px;
+}
+
+.foundationPlot {
+  position: absolute;
+  left: 50%;
+  bottom: 2px;
+  width: 52px;
+  height: 26px;
+  transform: translateX(-50%) skewX(-18deg);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(196, 165, 116, 0.45), rgba(77, 52, 28, 0.5)),
+    repeating-linear-gradient(90deg, transparent 0 8px, rgba(255, 255, 255, 0.14) 8px 10px);
+  border: 2px dashed color-mix(in srgb, var(--bld-color, #86efac) 65%, #111 35%);
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.25);
+}
+
+.foundationStake {
+  position: absolute;
+  width: 4px;
+  height: 18px;
+  background: #8b5a2b;
+  border-radius: 999px;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+}
+
+.foundationStake:nth-child(1) {
+  left: 8px;
+  top: -8px;
+}
+
+.foundationStake:nth-child(2) {
+  right: 10px;
+  top: -5px;
+}
+
+.foundationStake:nth-child(3) {
+  left: 26px;
+  bottom: -7px;
+}
+
+.lockedPlot {
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  width: 54px;
+  height: 30px;
+  transform: translateX(-50%) skewX(-18deg);
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  border: 2px dashed rgba(148, 163, 184, 0.55);
+  background:
+    repeating-linear-gradient(45deg, rgba(148, 163, 184, 0.12) 0 6px, rgba(0, 0, 0, 0.14) 6px 12px),
+    rgba(4, 8, 14, 0.5);
+}
+
+.scaffold {
+  position: absolute;
+  inset: -6px -8px -2px;
+  border-left: 3px solid rgba(251, 191, 36, 0.7);
+  border-right: 3px solid rgba(251, 191, 36, 0.7);
+  pointer-events: none;
+}
+
+.scaffold::before,
+.scaffold::after {
+  content: "";
+  position: absolute;
+  left: -4px;
+  right: -4px;
+  height: 2px;
+  background: rgba(251, 191, 36, 0.75);
+  transform: rotate(-18deg);
+}
+
+.scaffold::before {
+  top: 9px;
+}
+
+.scaffold::after {
+  bottom: 10px;
+  transform: rotate(18deg);
+}
+
+.constructionSmoke {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  width: 34px;
+  height: 30px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.constructionSmoke span {
+  position: absolute;
+  bottom: 2px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(226, 232, 240, 0.45);
+  filter: blur(1px);
+  animation: smokeDrift 3s ease-in-out infinite;
+}
+
+.constructionSmoke span:nth-child(1) {
+  left: 6px;
+}
+
+.constructionSmoke span:nth-child(2) {
+  left: 14px;
+  animation-delay: 0.65s;
+}
+
+.constructionSmoke span:nth-child(3) {
+  left: 22px;
+  animation-delay: 1.15s;
+}
+
+@keyframes smokeDrift {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.65);
+  }
+  35% {
+    opacity: 0.45;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-18px) scale(1.35);
+  }
 }
 
 .buildingEmoji {
@@ -251,7 +552,9 @@
   transform: translateX(-50%) scale(0.9);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s, transform 0.2s;
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
   background: rgba(10, 14, 20, 0.92);
   border: 1px solid rgba(132, 255, 159, 0.3);
   border-radius: 8px;
@@ -292,13 +595,39 @@
 }
 
 @keyframes sparkPulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.6; transform: scale(1.2); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.2);
+  }
 }
 
 .buildingLocked {
-  opacity: 0.45;
-  filter: grayscale(0.6);
+  opacity: 0.62;
+  filter: grayscale(0.75);
+}
+
+.buildingStageBuildable {
+  opacity: 0.86;
+}
+
+.buildingStageConstruction .buildingWall {
+  height: 22px;
+  top: 24px;
+  opacity: 0.82;
+}
+
+.buildingStageConstruction .buildingRoof {
+  opacity: 0.35;
+  transform: translateX(-50%) translateY(-8px) scale(0.75);
+}
+
+.buildingStageLevel5 .buildingRoof {
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--bld-color, #86efac) 75%, transparent));
 }
 
 /* Pikmin */
@@ -375,6 +704,63 @@
   opacity: 1;
 }
 
+.ambientPikmin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.45));
+}
+
+.carryCrate {
+  position: absolute;
+  left: -7px;
+  top: 13px;
+  z-index: 2;
+  width: 14px;
+  height: 12px;
+  display: grid;
+  place-items: center;
+  border-radius: 3px;
+  background: linear-gradient(135deg, #a16207, #713f12);
+  border: 1px solid rgba(254, 243, 199, 0.5);
+  color: #fde68a;
+  font-size: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.45);
+  animation: crateBob 0.9s ease-in-out infinite;
+}
+
+.workMark {
+  position: absolute;
+  right: -4px;
+  top: -2px;
+  color: #facc15;
+  font-size: 12px;
+  text-shadow: 0 0 8px rgba(250, 204, 21, 0.85);
+  animation: workBlink 1.1s ease-in-out infinite;
+}
+
+@keyframes crateBob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-3deg);
+  }
+  50% {
+    transform: translateY(-2px) rotate(4deg);
+  }
+}
+
+@keyframes workBlink {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
 /* Ship hangar */
 .shipHangar {
   position: relative;
@@ -388,10 +774,73 @@
   touch-action: manipulation;
 }
 
+.shipHangarHero {
+  min-width: 138px;
+  min-height: 128px;
+  justify-content: center;
+  transform-origin: center bottom;
+}
+
+.shipHangarHero::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 30px;
+  z-index: 6;
+  width: 72px;
+  height: 54px;
+  transform: translateX(-50%) rotate(-8deg);
+  border: 2px dashed rgba(251, 146, 60, 0);
+  border-radius: 16px;
+  pointer-events: none;
+}
+
 .shipHangar:focus-visible {
   outline: 2px solid rgba(56, 189, 248, 0.7);
   outline-offset: 4px;
   border-radius: 8px;
+}
+
+.hangarLightRig {
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  display: flex;
+  gap: 8px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 4;
+}
+
+.hangarLightRig span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow:
+    0 0 12px rgba(56, 189, 248, 0.9),
+    0 0 26px rgba(56, 189, 248, 0.45);
+  animation: hangarLightPulse 1.7s ease-in-out infinite;
+}
+
+.hangarLightRig span:nth-child(2) {
+  animation-delay: 0.35s;
+}
+
+.hangarLightRig span:nth-child(3) {
+  animation-delay: 0.7s;
+}
+
+@keyframes hangarLightPulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
 }
 
 .shipModel {
@@ -399,30 +848,113 @@
   filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
 }
 
+.shipHeroModel {
+  z-index: 3;
+  margin-top: 8px;
+}
+
 .shipGlow {
-  filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.6)) drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+  filter: drop-shadow(0 0 18px rgba(56, 189, 248, 0.78)) drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
 }
 
 .shipSvg {
-  width: 64px;
-  height: 48px;
+  width: 122px;
+  height: 86px;
 }
 
 .compact .shipSvg {
-  width: 48px;
-  height: 36px;
+  width: 74px;
+  height: 54px;
+}
+
+.shipHeroPlatform {
+  position: absolute;
+  left: 50%;
+  top: 22px;
+  width: 148px;
+  height: 94px;
+  transform: translateX(-50%) perspective(520px) rotateX(58deg) rotateZ(-18deg);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(56, 189, 248, 0.22) 0 18%, transparent 19%),
+    repeating-conic-gradient(
+      from 12deg,
+      rgba(56, 189, 248, 0.22) 0 10deg,
+      rgba(15, 23, 42, 0.78) 10deg 20deg
+    ),
+    linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 58, 95, 0.72));
+  border: 2px solid rgba(125, 211, 252, 0.58);
+  box-shadow:
+    0 0 26px rgba(56, 189, 248, 0.28),
+    inset 0 0 28px rgba(56, 189, 248, 0.22);
+  pointer-events: none;
+}
+
+.shipPlatformRing {
+  position: absolute;
+  inset: 13px;
+  border-radius: 50%;
+  border: 2px dashed rgba(186, 230, 253, 0.55);
+  animation: platformScan 9s linear infinite;
+}
+
+.shipRunwayLine {
+  position: absolute;
+  left: 50%;
+  top: 13%;
+  width: 3px;
+  height: 74%;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: linear-gradient(180deg, transparent, rgba(254, 240, 138, 0.9), transparent);
+  box-shadow: 0 0 12px rgba(254, 240, 138, 0.55);
+}
+
+.shipRunwayLine:nth-child(3) {
+  transform: translateX(-50%) rotate(90deg);
+}
+
+.shipPlatformGlow {
+  position: absolute;
+  inset: 34%;
+  border-radius: 50%;
+  background: rgba(56, 189, 248, 0.4);
+  filter: blur(8px);
+  animation: platformGlow 2.2s ease-in-out infinite;
+}
+
+@keyframes platformScan {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes platformGlow {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.18);
+  }
 }
 
 .shipPartsRow {
   display: flex;
   gap: 2px;
   justify-content: center;
-  margin-top: 2px;
+  margin-top: -4px;
+  position: relative;
+  z-index: 5;
 }
 
 .shipPartDot {
   font-size: 10px;
-  transition: opacity 0.3s, filter 0.3s;
+  transition:
+    opacity 0.3s,
+    filter 0.3s;
 }
 
 .shipPartOn {
@@ -436,13 +968,15 @@
 }
 
 .shipProgressBar {
-  width: 56px;
-  height: 4px;
+  width: 96px;
+  height: 5px;
   background: rgba(0, 0, 0, 0.5);
   border-radius: 999px;
   overflow: hidden;
-  margin-top: 4px;
+  margin-top: -2px;
   border: 1px solid rgba(56, 189, 248, 0.3);
+  position: relative;
+  z-index: 5;
 }
 
 .shipProgressFill {
@@ -456,6 +990,239 @@
   color: rgba(255, 255, 255, 0.7);
   margin-top: 2px;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  position: relative;
+  z-index: 5;
+}
+
+.shipDamageTag {
+  margin-top: 2px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(251, 191, 36, 0.45);
+  background: rgba(0, 0, 0, 0.45);
+  color: #fde68a;
+  font-size: 7px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  position: relative;
+  z-index: 5;
+}
+
+.shipMissingTags {
+  position: absolute;
+  left: 50%;
+  top: 94%;
+  z-index: 6;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3px;
+  width: 150px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.shipMissingTags span {
+  padding: 1px 5px;
+  border-radius: 999px;
+  border: 1px solid rgba(251, 146, 60, 0.45);
+  background: rgba(15, 23, 42, 0.72);
+  color: #fed7aa;
+  font-size: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.shipRepairFlags {
+  position: absolute;
+  left: 50%;
+  top: 18px;
+  z-index: 7;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  width: 128px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.shipRepairFlags span {
+  padding: 2px 6px;
+  border-radius: 6px;
+  border: 1px solid rgba(251, 146, 60, 0.72);
+  background: rgba(69, 26, 3, 0.82);
+  color: #fed7aa;
+  font-size: 7px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  box-shadow: 0 0 12px rgba(251, 146, 60, 0.38);
+}
+
+.shipYardDetails {
+  position: absolute;
+  left: 50%;
+  top: 56%;
+  width: 150px;
+  height: 58px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 6;
+}
+
+.shipYardCrate,
+.shipYardTools {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  border-radius: 4px;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5));
+}
+
+.shipYardCrate {
+  width: 16px;
+  height: 13px;
+  color: #fde68a;
+  font-size: 8px;
+  background: linear-gradient(135deg, #92400e, #451a03);
+  border: 1px solid rgba(254, 243, 199, 0.42);
+}
+
+.shipYardCrate:nth-child(1) {
+  left: 6px;
+  bottom: 8px;
+}
+
+.shipYardCrate:nth-child(2) {
+  right: 8px;
+  bottom: 13px;
+}
+
+.shipYardTools {
+  right: 28px;
+  top: 3px;
+  color: #fde68a;
+  font-size: 12px;
+  text-shadow: 0 0 8px rgba(250, 204, 21, 0.75);
+}
+
+.shipWorkerPikmin {
+  position: absolute;
+  width: 9px;
+  height: 13px;
+  border-radius: 50% 50% 45% 45%;
+  background: #facc15;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.45);
+  animation: shipWorkerBob 1.4s ease-in-out infinite;
+}
+
+.shipWorkerPikmin::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -6px;
+  width: 1px;
+  height: 7px;
+  transform: translateX(-50%);
+  background: #bbf7d0;
+}
+
+.shipWorkerPikmin:nth-child(4) {
+  left: 24px;
+  top: 15px;
+  background: #ef4444;
+}
+
+.shipWorkerPikmin:nth-child(5) {
+  right: 33px;
+  top: 25px;
+  background: #3b82f6;
+  animation-delay: 0.3s;
+}
+
+.shipWorkerPikmin:nth-child(6) {
+  left: 70px;
+  bottom: 4px;
+  background: #facc15;
+  animation-delay: 0.6s;
+}
+
+@keyframes shipWorkerBob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.shipState_wreck .shipHeroPlatform {
+  opacity: 0.58;
+  filter: grayscale(0.55);
+}
+
+.shipState_wreck::after,
+.shipState_initial::after,
+.shipState_p25::after,
+.shipState_p50::after,
+.shipState_p75::after {
+  border-color: rgba(251, 146, 60, 0.82);
+  background:
+    linear-gradient(135deg, rgba(251, 146, 60, 0.16), transparent 45%),
+    repeating-linear-gradient(45deg, transparent 0 8px, rgba(251, 146, 60, 0.18) 8px 10px);
+  animation: repairFramePulse 1.8s ease-in-out infinite;
+}
+
+@keyframes repairFramePulse {
+  0%,
+  100% {
+    opacity: 0.48;
+    transform: translateX(-50%) rotate(-8deg) scale(0.96);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translateX(-50%) rotate(-8deg) scale(1.04);
+  }
+}
+
+.shipState_initial .hangarLightRig span:first-child,
+.shipState_p25 .hangarLightRig span:nth-child(-n + 2),
+.shipState_p50 .hangarLightRig span,
+.shipState_p75 .hangarLightRig span,
+.shipState_complete .hangarLightRig span {
+  background: #fef08a;
+  box-shadow:
+    0 0 12px rgba(254, 240, 138, 0.95),
+    0 0 26px rgba(56, 189, 248, 0.55);
+}
+
+.shipState_complete .shipHeroPlatform {
+  border-color: rgba(254, 240, 138, 0.78);
+  box-shadow:
+    0 0 34px rgba(254, 240, 138, 0.3),
+    inset 0 0 34px rgba(56, 189, 248, 0.3);
+}
+
+.arrivalBeacon {
+  position: absolute;
+  left: 15%;
+  top: 30%;
+  z-index: 22;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.42);
+  border: 1px solid rgba(132, 255, 159, 0.25);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  pointer-events: none;
 }
 
 /* Context strip */
@@ -580,4 +1347,36 @@
   outline: 2px solid rgba(132, 255, 159, 0.6);
   outline-offset: 2px;
   border-radius: 0.5rem;
+}
+
+@media (max-width: 480px) {
+  .buildingHit {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .arrivalBeacon {
+    left: 7%;
+    top: 27%;
+    font-size: 7px;
+    padding: 3px 5px;
+  }
+
+  .shipHangarHero {
+    transform: scale(0.86);
+  }
+
+  .shipMissingTags {
+    width: 132px;
+  }
+
+  .shipRepairFlags {
+    top: 20px;
+    width: 116px;
+  }
+
+  .shipRepairFlags span {
+    font-size: 6px;
+    padding: 2px 5px;
+  }
 }

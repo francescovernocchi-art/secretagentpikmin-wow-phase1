@@ -21,6 +21,11 @@ import {
 } from "@/lib/base";
 import { VillageDiorama } from "@/components/game/VillageDiorama";
 import { VILLAGE_BUILDINGS } from "@/data/secretPikminWorld";
+import {
+  getColonyBuildingPresentation,
+  resolveColonyBuildingStage,
+} from "@/components/game/diorama/colonyProgression";
+import { DIORAMA_BUILDINGS } from "@/components/game/diorama/diorama-data";
 import { ArrowLeft, ArrowUpRight, Hammer, Lock, Sparkles, Star } from "lucide-react";
 
 export const Route = createFileRoute("/villaggio/edifici")({
@@ -28,7 +33,10 @@ export const Route = createFileRoute("/villaggio/edifici")({
   head: () => ({
     meta: [
       { title: "Edifici del Villaggio · Buff e potenziamenti" },
-      { name: "description", content: "Sfoglia, costruisci ed evolvi gli edifici del villaggio Pikmin." },
+      {
+        name: "description",
+        content: "Sfoglia, costruisci ed evolvi gli edifici del villaggio Pikmin.",
+      },
     ],
   }),
 });
@@ -79,7 +87,11 @@ function EdificiPage() {
     reload();
     const ch = supabase
       .channel("edifici:" + agent)
-      .on("postgres_changes", { event: "*", schema: "public", table: "base_buildings", filter: `agent=eq.${agent}` }, reload)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "base_buildings", filter: `agent=eq.${agent}` },
+        reload,
+      )
       .subscribe();
     return () => {
       supabase.removeChannel(ch);
@@ -100,7 +112,11 @@ function EdificiPage() {
           <span className="panel px-2 py-1 text-[11px] flex items-center gap-1">
             <Sparkles className="h-3 w-3 text-primary" /> {coins}
           </span>
-          <Link to="/villaggio" onClick={hapticTap} className="panel px-2 py-1 text-[11px] flex items-center gap-1">
+          <Link
+            to="/villaggio"
+            onClick={hapticTap}
+            className="panel px-2 py-1 text-[11px] flex items-center gap-1"
+          >
             <ArrowLeft className="h-3 w-3" /> Villaggio
           </Link>
         </div>
@@ -109,21 +125,51 @@ function EdificiPage() {
       <VillageDiorama buildingCount={buildings.length} pikminCount={12} />
 
       <section className="panel p-3 space-y-2">
-        <p className="text-[10px] uppercase tracking-widest text-primary/80">Edifici base — Missione Famiglia</p>
+        <p className="text-[10px] uppercase tracking-widest text-primary/80">
+          Colonia in crescita — Missione Famiglia
+        </p>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-          {VILLAGE_BUILDINGS.map((b) => (
-            <div key={b.key} className="rounded-xl border border-primary/20 bg-night/50 p-2 text-center">
-              <span className="text-xl">{b.emoji}</span>
-              <p className="text-[10px] font-display text-glow mt-1">{b.name}</p>
-            </div>
-          ))}
+          {VILLAGE_BUILDINGS.map((b) => {
+            const def = DIORAMA_BUILDINGS.find((d) => d.key === b.key);
+            const current = def ? byKey(b.key) : null;
+            const stage = def
+              ? resolveColonyBuildingStage(def, {
+                  id: current?.id ?? b.key,
+                  village_id: "",
+                  building_key: current?.type ?? b.key,
+                  name: b.name,
+                  emoji: b.emoji,
+                  level: current?.level ?? b.level,
+                  max_level: b.maxLevel,
+                  status: current?.status ?? "active",
+                })
+              : "buildable";
+            const presentation = def
+              ? getColonyBuildingPresentation(def, stage)
+              : { name: b.name, emoji: b.emoji, label: "Pronto" };
+            return (
+              <div
+                key={b.key}
+                className="rounded-xl border border-primary/20 bg-night/50 p-2 text-center"
+              >
+                <span className="text-xl">{presentation.emoji}</span>
+                <p className="text-[10px] font-display text-glow mt-1">{presentation.name}</p>
+                <p className="text-[8px] uppercase tracking-widest text-muted-foreground mt-0.5">
+                  {presentation.label}
+                </p>
+              </div>
+            );
+          })}
         </div>
       </section>
 
       {/* Filtri categoria */}
       <div className="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
         {categories.map((c) => {
-          const meta = c === "all" ? { label: "Tutti", color: "#fff" } : CATEGORY_META[c] ?? { label: c, color: "#fff" };
+          const meta =
+            c === "all"
+              ? { label: "Tutti", color: "#fff" }
+              : (CATEGORY_META[c] ?? { label: c, color: "#fff" });
           const active = filter === c;
           return (
             <button
@@ -181,14 +227,18 @@ function EdificiPage() {
                       {catMeta.label}
                     </span>
                     {owned ? (
-                      <span className="text-[10px] text-primary">Lv {level}/{c.max_level} · {stage}</span>
+                      <span className="text-[10px] text-primary">
+                        Lv {level}/{c.max_level} · {stage}
+                      </span>
                     ) : (
                       <span className="text-[10px] text-muted-foreground flex items-center gap-1">
                         <Lock className="h-3 w-3" /> Non costruito
                       </span>
                     )}
                   </div>
-                  {c.description && <p className="text-[11px] text-muted-foreground mt-1">{c.description}</p>}
+                  {c.description && (
+                    <p className="text-[11px] text-muted-foreground mt-1">{c.description}</p>
+                  )}
                 </div>
               </div>
 
@@ -217,8 +267,13 @@ function EdificiPage() {
                       const cur = level * Number(v);
                       const max = c.max_level * Number(v);
                       return (
-                        <div key={k} className="rounded-md bg-night/70 px-2 py-1.5 border border-primary/10">
-                          <p className="text-[10px] text-muted-foreground">{BONUS_LABELS[k] ?? k}</p>
+                        <div
+                          key={k}
+                          className="rounded-md bg-night/70 px-2 py-1.5 border border-primary/10"
+                        >
+                          <p className="text-[10px] text-muted-foreground">
+                            {BONUS_LABELS[k] ?? k}
+                          </p>
                           <p className="text-xs">
                             <span className="text-primary font-semibold">+{cur}</span>
                             <span className="text-muted-foreground"> / max +{max}</span>
@@ -234,8 +289,12 @@ function EdificiPage() {
               {/* AZIONE — costruisci / evolvi / in corso */}
               {isBuilding ? (
                 <div className="rounded-lg bg-primary/10 border border-primary/30 p-2.5 text-center">
-                  <p className="text-[10px] uppercase tracking-widest text-primary">In costruzione</p>
-                  <p className="font-display text-lg text-glow">{formatRemaining(owned!.build_end_at)}</p>
+                  <p className="text-[10px] uppercase tracking-widest text-primary">
+                    In costruzione
+                  </p>
+                  <p className="font-display text-lg text-glow">
+                    {formatRemaining(owned!.build_end_at)}
+                  </p>
                   <button
                     className="mt-1 text-[10px] underline text-muted-foreground"
                     onClick={async () => {
@@ -255,10 +314,13 @@ function EdificiPage() {
                   <div className="text-[11px] space-y-0.5">
                     <p className="text-muted-foreground">
                       Prossimo Lv {level + 1}:{" "}
-                      <span className="text-foreground">{nextCost.coins} 💰</span> · {nextCost.minutes} min
+                      <span className="text-foreground">{nextCost.coins} 💰</span> ·{" "}
+                      {nextCost.minutes} min
                     </p>
                     {nextCost.ingredients.length > 0 && (
-                      <p className="text-muted-foreground">Ingredienti: {nextCost.ingredients.join(", ")}</p>
+                      <p className="text-muted-foreground">
+                        Ingredienti: {nextCost.ingredients.join(", ")}
+                      </p>
                     )}
                   </div>
                   <button
@@ -267,15 +329,18 @@ function EdificiPage() {
                       hapticTap();
                       try {
                         if (!owned) {
-                          await startBuilding(agent, c, { x: 20 + Math.random() * 60, y: 10 + Math.random() * 45 });
+                          await startBuilding(agent, c, {
+                            x: 20 + Math.random() * 60,
+                            y: 10 + Math.random() * 45,
+                          });
                           sfx.build();
                         } else {
                           await startUpgrade(agent, owned, c);
                           sfx.upgrade();
                         }
                         reload();
-                      } catch (e: any) {
-                        alert(e.message);
+                      } catch (e: unknown) {
+                        alert(e instanceof Error ? e.message : "Errore costruzione edificio.");
                       }
                     }}
                     className="btn-neon px-3 py-2 text-xs flex items-center gap-1 disabled:opacity-50"

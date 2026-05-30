@@ -23,12 +23,72 @@ export interface DioramaBuildingDef {
 }
 
 export const DIORAMA_BUILDINGS: DioramaBuildingDef[] = [
-  { key: "centro_controllo", name: "Centro Controllo", emoji: "🎛️", role: "Comando remoto", x: 48, y: 28, z: 40, route: "/base", color: "#4ade80" },
-  { key: "hangar", name: "Hangar Navicella", emoji: "🚀", role: "Costruzione", x: 72, y: 52, z: 35, action: "ship", color: "#38bdf8" },
-  { key: "accademia", name: "Accademia Pikmin", emoji: "🎓", role: "Specializzazioni", x: 22, y: 38, z: 30, route: "/archivio", color: "#fbbf24" },
-  { key: "magazzino", name: "Magazzino", emoji: "📦", role: "Risorse", x: 30, y: 62, z: 25, route: "/inventario", color: "#a78bfa" },
-  { key: "laboratorio", name: "Laboratorio", emoji: "🔬", role: "Trasformazioni", x: 58, y: 68, z: 28, route: "/lab", color: "#f472b6" },
-  { key: "mercato", name: "Mercato", emoji: "🏪", role: "Scambi", x: 78, y: 28, z: 32, route: "/villaggio/scambi", color: "#fb923c" },
+  {
+    key: "centro_controllo",
+    name: "Centro Controllo",
+    emoji: "🎛️",
+    role: "Comando remoto",
+    x: 48,
+    y: 28,
+    z: 40,
+    route: "/base",
+    color: "#4ade80",
+  },
+  {
+    key: "hangar",
+    name: "Hangar Navicella",
+    emoji: "🚀",
+    role: "Riparazione navicella",
+    x: 69,
+    y: 34,
+    z: 82,
+    action: "ship",
+    color: "#38bdf8",
+  },
+  {
+    key: "accademia",
+    name: "Accademia Pikmin",
+    emoji: "🎓",
+    role: "Specializzazioni",
+    x: 22,
+    y: 38,
+    z: 30,
+    route: "/archivio",
+    color: "#fbbf24",
+  },
+  {
+    key: "magazzino",
+    name: "Magazzino",
+    emoji: "📦",
+    role: "Risorse",
+    x: 30,
+    y: 62,
+    z: 25,
+    route: "/inventario",
+    color: "#a78bfa",
+  },
+  {
+    key: "laboratorio",
+    name: "Laboratorio",
+    emoji: "🔬",
+    role: "Trasformazioni",
+    x: 58,
+    y: 68,
+    z: 28,
+    route: "/lab",
+    color: "#f472b6",
+  },
+  {
+    key: "mercato",
+    name: "Mercato",
+    emoji: "🏪",
+    role: "Scambi",
+    x: 78,
+    y: 28,
+    z: 32,
+    route: "/villaggio/scambi",
+    color: "#fb923c",
+  },
 ];
 
 export interface BiomeTheme {
@@ -131,7 +191,10 @@ export const PIKMIN_TYPE_TO_SPRITE: Record<string, string> = {
   luminoso: "white",
 };
 
-export function statusToAnimation(status: string, spec?: string): "walk" | "run" | "carry" | "work" | "idle" | "sleep" {
+export function statusToAnimation(
+  status: string,
+  spec?: string,
+): "walk" | "run" | "carry" | "work" | "idle" | "sleep" {
   if (status === "in_spedizione") return "run";
   if (status === "in_missione") return "run";
   if (status === "addestramento") return "work";
