@@ -60,14 +60,39 @@ export function DioramaTerrain({ theme }: DioramaTerrainProps) {
           }}
         >
           <svg className={styles.pathSvg} viewBox="0 0 100 100" preserveAspectRatio="none">
-            <path d="M 15 55 Q 35 48 50 52 Q 65 56 85 45" fill="none" stroke={theme.path} strokeWidth="6" strokeLinecap="round" opacity="0.7" />
-            <path d="M 50 52 Q 55 65 48 78 Q 42 85 35 75" fill="none" stroke={theme.path} strokeWidth="4" strokeLinecap="round" opacity="0.5" />
+            <path
+              d="M 15 55 Q 35 48 50 52 Q 65 56 85 45"
+              fill="none"
+              stroke={theme.path}
+              strokeWidth="6"
+              strokeLinecap="round"
+              opacity="0.7"
+            />
+            <path
+              d="M 50 52 Q 55 65 48 78 Q 42 85 35 75"
+              fill="none"
+              stroke={theme.path}
+              strokeWidth="4"
+              strokeLinecap="round"
+              opacity="0.5"
+            />
           </svg>
           {theme.water && (
-            <div className={styles.waterPond} style={{ background: theme.water, boxShadow: `inset 0 0 20px ${theme.accent}44` }} />
+            <div
+              className={styles.waterPond}
+              style={{ background: theme.water, boxShadow: `inset 0 0 20px ${theme.accent}44` }}
+            />
           )}
           {[12, 68, 82, 25].map((left, i) => (
-            <div key={i} className={styles.rock} style={{ left: `${left}%`, top: `${[72, 78, 65, 82][i]}%`, opacity: 0.5 + (i % 2) * 0.2 }} />
+            <div
+              key={i}
+              className={styles.rock}
+              style={{
+                left: `${left}%`,
+                top: `${[72, 78, 65, 82][i]}%`,
+                opacity: 0.5 + (i % 2) * 0.2,
+              }}
+            />
           ))}
           {NATURE_DETAILS.map((item, i) => (
             <span
@@ -81,7 +106,11 @@ export function DioramaTerrain({ theme }: DioramaTerrainProps) {
             <span
               key={i}
               className={styles.decorItem}
-              style={{ left: `${[8, 88, 5, 92, 18][i % 5]}%`, top: `${[15, 20, 75, 80, 45][i % 5]}%`, animationDelay: `${i * 0.7}s` }}
+              style={{
+                left: `${[8, 88, 5, 92, 18][i % 5]}%`,
+                top: `${[15, 20, 75, 80, 45][i % 5]}%`,
+                animationDelay: `${i * 0.7}s`,
+              }}
             >
               {d}
             </span>
@@ -90,7 +119,12 @@ export function DioramaTerrain({ theme }: DioramaTerrainProps) {
             <span
               key={`mote-${i}`}
               className={styles.ambientMote}
-              style={{ left: `${mote.x}%`, top: `${mote.y}%`, animationDelay: `${mote.delay}s`, background: theme.accent }}
+              style={{
+                left: `${mote.x}%`,
+                top: `${mote.y}%`,
+                animationDelay: `${mote.delay}s`,
+                background: theme.accent,
+              }}
               aria-hidden
             />
           ))}
