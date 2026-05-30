@@ -46,6 +46,7 @@ export function DioramaShipHangar({ parts, percent, onClick, compact }: DioramaS
     !hasMotor && "motore spento",
     !hasEnergy && "pannello aperto",
     !hasAntenna && "antenna assente",
+    !hasCabin && "cabina aperta",
   ].filter(Boolean) as string[];
 
   return (
@@ -276,6 +277,13 @@ export function DioramaShipHangar({ parts, percent, onClick, compact }: DioramaS
               <span key={label}>{label}</span>
             ))}
           </div>
+          {damaged && (
+            <div className={styles.shipRepairFlags} aria-hidden>
+              {missingParts.slice(0, 2).map((label) => (
+                <span key={label}>{label}</span>
+              ))}
+            </div>
+          )}
           <div className={styles.shipYardDetails} aria-hidden>
             <span className={styles.shipYardCrate}>▣</span>
             <span className={styles.shipYardCrate}>▣</span>

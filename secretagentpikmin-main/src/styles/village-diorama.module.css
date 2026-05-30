@@ -730,6 +730,20 @@
   transform-origin: center bottom;
 }
 
+.shipHangarHero::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 30px;
+  z-index: 6;
+  width: 72px;
+  height: 54px;
+  transform: translateX(-50%) rotate(-8deg);
+  border: 2px dashed rgba(251, 146, 60, 0);
+  border-radius: 16px;
+  pointer-events: none;
+}
+
 .shipHangar:focus-visible {
   outline: 2px solid rgba(56, 189, 248, 0.7);
   outline-offset: 4px;
@@ -946,7 +960,7 @@
 .shipMissingTags {
   position: absolute;
   left: 50%;
-  top: 100%;
+  top: 94%;
   z-index: 6;
   display: flex;
   flex-wrap: wrap;
@@ -966,6 +980,33 @@
   font-size: 6px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
+}
+
+.shipRepairFlags {
+  position: absolute;
+  left: 50%;
+  top: 18px;
+  z-index: 7;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  width: 128px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.shipRepairFlags span {
+  padding: 2px 6px;
+  border-radius: 6px;
+  border: 1px solid rgba(251, 146, 60, 0.72);
+  background: rgba(69, 26, 3, 0.82);
+  color: #fed7aa;
+  font-size: 7px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  box-shadow: 0 0 12px rgba(251, 146, 60, 0.38);
 }
 
 .shipYardDetails {
@@ -1070,6 +1111,30 @@
 .shipState_wreck .shipHeroPlatform {
   opacity: 0.58;
   filter: grayscale(0.55);
+}
+
+.shipState_wreck::after,
+.shipState_initial::after,
+.shipState_p25::after,
+.shipState_p50::after,
+.shipState_p75::after {
+  border-color: rgba(251, 146, 60, 0.82);
+  background:
+    linear-gradient(135deg, rgba(251, 146, 60, 0.16), transparent 45%),
+    repeating-linear-gradient(45deg, transparent 0 8px, rgba(251, 146, 60, 0.18) 8px 10px);
+  animation: repairFramePulse 1.8s ease-in-out infinite;
+}
+
+@keyframes repairFramePulse {
+  0%,
+  100% {
+    opacity: 0.48;
+    transform: translateX(-50%) rotate(-8deg) scale(0.96);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translateX(-50%) rotate(-8deg) scale(1.04);
+  }
 }
 
 .shipState_initial .hangarLightRig span:first-child,
