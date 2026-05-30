@@ -13,6 +13,10 @@ import { DioramaBuilding } from "@/components/game/diorama/DioramaBuilding";
 import { DioramaPikminActor } from "@/components/game/diorama/DioramaPikminActor";
 import { DioramaShipHangar } from "@/components/game/diorama/DioramaShipHangar";
 import { DIORAMA_BUILDINGS, BIOME_DIORAMA_THEMES } from "@/components/game/diorama/diorama-data";
+import {
+  isOperationalColonyStage,
+  resolveColonyBuildingStage,
+} from "@/components/game/diorama/colonyProgression";
 import styles from "@/styles/village-diorama.module.css";
 import type { BiomeKey } from "@/types/secretPikmin";
 
@@ -34,7 +38,7 @@ export function VillageDiorama({
   showFooter = true,
   fullScreen = false,
 }: VillageDioramaProps) {
-  const { buildings, villageName, controlLevel, maxVillages, loading } = useVillageDiorama(ownerAgent);
+  const { buildings, villageName, controlLevel, loading } = useVillageDiorama(ownerAgent);
   const { parts } = useSpaceshipParts();
   const { squad } = usePikminSquad(ownerAgent);
   const { biome } = usePlayerBiome(ownerAgent);
@@ -55,26 +59,36 @@ export function VillageDiorama({
   const theme = BIOME_DIORAMA_THEMES[(biome as BiomeKey) ?? "bosco"] ?? BIOME_DIORAMA_THEMES.bosco;
   const biomeDef = getBiomeByKey(biome);
 
-  const levelMap = new Map(buildings.map((b) => [b.building_key, b.level]));
-  const statusMap = new Map(buildings.map((b) => [b.building_key, b.status as "active" | "upgrading" | "locked"]));
+  const buildingMap = new Map(buildings.map((b) => [b.building_key, b]));
 
   const displayBuildings =
     buildings.length > 0
       ? DIORAMA_BUILDINGS.map((def) => ({
           def,
-          level: levelMap.get(def.key) ?? 1,
-          status: statusMap.get(def.key) ?? "active",
+          level: buildingMap.get(def.key)?.level ?? 0,
+          stage: resolveColonyBuildingStage(def, buildingMap.get(def.key)),
         }))
       : DIORAMA_BUILDINGS.slice(0, (buildingCount ?? 3) + 3).map((def, i) => ({
           def,
           level: VILLAGE_BUILDINGS.find((b) => b.key === def.key)?.level ?? i + 1,
-          status: "active" as const,
+          stage: resolveColonyBuildingStage(def, {
+            id: def.key,
+            village_id: "",
+            building_key: def.key,
+            name: def.name,
+            emoji: def.emoji,
+            level: VILLAGE_BUILDINGS.find((b) => b.key === def.key)?.level ?? i + 1,
+            max_level: 5,
+            status: "active",
+          }),
         }));
 
   const visiblePikmin = squad.length > 0 ? squad.slice(0, compact ? 3 : 6) : [];
   const onMission = squad.filter((p) => p.status === "in_spedizione" || p.status === "in_missione");
   const hangarDef = DIORAMA_BUILDINGS.find((b) => b.key === "hangar")!;
   const sceneBuildings = displayBuildings.filter((b) => b.def.key !== "hangar");
+  const operationalCount = displayBuildings.filter((b) => isOperationalColonyStage(b.stage)).length;
+  const inProgressCount = displayBuildings.filter((b) => b.stage === "buildable" || b.stage === "under_construction").length;
 
   return (
     <section className={`${styles.dioramaRoot} ${compact ? styles.compact : ""} ${fullScreen ? "rounded-none border-0 min-h-[50vh]" : ""}`}>
@@ -83,7 +97,7 @@ export function VillageDiorama({
           <div>
             <p className="text-[10px] uppercase tracking-[0.35em] text-primary/90 font-display">{villageName}</p>
             <p className="text-[9px] text-muted-foreground mt-0.5">
-              {biomeDef?.emoji} {biomeDef?.label} · CC Lv{controlLevel} · max {maxVillages} villaggi
+              {biomeDef?.emoji} {biomeDef?.label} · Fase atterraggio · CC Lv{controlLevel}
             </p>
           </div>
           {!fullScreen && (
@@ -97,12 +111,17 @@ export function VillageDiorama({
       <div className={styles.dioramaScene} role="img" aria-label={`Villaggio ${villageName || ""} nel bioma ${biomeDef?.label ?? biome}`}>
         <DioramaTerrain theme={theme} />
 
-        {sceneBuildings.map(({ def, level, status }) => (
+        <div className={styles.arrivalBeacon} aria-hidden>
+          <span>🛬</span>
+          <span>Zona atterraggio</span>
+        </div>
+
+        {sceneBuildings.map(({ def, level, stage }) => (
           <DioramaBuilding
             key={def.key}
             def={def}
             level={level}
-            status={status}
+            stage={stage}
             compact={compact}
             onShipClick={() => setShipOpen(true)}
           />
@@ -140,7 +159,9 @@ export function VillageDiorama({
         <div className="relative px-4 pb-3 flex items-center justify-between gap-2 flex-wrap border-t border-primary/10 bg-black/20">
           <div className="text-[10px] uppercase tracking-widest py-2">
             <span className="text-primary">{squad.length || pikminCount}</span>{" "}
-            <span className="text-muted-foreground">Pikmin · {loading ? "…" : `${displayBuildings.length} edifici`}</span>
+            <span className="text-muted-foreground">
+              Pikmin · {loading ? "…" : `${operationalCount} operativi · ${inProgressCount} in crescita`}
+            </span>
             {onMission.length > 0 && (
               <span className="block text-[9px] text-amber-300 mt-0.5">{onMission.length} in spedizione</span>
             )}

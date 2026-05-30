@@ -148,6 +148,10 @@
   touch-action: manipulation;
 }
 
+.buildingHitLocked {
+  cursor: default;
+}
+
 .buildingHit:focus-visible {
   outline: 2px solid rgba(132, 255, 159, 0.75);
   outline-offset: 3px;
@@ -157,6 +161,11 @@
 .building {
   position: relative;
   cursor: pointer;
+}
+
+.buildingStageLocked,
+.buildingStageBuildable {
+  cursor: default;
 }
 
 .buildingShadow {
@@ -174,6 +183,22 @@
   position: relative;
   width: 48px;
   height: 52px;
+}
+
+.buildingStageLevel1 .buildingBody {
+  transform: scale(0.82);
+  transform-origin: center bottom;
+}
+
+.buildingStageLevel2 .buildingBody {
+  transform: scale(0.94);
+  transform-origin: center bottom;
+}
+
+.buildingStageLevel4 .buildingBody,
+.buildingStageLevel5 .buildingBody {
+  transform: scale(1.08);
+  transform-origin: center bottom;
 }
 
 .buildingRoof {
@@ -210,6 +235,89 @@
   height: 6px;
   background: rgba(0, 0, 0, 0.25);
   border-radius: 2px;
+}
+
+.foundationPlot {
+  position: absolute;
+  left: 50%;
+  bottom: 2px;
+  width: 52px;
+  height: 26px;
+  transform: translateX(-50%) skewX(-18deg);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(196, 165, 116, 0.45), rgba(77, 52, 28, 0.5)),
+    repeating-linear-gradient(90deg, transparent 0 8px, rgba(255, 255, 255, 0.14) 8px 10px);
+  border: 2px dashed color-mix(in srgb, var(--bld-color, #86efac) 65%, #111 35%);
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.25);
+}
+
+.foundationStake {
+  position: absolute;
+  width: 4px;
+  height: 18px;
+  background: #8b5a2b;
+  border-radius: 999px;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+}
+
+.foundationStake:nth-child(1) {
+  left: 8px;
+  top: -8px;
+}
+
+.foundationStake:nth-child(2) {
+  right: 10px;
+  top: -5px;
+}
+
+.foundationStake:nth-child(3) {
+  left: 26px;
+  bottom: -7px;
+}
+
+.lockedPlot {
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  width: 54px;
+  height: 30px;
+  transform: translateX(-50%) skewX(-18deg);
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  border: 2px dashed rgba(148, 163, 184, 0.55);
+  background:
+    repeating-linear-gradient(45deg, rgba(148, 163, 184, 0.12) 0 6px, rgba(0, 0, 0, 0.14) 6px 12px),
+    rgba(4, 8, 14, 0.5);
+}
+
+.scaffold {
+  position: absolute;
+  inset: -6px -8px -2px;
+  border-left: 3px solid rgba(251, 191, 36, 0.7);
+  border-right: 3px solid rgba(251, 191, 36, 0.7);
+  pointer-events: none;
+}
+
+.scaffold::before,
+.scaffold::after {
+  content: "";
+  position: absolute;
+  left: -4px;
+  right: -4px;
+  height: 2px;
+  background: rgba(251, 191, 36, 0.75);
+  transform: rotate(-18deg);
+}
+
+.scaffold::before {
+  top: 9px;
+}
+
+.scaffold::after {
+  bottom: 10px;
+  transform: rotate(18deg);
 }
 
 .buildingEmoji {
@@ -297,8 +405,27 @@
 }
 
 .buildingLocked {
-  opacity: 0.45;
-  filter: grayscale(0.6);
+  opacity: 0.62;
+  filter: grayscale(0.75);
+}
+
+.buildingStageBuildable {
+  opacity: 0.86;
+}
+
+.buildingStageConstruction .buildingWall {
+  height: 22px;
+  top: 24px;
+  opacity: 0.82;
+}
+
+.buildingStageConstruction .buildingRoof {
+  opacity: 0.35;
+  transform: translateX(-50%) translateY(-8px) scale(0.75);
+}
+
+.buildingStageLevel5 .buildingRoof {
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--bld-color, #86efac) 75%, transparent));
 }
 
 /* Pikmin */
@@ -456,6 +583,37 @@
   color: rgba(255, 255, 255, 0.7);
   margin-top: 2px;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.shipDamageTag {
+  margin-top: 2px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(251, 191, 36, 0.45);
+  background: rgba(0, 0, 0, 0.45);
+  color: #fde68a;
+  font-size: 7px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.arrivalBeacon {
+  position: absolute;
+  left: 15%;
+  top: 30%;
+  z-index: 22;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.42);
+  border: 1px solid rgba(132, 255, 159, 0.25);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  pointer-events: none;
 }
 
 /* Context strip */

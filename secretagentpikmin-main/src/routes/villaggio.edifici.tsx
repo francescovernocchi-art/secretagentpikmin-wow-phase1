@@ -21,6 +21,11 @@ import {
 } from "@/lib/base";
 import { VillageDiorama } from "@/components/game/VillageDiorama";
 import { VILLAGE_BUILDINGS } from "@/data/secretPikminWorld";
+import {
+  getColonyBuildingPresentation,
+  resolveColonyBuildingStage,
+} from "@/components/game/diorama/colonyProgression";
+import { DIORAMA_BUILDINGS } from "@/components/game/diorama/diorama-data";
 import { ArrowLeft, ArrowUpRight, Hammer, Lock, Sparkles, Star } from "lucide-react";
 
 export const Route = createFileRoute("/villaggio/edifici")({
@@ -109,14 +114,32 @@ function EdificiPage() {
       <VillageDiorama buildingCount={buildings.length} pikminCount={12} />
 
       <section className="panel p-3 space-y-2">
-        <p className="text-[10px] uppercase tracking-widest text-primary/80">Edifici base — Missione Famiglia</p>
+        <p className="text-[10px] uppercase tracking-widest text-primary/80">Colonia in crescita — Missione Famiglia</p>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-          {VILLAGE_BUILDINGS.map((b) => (
-            <div key={b.key} className="rounded-xl border border-primary/20 bg-night/50 p-2 text-center">
-              <span className="text-xl">{b.emoji}</span>
-              <p className="text-[10px] font-display text-glow mt-1">{b.name}</p>
-            </div>
-          ))}
+          {VILLAGE_BUILDINGS.map((b) => {
+            const def = DIORAMA_BUILDINGS.find((d) => d.key === b.key);
+            const current = def ? byKey(b.key) : null;
+            const stage = def
+              ? resolveColonyBuildingStage(def, {
+                  id: current?.id ?? b.key,
+                  village_id: "",
+                  building_key: current?.type ?? b.key,
+                  name: b.name,
+                  emoji: b.emoji,
+                  level: current?.level ?? b.level,
+                  max_level: b.maxLevel,
+                  status: current?.status ?? "active",
+                })
+              : "buildable";
+            const presentation = def ? getColonyBuildingPresentation(def, stage) : { name: b.name, emoji: b.emoji, label: "Pronto" };
+            return (
+              <div key={b.key} className="rounded-xl border border-primary/20 bg-night/50 p-2 text-center">
+                <span className="text-xl">{presentation.emoji}</span>
+                <p className="text-[10px] font-display text-glow mt-1">{presentation.name}</p>
+                <p className="text-[8px] uppercase tracking-widest text-muted-foreground mt-0.5">{presentation.label}</p>
+              </div>
+            );
+          })}
         </div>
       </section>
 

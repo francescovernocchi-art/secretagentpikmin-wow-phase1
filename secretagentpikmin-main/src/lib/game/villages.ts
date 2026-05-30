@@ -7,6 +7,15 @@ import type { DbVillage, DbVillageBuilding } from "@/types/phase2-db";
 import type { DbVillageExtended, RemoteControlTier } from "@/types/phase4-db";
 import type { BiomeKey } from "@/types/secretPikmin";
 
+const ARRIVAL_BUILDING_STATE: Record<string, { name?: string; emoji?: string; level: number; status: string }> = {
+  centro_controllo: { name: "Capsula comando", emoji: "🛸", level: 1, status: "level_1" },
+  magazzino: { name: "Piccolo deposito", emoji: "📦", level: 1, status: "level_1" },
+  hangar: { name: "Navicella danneggiata", emoji: "🚀", level: 0, status: "under_construction" },
+  accademia: { level: 0, status: "locked" },
+  laboratorio: { level: 0, status: "under_construction" },
+  mercato: { level: 0, status: "buildable" },
+};
+
 export function maxVillagesForControlCenterLevel(level: number): number {
   const rules = VILLAGE_RULES.maxVillagesByControlCenterLevel;
   if (level >= 5) return rules[5];
@@ -98,11 +107,11 @@ export async function createVillage(opts: {
     id: `local-bld-${village.id}-${i}`,
     village_id: village.id,
     building_key: b.key,
-    name: b.name,
-    emoji: b.emoji,
-    level: b.level,
+    name: ARRIVAL_BUILDING_STATE[b.key]?.name ?? b.name,
+    emoji: ARRIVAL_BUILDING_STATE[b.key]?.emoji ?? b.emoji,
+    level: ARRIVAL_BUILDING_STATE[b.key]?.level ?? b.level,
     max_level: b.maxLevel,
-    status: "active",
+    status: ARRIVAL_BUILDING_STATE[b.key]?.status ?? `level_${b.level}`,
   }));
 
   try {
@@ -251,12 +260,13 @@ export async function upgradeVillageBuilding(
     return { success: false, buildings, message: "Edificio al livello massimo" };
   }
 
-  const updated = { ...buildings[idx], level: buildings[idx].level + 1 };
+  const nextLevel = buildings[idx].level + 1;
+  const updated = { ...buildings[idx], level: nextLevel, status: `level_${nextLevel}` };
   buildings[idx] = updated;
 
   try {
     if (isSupabaseConfigured()) {
-      await gameTable("village_buildings").update({ level: updated.level }).eq("id", updated.id);
+      await gameTable("village_buildings").update({ level: updated.level, status: updated.status }).eq("id", updated.id);
     }
   } catch {}
 

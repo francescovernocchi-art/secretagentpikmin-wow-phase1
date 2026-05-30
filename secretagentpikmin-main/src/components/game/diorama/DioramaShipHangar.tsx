@@ -16,14 +16,15 @@ export function DioramaShipHangar({ parts, percent, onClick, compact }: DioramaS
   const hullId = `shipHull-${uid}`;
   const darkId = `shipDark-${uid}`;
   const collected = parts.filter((p) => p.collected);
-  const glow = percent >= 50;
+  const damaged = percent < 100;
+  const glow = percent >= 75;
 
   return (
     <button
       type="button"
       className={`${styles.shipHangar} relative`}
       onClick={onClick}
-      aria-label={`Hangar navicella, ${percent}% completata, ${collected.length} di ${parts.length} pezzi`}
+      aria-label={`Navicella danneggiata, ${percent}% riparata, ${collected.length} di ${parts.length} pezzi`}
     >
       <ParticleEffect variant="ship-glow" />
       <motion.div
@@ -44,11 +45,18 @@ export function DioramaShipHangar({ parts, percent, onClick, compact }: DioramaS
             </linearGradient>
           </defs>
           <ellipse cx="40" cy="48" rx="28" ry="8" fill="#00000044" />
-          <path d="M 40 8 L 62 42 L 40 52 L 18 42 Z" fill={`url(#${hullId})`} stroke="#7dd3fc" strokeWidth="1.5" />
-          <path d="M 40 18 L 52 40 L 40 46 L 28 40 Z" fill={`url(#${darkId})`} opacity="0.6" />
-          <ellipse cx="40" cy="28" rx="6" ry="8" fill="#bae6fd" opacity="0.8" />
-          <path d="M 18 38 L 8 44 L 18 42 Z" fill="#0284c7" />
-          <path d="M 62 38 L 72 44 L 62 42 Z" fill="#0284c7" />
+          <path d="M 40 8 L 62 42 L 40 52 L 18 42 Z" fill={`url(#${hullId})`} stroke="#7dd3fc" strokeWidth="1.5" opacity={damaged ? 0.75 : 1} />
+          <path d="M 40 18 L 52 40 L 40 46 L 28 40 Z" fill={`url(#${darkId})`} opacity="0.65" />
+          <ellipse cx="40" cy="28" rx="6" ry="8" fill="#bae6fd" opacity={damaged ? 0.45 : 0.8} />
+          <path d="M 18 38 L 8 44 L 18 42 Z" fill="#0284c7" opacity={damaged ? 0.35 : 1} />
+          <path d="M 62 38 L 72 44 L 62 42 Z" fill="#0284c7" opacity={damaged ? 0.35 : 1} />
+          {damaged && (
+            <>
+              <path d="M 28 30 L 35 36 L 31 43" fill="none" stroke="#f97316" strokeWidth="2" strokeLinecap="round" />
+              <path d="M 52 20 L 58 15 L 55 25" fill="none" stroke="#f97316" strokeWidth="2" strokeLinecap="round" />
+              <circle cx="59" cy="17" r="3" fill="#111827" opacity="0.55" />
+            </>
+          )}
         </svg>
 
         {!compact && (
@@ -78,6 +86,7 @@ export function DioramaShipHangar({ parts, percent, onClick, compact }: DioramaS
       <p className={styles.shipProgressLabel} aria-hidden>
         {percent}% · {collected.length}/{parts.length}
       </p>
+      {!compact && damaged && <p className={styles.shipDamageTag} aria-hidden>Danneggiata</p>}
     </button>
   );
 }

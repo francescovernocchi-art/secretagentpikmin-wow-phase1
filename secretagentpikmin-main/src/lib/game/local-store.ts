@@ -127,15 +127,24 @@ function seedVillage(agent: string): DbVillage {
 }
 
 function seedVillageBuildings(villageId: string): DbVillageBuilding[] {
+  const arrivalState: Record<string, { name?: string; emoji?: string; level: number; status: string }> = {
+    centro_controllo: { name: "Capsula comando", emoji: "🛸", level: 1, status: "level_1" },
+    magazzino: { name: "Piccolo deposito", emoji: "📦", level: 1, status: "level_1" },
+    hangar: { name: "Navicella danneggiata", emoji: "🚀", level: 0, status: "under_construction" },
+    accademia: { level: 0, status: "locked" },
+    laboratorio: { level: 0, status: "under_construction" },
+    mercato: { level: 0, status: "buildable" },
+  };
+
   return VILLAGE_BUILDINGS.map((b, i) => ({
     id: `local-bld-${villageId}-${i}`,
     village_id: villageId,
     building_key: b.key,
-    name: b.name,
-    emoji: b.emoji,
-    level: b.level,
+    name: arrivalState[b.key]?.name ?? b.name,
+    emoji: arrivalState[b.key]?.emoji ?? b.emoji,
+    level: arrivalState[b.key]?.level ?? b.level,
     max_level: b.maxLevel,
-    status: "active",
+    status: arrivalState[b.key]?.status ?? `level_${b.level}`,
   }));
 }
 

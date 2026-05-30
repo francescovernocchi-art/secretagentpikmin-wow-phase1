@@ -16,7 +16,7 @@ export const Route = createFileRoute("/villaggio")({
   head: () => ({
     meta: [
       { title: "Villaggio Pikmin · Diorama" },
-      { name: "description", content: "Il tuo villaggio isometrico vivo — edifici, Pikmin e navicella." },
+      { name: "description", content: "La colonia Pikmin appena atterrata: capsula, navicella danneggiata e cantieri in crescita." },
     ],
   }),
 });
@@ -66,7 +66,7 @@ function VillaggioDioramaPage() {
         </div>
 
         <p className="text-[9px] text-center text-muted-foreground uppercase tracking-widest px-4">
-          Clicca un edificio o la navicella · Modalità Phaser RTS disponibile per costruzione avanzata
+          Capsula comando, navicella danneggiata e piccoli cantieri: la colonia cresce passo dopo passo
         </p>
       </main>
     </div>
