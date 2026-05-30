@@ -12,6 +12,7 @@ import { DioramaTerrain } from "@/components/game/diorama/DioramaTerrain";
 import { DioramaBuilding } from "@/components/game/diorama/DioramaBuilding";
 import { DioramaPikminActor } from "@/components/game/diorama/DioramaPikminActor";
 import { DioramaShipHangar } from "@/components/game/diorama/DioramaShipHangar";
+import { DioramaLivingColony } from "@/components/game/diorama/DioramaLivingColony";
 import { DIORAMA_BUILDINGS, BIOME_DIORAMA_THEMES } from "@/components/game/diorama/diorama-data";
 import styles from "@/styles/village-diorama.module.css";
 import type { BiomeKey } from "@/types/secretPikmin";
@@ -120,6 +121,8 @@ export function VillageDiorama({
         {visiblePikmin.map((p, i) => (
           <DioramaPikminActor key={p.id} pikmin={p} index={i} compact={compact} />
         ))}
+
+        {!compact && <DioramaLivingColony />}
 
         {visiblePikmin.length === 0 && !loading && (
           Array.from({ length: compact ? 2 : 4 }).map((_, i) => (

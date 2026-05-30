@@ -25,7 +25,7 @@
 .dioramaScene {
   position: relative;
   width: 100%;
-  min-height: 280px;
+  min-height: clamp(320px, 76vw, 420px);
   aspect-ratio: 16 / 11;
   max-height: 420px;
   overflow: hidden;
@@ -125,9 +125,171 @@
   pointer-events: none;
 }
 
+.natureDetail {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  filter: drop-shadow(1px 3px 3px rgba(0, 0, 0, 0.28));
+}
+
+.naturesapling {
+  width: 22px;
+  height: 30px;
+}
+
+.naturesapling::before {
+  content: "";
+  position: absolute;
+  left: 9px;
+  bottom: 0;
+  width: 4px;
+  height: 17px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #7c4a20, #3f2412);
+}
+
+.naturesapling::after {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: 0;
+  width: 20px;
+  height: 18px;
+  border-radius: 55% 45% 55% 45%;
+  background:
+    radial-gradient(circle at 68% 30%, #bbf7d0 0 12%, transparent 13%),
+    linear-gradient(135deg, #22c55e, #166534);
+  animation: natureSway 4.8s ease-in-out infinite;
+}
+
+.naturebush {
+  width: 24px;
+  height: 14px;
+  border-radius: 999px 999px 60% 60%;
+  background:
+    radial-gradient(circle at 22% 42%, #86efac 0 16%, transparent 17%),
+    radial-gradient(circle at 55% 28%, #4ade80 0 23%, transparent 24%),
+    linear-gradient(180deg, #22c55e, #14532d);
+  animation: natureSway 4.2s ease-in-out infinite;
+}
+
+.natureflower {
+  width: 15px;
+  height: 19px;
+}
+
+.natureflower::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  bottom: 0;
+  width: 2px;
+  height: 12px;
+  border-radius: 999px;
+  background: #15803d;
+}
+
+.natureflower::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 1px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #fde68a 0 22%, transparent 24%),
+    conic-gradient(#fb7185 0 20%, #f472b6 20% 40%, #fb7185 40% 60%, #f472b6 60% 80%, #fb7185 80% 100%);
+  animation: flowerNod 3.6s ease-in-out infinite;
+}
+
+.naturemushroom {
+  width: 18px;
+  height: 17px;
+}
+
+.naturemushroom::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  bottom: 0;
+  width: 5px;
+  height: 9px;
+  border-radius: 999px;
+  background: #fef3c7;
+}
+
+.naturemushroom::after {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 1px;
+  width: 15px;
+  height: 10px;
+  border-radius: 999px 999px 35% 35%;
+  background:
+    radial-gradient(circle at 35% 40%, #fee2e2 0 10%, transparent 11%),
+    radial-gradient(circle at 70% 28%, #fee2e2 0 9%, transparent 10%),
+    linear-gradient(180deg, #ef4444, #991b1b);
+}
+
+.naturetallGrass {
+  width: 24px;
+  height: 22px;
+  background:
+    linear-gradient(72deg, transparent 42%, #bef264 43% 50%, transparent 51%),
+    linear-gradient(95deg, transparent 46%, #65a30d 47% 54%, transparent 55%),
+    linear-gradient(118deg, transparent 42%, #22c55e 43% 50%, transparent 51%),
+    linear-gradient(55deg, transparent 50%, #84cc16 51% 57%, transparent 58%);
+  transform-origin: center bottom;
+  animation: grassWave 2.9s ease-in-out infinite;
+}
+
+.naturepebble {
+  width: 12px;
+  height: 8px;
+  border-radius: 50% 45% 55% 50%;
+  background: linear-gradient(135deg, #94a3b8, #475569);
+  box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.35);
+}
+
+.ambientMote {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  opacity: 0.45;
+  box-shadow: 0 0 9px currentColor;
+  animation: moteFloat 6.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
 @keyframes decorSway {
   0%, 100% { transform: rotate(-3deg) translateY(0); }
   50% { transform: rotate(3deg) translateY(-3px); }
+}
+
+@keyframes natureSway {
+  0%, 100% { transform: rotate(-2deg) translateY(0); }
+  50% { transform: rotate(3deg) translateY(-1px); }
+}
+
+@keyframes flowerNod {
+  0%, 100% { transform: rotate(-7deg); }
+  50% { transform: rotate(8deg); }
+}
+
+@keyframes grassWave {
+  0%, 100% { transform: translate(-50%, -50%) skewX(-4deg); }
+  50% { transform: translate(-50%, -50%) skewX(7deg); }
+}
+
+@keyframes moteFloat {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(0.8); opacity: 0.2; }
+  45% { transform: translate3d(10px, -15px, 0) scale(1); opacity: 0.55; }
+  70% { transform: translate3d(-5px, -23px, 0) scale(0.9); opacity: 0.32; }
 }
 
 /* Buildings */
@@ -140,8 +302,8 @@
   cursor: pointer;
   text-decoration: none;
   color: inherit;
-  min-width: 52px;
-  min-height: 56px;
+  min-width: 58px;
+  min-height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -375,6 +537,316 @@
   opacity: 1;
 }
 
+.livingColonyLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 58;
+}
+
+.livingPikmin {
+  position: absolute;
+  width: 28px;
+  height: 40px;
+  transform: translate(-50%, -50%);
+  animation-duration: var(--pikmin-duration, 6s);
+  animation-delay: var(--pikmin-delay, 0s);
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+.livingPikminpathA {
+  animation-name: livingPathA;
+}
+
+.livingPikminpathB {
+  animation-name: livingPathB;
+}
+
+.livingPikminpathC {
+  animation-name: livingPathC;
+}
+
+.livingPikminwork {
+  animation-name: livingWorkSpot;
+}
+
+.livingPikmintech {
+  animation-name: livingTechIdle;
+}
+
+.livingPikminShadow {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 24px;
+  height: 7px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.4) 0%, transparent 72%);
+}
+
+.livingPikminFigure {
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  width: 20px;
+  height: 31px;
+  transform: translateX(-50%) scaleX(var(--pikmin-flip, 1));
+  transform-origin: center bottom;
+  animation: livingStep 0.72s ease-in-out infinite;
+}
+
+.livingPikminworker .livingPikminFigure {
+  animation-duration: 0.84s;
+}
+
+.livingPikminbuilder .livingPikminFigure {
+  animation-name: builderTap;
+  animation-duration: 0.92s;
+}
+
+.livingPikmintechnician .livingPikminFigure {
+  animation-name: techLean;
+  animation-duration: 1.7s;
+}
+
+.livingPikminStem {
+  position: absolute;
+  left: 9px;
+  top: 1px;
+  width: 2px;
+  height: 10px;
+  border-radius: 999px;
+  background: #bbf7d0;
+}
+
+.livingPikminLeaf {
+  position: absolute;
+  left: 9px;
+  top: -2px;
+  width: 12px;
+  height: 8px;
+  border-radius: 100% 0 100% 0;
+  background: linear-gradient(135deg, #bef264, #16a34a);
+  transform: rotate(-22deg);
+  box-shadow: 0 0 6px rgba(132, 204, 22, 0.45);
+}
+
+.livingPikminHead {
+  position: absolute;
+  left: 4px;
+  top: 8px;
+  width: 13px;
+  height: 12px;
+  border-radius: 55% 55% 48% 48%;
+  background: radial-gradient(circle at 35% 28%, var(--pikmin-accent), var(--pikmin-color) 62%);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: inset -2px -3px 4px rgba(0, 0, 0, 0.2);
+}
+
+.livingPikminEye {
+  position: absolute;
+  top: 4px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #08111f;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.65);
+}
+
+.livingPikminEye:first-child {
+  left: 3px;
+}
+
+.livingPikminEye:last-child {
+  right: 3px;
+}
+
+.livingPikminBody {
+  position: absolute;
+  left: 5px;
+  bottom: 4px;
+  width: 11px;
+  height: 14px;
+  border-radius: 48% 48% 42% 42%;
+  background: linear-gradient(180deg, var(--pikmin-color), color-mix(in srgb, var(--pikmin-color) 72%, #111827));
+  border: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.livingPikminFoot {
+  position: absolute;
+  bottom: 1px;
+  width: 7px;
+  height: 3px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--pikmin-color) 70%, #111827);
+}
+
+.livingPikminFoot:nth-of-type(5) {
+  left: 3px;
+}
+
+.livingPikminFoot:nth-of-type(6) {
+  right: 2px;
+}
+
+.livingPikminCargo {
+  position: absolute;
+  left: 19px;
+  bottom: 13px;
+  width: 15px;
+  height: 12px;
+  border-radius: 3px;
+  transform: rotate(-8deg);
+  animation: cargoBob 0.84s ease-in-out infinite;
+  box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.32);
+}
+
+.livingCargocrate {
+  background:
+    linear-gradient(90deg, transparent 44%, rgba(64, 34, 14, 0.45) 45% 55%, transparent 56%),
+    linear-gradient(180deg, #b7791f, #78350f);
+  border: 1px solid rgba(254, 215, 170, 0.42);
+}
+
+.livingCargocrystal {
+  width: 13px;
+  height: 15px;
+  clip-path: polygon(50% 0, 88% 28%, 78% 100%, 22% 100%, 12% 28%);
+  background: linear-gradient(135deg, #bae6fd, #38bdf8 55%, #0f172a);
+}
+
+.livingCargotwig {
+  width: 18px;
+  height: 5px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #3f2412, #92400e, #3f2412);
+  transform: rotate(16deg);
+}
+
+.livingPikminTool {
+  position: absolute;
+  left: 20px;
+  bottom: 17px;
+  width: 4px;
+  height: 17px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #cbd5e1, #475569);
+  transform-origin: bottom center;
+  animation: toolHammer 0.92s ease-in-out infinite;
+}
+
+.constructionDust {
+  position: absolute;
+  right: -5px;
+  bottom: 5px;
+  width: 20px;
+  height: 10px;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 20% 60%, rgba(214, 159, 92, 0.65) 0 15%, transparent 16%),
+    radial-gradient(circle at 54% 36%, rgba(214, 159, 92, 0.5) 0 14%, transparent 15%),
+    radial-gradient(circle at 78% 72%, rgba(214, 159, 92, 0.38) 0 12%, transparent 13%);
+  animation: dustPuff 1.6s ease-in-out infinite;
+}
+
+.techSpark {
+  position: absolute;
+  right: -2px;
+  bottom: 19px;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #7dd3fc;
+  box-shadow: 0 0 10px #38bdf8, 0 0 18px rgba(56, 189, 248, 0.5);
+  animation: techSparkPulse 1.35s ease-in-out infinite;
+}
+
+.livingPikminLabel {
+  position: absolute;
+  left: 50%;
+  bottom: -9px;
+  transform: translateX(-50%);
+  padding: 1px 4px;
+  border-radius: 999px;
+  background: rgba(6, 12, 10, 0.52);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 6px;
+  line-height: 1.15;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+}
+
+@keyframes livingPathA {
+  0%, 100% { transform: translate(-50%, -50%) translate3d(-5px, 1px, 0); }
+  28% { transform: translate(-50%, -50%) translate3d(9px, -5px, 0); }
+  60% { transform: translate(-50%, -50%) translate3d(18px, 2px, 0); }
+  82% { transform: translate(-50%, -50%) translate3d(7px, 7px, 0); }
+}
+
+@keyframes livingPathB {
+  0%, 100% { transform: translate(-50%, -50%) translate3d(8px, -2px, 0); }
+  35% { transform: translate(-50%, -50%) translate3d(-11px, 5px, 0); }
+  65% { transform: translate(-50%, -50%) translate3d(-18px, -2px, 0); }
+  86% { transform: translate(-50%, -50%) translate3d(-2px, -7px, 0); }
+}
+
+@keyframes livingPathC {
+  0%, 100% { transform: translate(-50%, -50%) translate3d(-2px, -4px, 0); }
+  40% { transform: translate(-50%, -50%) translate3d(12px, 4px, 0); }
+  72% { transform: translate(-50%, -50%) translate3d(-10px, 7px, 0); }
+}
+
+@keyframes livingWorkSpot {
+  0%, 100% { transform: translate(-50%, -50%) translate3d(0, 0, 0); }
+  38% { transform: translate(-50%, -50%) translate3d(2px, 1px, 0); }
+  68% { transform: translate(-50%, -50%) translate3d(-2px, 0, 0); }
+}
+
+@keyframes livingTechIdle {
+  0%, 100% { transform: translate(-50%, -50%) translate3d(0, 0, 0); }
+  50% { transform: translate(-50%, -50%) translate3d(0, -3px, 0); }
+}
+
+@keyframes livingStep {
+  0%, 100% { transform: translateX(-50%) scaleX(var(--pikmin-flip, 1)) translateY(0) rotate(-2deg); }
+  50% { transform: translateX(-50%) scaleX(var(--pikmin-flip, 1)) translateY(-2px) rotate(3deg); }
+}
+
+@keyframes builderTap {
+  0%, 100% { transform: translateX(-50%) scaleX(var(--pikmin-flip, 1)) rotate(-3deg); }
+  48% { transform: translateX(-50%) scaleX(var(--pikmin-flip, 1)) rotate(9deg) translateY(1px); }
+}
+
+@keyframes techLean {
+  0%, 100% { transform: translateX(-50%) scaleX(var(--pikmin-flip, 1)) rotate(-2deg); }
+  50% { transform: translateX(-50%) scaleX(var(--pikmin-flip, 1)) rotate(5deg) translateY(-1px); }
+}
+
+@keyframes cargoBob {
+  0%, 100% { transform: rotate(-8deg) translateY(0); }
+  50% { transform: rotate(4deg) translateY(-2px); }
+}
+
+@keyframes toolHammer {
+  0%, 100% { transform: rotate(-35deg); }
+  55% { transform: rotate(22deg); }
+}
+
+@keyframes dustPuff {
+  0%, 100% { opacity: 0.1; transform: scale(0.75) translateY(0); }
+  45% { opacity: 0.58; transform: scale(1.08) translateY(-2px); }
+}
+
+@keyframes techSparkPulse {
+  0%, 100% { opacity: 0.45; transform: scale(0.75); }
+  45% { opacity: 1; transform: scale(1.12); }
+}
+
 /* Ship hangar */
 .shipHangar {
   position: relative;
@@ -386,6 +858,8 @@
   flex-direction: column;
   align-items: center;
   touch-action: manipulation;
+  min-width: 88px;
+  min-height: 86px;
 }
 
 .shipHangar:focus-visible {
@@ -396,16 +870,17 @@
 
 .shipModel {
   position: relative;
-  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+  z-index: 2;
+  filter: drop-shadow(0 9px 17px rgba(0, 0, 0, 0.42));
 }
 
 .shipGlow {
-  filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.6)) drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+  filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.72)) drop-shadow(0 9px 17px rgba(0, 0, 0, 0.42));
 }
 
 .shipSvg {
-  width: 64px;
-  height: 48px;
+  width: 76px;
+  height: 57px;
 }
 
 .compact .shipSvg {
@@ -436,7 +911,9 @@
 }
 
 .shipProgressBar {
-  width: 56px;
+  position: relative;
+  z-index: 2;
+  width: 64px;
   height: 4px;
   background: rgba(0, 0, 0, 0.5);
   border-radius: 999px;
@@ -452,10 +929,62 @@
 }
 
 .shipProgressLabel {
+  position: relative;
+  z-index: 2;
   font-size: 8px;
   color: rgba(255, 255, 255, 0.7);
   margin-top: 2px;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.hangarPad {
+  position: absolute;
+  left: 50%;
+  bottom: 15px;
+  width: 104px;
+  height: 42px;
+  transform: translateX(-50%) perspective(120px) rotateX(54deg);
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse, rgba(56, 189, 248, 0.28) 0%, transparent 58%),
+    linear-gradient(90deg, transparent 47%, rgba(125, 211, 252, 0.6) 48% 52%, transparent 53%),
+    linear-gradient(180deg, rgba(15, 23, 42, 0.68), rgba(2, 6, 23, 0.4));
+  border: 1px solid rgba(125, 211, 252, 0.36);
+  box-shadow:
+    0 0 28px rgba(56, 189, 248, 0.2),
+    inset 0 0 18px rgba(125, 211, 252, 0.18);
+  animation: hangarPadGlow 3.4s ease-in-out infinite;
+}
+
+.hangarBeacon {
+  position: absolute;
+  bottom: 30px;
+  z-index: 3;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8, 0 0 16px rgba(56, 189, 248, 0.5);
+  animation: beaconBlink 1.8s ease-in-out infinite;
+}
+
+.hangarBeaconLeft {
+  left: 8px;
+}
+
+.hangarBeaconRight {
+  right: 8px;
+  animation-delay: 0.65s;
+}
+
+@keyframes hangarPadGlow {
+  0%, 100% { opacity: 0.66; transform: translateX(-50%) perspective(120px) rotateX(54deg) scale(0.98); }
+  50% { opacity: 1; transform: translateX(-50%) perspective(120px) rotateX(54deg) scale(1.03); }
+}
+
+@keyframes beaconBlink {
+  0%, 100% { opacity: 0.35; transform: scale(0.75); }
+  45% { opacity: 1; transform: scale(1.18); }
 }
 
 /* Context strip */
@@ -580,4 +1109,61 @@
   outline: 2px solid rgba(132, 255, 159, 0.6);
   outline-offset: 2px;
   border-radius: 0.5rem;
+}
+
+@media (max-width: 430px) {
+  .dioramaHeader {
+    padding-inline: 0.75rem;
+  }
+
+  .isoStage {
+    width: 94%;
+    bottom: 10%;
+  }
+
+  .buildingBody {
+    width: 44px;
+    height: 49px;
+  }
+
+  .buildingName,
+  .buildingLevel {
+    font-size: 6px;
+  }
+
+  .livingPikmin {
+    width: 26px;
+    height: 38px;
+  }
+
+  .livingPikminLabel {
+    font-size: 5px;
+    padding-inline: 3px;
+  }
+
+  .shipSvg {
+    width: 72px;
+    height: 54px;
+  }
+
+  .contextStrip {
+    padding-inline: 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .natureDetail,
+  .ambientMote,
+  .decorItem,
+  .livingPikmin,
+  .livingPikminFigure,
+  .livingPikminCargo,
+  .livingPikminTool,
+  .constructionDust,
+  .techSpark,
+  .hangarPad,
+  .hangarBeacon {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }
