@@ -26,6 +26,9 @@ export function DioramaShipHangar({ parts, percent, onClick, compact }: DioramaS
       aria-label={`Hangar navicella, ${percent}% completata, ${collected.length} di ${parts.length} pezzi`}
     >
       <ParticleEffect variant="ship-glow" />
+      <span className={styles.hangarPad} aria-hidden />
+      <span className={`${styles.hangarBeacon} ${styles.hangarBeaconLeft}`} aria-hidden />
+      <span className={`${styles.hangarBeacon} ${styles.hangarBeaconRight}`} aria-hidden />
       <motion.div
         className={`${styles.shipModel} ${glow ? styles.shipGlow : ""}`}
         animate={{ y: [0, -4, 0] }}
@@ -44,7 +47,12 @@ export function DioramaShipHangar({ parts, percent, onClick, compact }: DioramaS
             </linearGradient>
           </defs>
           <ellipse cx="40" cy="48" rx="28" ry="8" fill="#00000044" />
-          <path d="M 40 8 L 62 42 L 40 52 L 18 42 Z" fill={`url(#${hullId})`} stroke="#7dd3fc" strokeWidth="1.5" />
+          <path
+            d="M 40 8 L 62 42 L 40 52 L 18 42 Z"
+            fill={`url(#${hullId})`}
+            stroke="#7dd3fc"
+            strokeWidth="1.5"
+          />
           <path d="M 40 18 L 52 40 L 40 46 L 28 40 Z" fill={`url(#${darkId})`} opacity="0.6" />
           <ellipse cx="40" cy="28" rx="6" ry="8" fill="#bae6fd" opacity="0.8" />
           <path d="M 18 38 L 8 44 L 18 42 Z" fill="#0284c7" />
