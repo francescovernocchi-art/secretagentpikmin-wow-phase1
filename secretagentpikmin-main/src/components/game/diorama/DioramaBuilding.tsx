@@ -2,10 +2,7 @@ import { motion } from "framer-motion";
 import { Link } from "@tanstack/react-router";
 import { hapticBuildingClick } from "@/lib/haptic";
 import type { DioramaBuildingDef } from "./diorama-data";
-import {
-  getColonyBuildingPresentation,
-  type ColonyBuildingStage,
-} from "./colonyProgression";
+import { getColonyBuildingPresentation, type ColonyBuildingStage } from "./colonyProgression";
 import styles from "@/styles/village-diorama.module.css";
 import { BuildingIconSvg } from "@/components/game/assets/GameIcons";
 
@@ -63,9 +60,17 @@ export function DioramaBuilding({ def, level, stage, onShipClick, compact }: Dio
           </div>
         ) : (
           <>
-            <div className={styles.buildingRoof} style={{ background: `linear-gradient(135deg, ${def.color}cc, ${def.color}66)` }} />
-            <div className={styles.buildingWall} style={{ background: `linear-gradient(180deg, ${def.color}55, ${def.color}22)` }}>
-              <span className={styles.buildingEmoji} aria-hidden>{presentation.emoji}</span>
+            <div
+              className={styles.buildingRoof}
+              style={{ background: `linear-gradient(135deg, ${def.color}cc, ${def.color}66)` }}
+            />
+            <div
+              className={styles.buildingWall}
+              style={{ background: `linear-gradient(180deg, ${def.color}55, ${def.color}22)` }}
+            >
+              <span className={styles.buildingEmoji} aria-hidden>
+                {presentation.emoji}
+              </span>
               <div className="absolute inset-0 flex items-center justify-center opacity-50 pointer-events-none">
                 <BuildingIconSvg buildingKey={def.key} size={26} color={def.color} />
               </div>
@@ -85,11 +90,18 @@ export function DioramaBuilding({ def, level, stage, onShipClick, compact }: Dio
 
       <div className={styles.buildingTooltip} role="tooltip">
         <p className="font-medium">{presentation.name}</p>
-        <p className="text-muted-foreground">{presentation.role}{level > 0 ? ` · Lv${level}` : ""}</p>
+        <p className="text-muted-foreground">
+          {presentation.role}
+          {level > 0 ? ` · Lv${level}` : ""}
+        </p>
         <p className="text-primary text-[9px] mt-0.5">{presentation.actionLabel}</p>
       </div>
 
-      {isConstruction && <span className={styles.buildingSpark} aria-hidden>🔨</span>}
+      {isConstruction && (
+        <span className={styles.buildingSpark} aria-hidden>
+          🔨
+        </span>
+      )}
     </motion.div>
   );
 
@@ -100,7 +112,10 @@ export function DioramaBuilding({ def, level, stage, onShipClick, compact }: Dio
         className={styles.buildingHit}
         style={posStyle(def)}
         aria-label={ariaLabel}
-        onClick={() => { hapticBuildingClick(); onShipClick?.(); }}
+        onClick={() => {
+          hapticBuildingClick();
+          onShipClick?.();
+        }}
       >
         {inner}
       </button>
@@ -122,7 +137,11 @@ export function DioramaBuilding({ def, level, stage, onShipClick, compact }: Dio
   }
 
   return (
-    <div className={`${styles.buildingHit} ${isLocked ? styles.buildingHitLocked : ""}`} style={posStyle(def)} aria-label={ariaLabel}>
+    <div
+      className={`${styles.buildingHit} ${isLocked ? styles.buildingHitLocked : ""}`}
+      style={posStyle(def)}
+      aria-label={ariaLabel}
+    >
       {inner}
     </div>
   );

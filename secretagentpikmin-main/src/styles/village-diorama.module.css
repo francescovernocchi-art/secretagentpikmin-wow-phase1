@@ -104,8 +104,15 @@
 }
 
 @keyframes waterShimmer {
-  0%, 100% { opacity: 0.7; transform: scale(1); }
-  50% { opacity: 0.9; transform: scale(1.03); }
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.03);
+  }
 }
 
 .rock {
@@ -126,8 +133,13 @@
 }
 
 @keyframes decorSway {
-  0%, 100% { transform: rotate(-3deg) translateY(0); }
-  50% { transform: rotate(3deg) translateY(-3px); }
+  0%,
+  100% {
+    transform: rotate(-3deg) translateY(0);
+  }
+  50% {
+    transform: rotate(3deg) translateY(-3px);
+  }
 }
 
 /* Buildings */
@@ -359,7 +371,9 @@
   transform: translateX(-50%) scale(0.9);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s, transform 0.2s;
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
   background: rgba(10, 14, 20, 0.92);
   border: 1px solid rgba(132, 255, 159, 0.3);
   border-radius: 8px;
@@ -400,8 +414,15 @@
 }
 
 @keyframes sparkPulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.6; transform: scale(1.2); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.2);
+  }
 }
 
 .buildingLocked {
@@ -549,7 +570,9 @@
 
 .shipPartDot {
   font-size: 10px;
-  transition: opacity 0.3s, filter 0.3s;
+  transition:
+    opacity 0.3s,
+    filter 0.3s;
 }
 
 .shipPartOn {

@@ -7,7 +7,10 @@ import type { DbVillage, DbVillageBuilding } from "@/types/phase2-db";
 import type { DbVillageExtended, RemoteControlTier } from "@/types/phase4-db";
 import type { BiomeKey } from "@/types/secretPikmin";
 
-const ARRIVAL_BUILDING_STATE: Record<string, { name?: string; emoji?: string; level: number; status: string }> = {
+const ARRIVAL_BUILDING_STATE: Record<
+  string,
+  { name?: string; emoji?: string; level: number; status: string }
+> = {
   centro_controllo: { name: "Capsula comando", emoji: "🛸", level: 1, status: "level_1" },
   magazzino: { name: "Piccolo deposito", emoji: "📦", level: 1, status: "level_1" },
   hangar: { name: "Navicella danneggiata", emoji: "🚀", level: 0, status: "under_construction" },
@@ -37,9 +40,15 @@ function dbVillageToExtended(v: DbVillage & Partial<DbVillageExtended>): DbVilla
   };
 }
 
-export async function fetchAgentVillages(agentKey: string): Promise<{ villages: DbVillageExtended[]; source: "supabase" | "local" }> {
+export async function fetchAgentVillages(
+  agentKey: string,
+): Promise<{ villages: DbVillageExtended[]; source: "supabase" | "local" }> {
   const res = await safeGameQuery(
-    () => gameTable("villages").select("*").eq("owner_agent", agentKey).order("is_primary", { ascending: false }),
+    () =>
+      gameTable("villages")
+        .select("*")
+        .eq("owner_agent", agentKey)
+        .order("is_primary", { ascending: false }),
     () => localStore.getAgentVillages(agentKey),
   );
   return { villages: (res.data as DbVillage[]).map(dbVillageToExtended), source: res.source };
@@ -54,13 +63,18 @@ export async function fetchActiveVillage(agentKey: string): Promise<DbVillageExt
   }
   try {
     if (isSupabaseConfigured()) {
-      const { data: profile } = await gameTable("player_profiles").select("active_village_id").eq("agent_key", agentKey).maybeSingle();
+      const { data: profile } = await gameTable("player_profiles")
+        .select("active_village_id")
+        .eq("agent_key", agentKey)
+        .maybeSingle();
       if (profile?.active_village_id) {
         const v = villages.find((x) => x.id === profile.active_village_id);
         if (v) return v;
       }
     }
-  } catch {}
+  } catch {
+    // Local fallback remains authoritative when remote profile lookup fails.
+  }
   return villages.find((v) => v.is_primary) ?? villages[0] ?? null;
 }
 
@@ -68,9 +82,13 @@ export async function setActiveVillage(agentKey: string, villageId: string): Pro
   localStore.setActiveVillageId(agentKey, villageId);
   try {
     if (isSupabaseConfigured()) {
-      await gameTable("player_profiles").update({ active_village_id: villageId }).eq("agent_key", agentKey);
+      await gameTable("player_profiles")
+        .update({ active_village_id: villageId })
+        .eq("agent_key", agentKey);
     }
-  } catch {}
+  } catch {
+    // Active village is still stored locally if the remote profile is unavailable.
+  }
 }
 
 export async function createVillage(opts: {
@@ -88,7 +106,10 @@ export async function createVillage(opts: {
   const maxV = maxVillagesForControlCenterLevel(ccLevel);
 
   if (villages.length >= maxV) {
-    return { success: false, message: `Centro Controllo Lv${ccLevel}: max ${maxV} villaggi. Potenzia il CC per espanderti.` };
+    return {
+      success: false,
+      message: `Centro Controllo Lv${ccLevel}: max ${maxV} villaggi. Potenzia il CC per espanderti.`,
+    };
   }
 
   const village: DbVillageExtended = {
@@ -139,7 +160,9 @@ export async function createVillage(opts: {
         });
       }
     }
-  } catch {}
+  } catch {
+    // The local store below still creates the village when Supabase is unavailable.
+  }
 
   localStore.addVillage(village, seedBuildings);
 
@@ -158,7 +181,8 @@ export async function createVillage(opts: {
 
 export async function fetchVillageBuildings(villageId: string): Promise<DbVillageBuilding[]> {
   const res = await safeGameQuery(
-    () => gameTable("village_buildings").select("*").eq("village_id", villageId).order("building_key"),
+    () =>
+      gameTable("village_buildings").select("*").eq("village_id", villageId).order("building_key"),
     () => localStore.getVillageBuildings(villageId),
   );
   return res.data as DbVillageBuilding[];
@@ -175,7 +199,11 @@ export async function fetchPrimaryVillage(agentKey: string): Promise<{
   const villageRes = await safeGameQuery(
     () => {
       if (active) return gameTable("villages").select("*").eq("id", active.id).maybeSingle();
-      return gameTable("villages").select("*").eq("owner_agent", agentKey).eq("is_primary", true).maybeSingle();
+      return gameTable("villages")
+        .select("*")
+        .eq("owner_agent", agentKey)
+        .eq("is_primary", true)
+        .maybeSingle();
     },
     () => active ?? localStore.getVillage(agentKey),
   );
@@ -213,7 +241,8 @@ export async function canRemoteControlVillage(
 ): Promise<{ allowed: boolean; reason: string; tier: RemoteControlTier; inRange: boolean }> {
   const { villages } = await fetchAgentVillages(agentKey);
   const village = villages.find((v) => v.id === villageId);
-  if (!village) return { allowed: false, reason: "Villaggio non trovato", tier: "none", inRange: false };
+  if (!village)
+    return { allowed: false, reason: "Villaggio non trovato", tier: "none", inRange: false };
 
   const buildings = await fetchVillageBuildings(villageId);
   const cc = buildings.find((b) => b.building_key === "centro_controllo");
@@ -221,24 +250,50 @@ export async function canRemoteControlVillage(
   const tier = remoteControlTier(ccLevel);
 
   const loc = await fetchPlayerLocation(agentKey);
-  const inRange = isWithinVillageRadius(loc.lat, loc.lng, village.lat, village.lng, village.action_radius_m);
+  const inRange = isWithinVillageRadius(
+    loc.lat,
+    loc.lng,
+    village.lat,
+    village.lng,
+    village.action_radius_m,
+  );
 
   if (inRange) {
     return { allowed: true, reason: "Sei nel raggio d'azione del villaggio", tier, inRange: true };
   }
 
   if (tier === "none") {
-    return { allowed: false, reason: "Fuori raggio — serve Centro di Controllo", tier, inRange: false };
+    return {
+      allowed: false,
+      reason: "Fuori raggio — serve Centro di Controllo",
+      tier,
+      inRange: false,
+    };
   }
 
   if (action === "base" && tier !== "none") {
-    return { allowed: true, reason: `Controllo remoto Lv${ccLevel} (comandi base)`, tier, inRange: false };
+    return {
+      allowed: true,
+      reason: `Controllo remoto Lv${ccLevel} (comandi base)`,
+      tier,
+      inRange: false,
+    };
   }
   if (action === "expeditions" && (tier === "expeditions" || tier === "full")) {
-    return { allowed: true, reason: `Controllo remoto Lv${ccLevel} (spedizioni)`, tier, inRange: false };
+    return {
+      allowed: true,
+      reason: `Controllo remoto Lv${ccLevel} (spedizioni)`,
+      tier,
+      inRange: false,
+    };
   }
   if (action === "market" && tier === "full") {
-    return { allowed: true, reason: `Controllo remoto Lv${ccLevel} (market/trasformazioni)`, tier, inRange: false };
+    return {
+      allowed: true,
+      reason: `Controllo remoto Lv${ccLevel} (market/trasformazioni)`,
+      tier,
+      inRange: false,
+    };
   }
 
   return {
@@ -266,9 +321,13 @@ export async function upgradeVillageBuilding(
 
   try {
     if (isSupabaseConfigured()) {
-      await gameTable("village_buildings").update({ level: updated.level, status: updated.status }).eq("id", updated.id);
+      await gameTable("village_buildings")
+        .update({ level: updated.level, status: updated.status })
+        .eq("id", updated.id);
     }
-  } catch {}
+  } catch {
+    // Local state is updated below even if the remote row cannot be patched.
+  }
 
   localStore.setVillageBuildings(villageId, buildings);
   return { success: true, buildings, message: `${updated.name} potenziato a Lv${updated.level}` };

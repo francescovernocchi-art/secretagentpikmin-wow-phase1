@@ -16,7 +16,11 @@ export const Route = createFileRoute("/villaggio")({
   head: () => ({
     meta: [
       { title: "Villaggio Pikmin · Diorama" },
-      { name: "description", content: "La colonia Pikmin appena atterrata: capsula, navicella danneggiata e cantieri in crescita." },
+      {
+        name: "description",
+        content:
+          "La colonia Pikmin appena atterrata: capsula, navicella danneggiata e cantieri in crescita.",
+      },
     ],
   }),
 });
@@ -36,14 +40,28 @@ function VillaggioDioramaPage() {
         style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
       >
         <div className="flex items-center justify-between px-3 py-2 gap-2">
-          <Link to="/base" onClick={hapticTap} className="panel p-2 shrink-0" aria-label="Torna al centro comando">
+          <Link
+            to="/base"
+            onClick={hapticTap}
+            className="panel p-2 shrink-0"
+            aria-label="Torna al centro comando"
+          >
             <Home className="h-4 w-4" />
           </Link>
           <div className="flex-1 min-w-0 text-center">
-            <p className="text-[9px] uppercase tracking-[0.35em] text-primary/70">{GAME_IDENTITY.title}</p>
-            <h1 className="font-display text-base text-glow truncate">{loading ? "…" : villageName || "Villaggio"}</h1>
+            <p className="text-[9px] uppercase tracking-[0.35em] text-primary/70">
+              {GAME_IDENTITY.title}
+            </p>
+            <h1 className="font-display text-base text-glow truncate">
+              {loading ? "…" : villageName || "Villaggio"}
+            </h1>
           </div>
-          <Link to="/mappa" onClick={hapticTap} className="panel p-2 shrink-0" aria-label="Apri mappa biomi">
+          <Link
+            to="/mappa"
+            onClick={hapticTap}
+            className="panel p-2 shrink-0"
+            aria-label="Apri mappa biomi"
+          >
             <Map className="h-4 w-4" />
           </Link>
         </div>
@@ -62,11 +80,17 @@ function VillaggioDioramaPage() {
           <QuickTile to="/villaggio/edifici" emoji="🏗️" label="Edifici" />
           <QuickTile to="/villaggio/scambi" emoji="🤝" label="Scambi" />
           <QuickTile to="/navicella" emoji="🚀" label="Navicella" />
-          <QuickTile to="/villaggio/phaser" emoji="🎮" label="Phaser RTS" icon={<Gamepad2 className="h-4 w-4 text-primary" />} />
+          <QuickTile
+            to="/villaggio/phaser"
+            emoji="🎮"
+            label="Phaser RTS"
+            icon={<Gamepad2 className="h-4 w-4 text-primary" />}
+          />
         </div>
 
         <p className="text-[9px] text-center text-muted-foreground uppercase tracking-widest px-4">
-          Capsula comando, navicella danneggiata e piccoli cantieri: la colonia cresce passo dopo passo
+          Capsula comando, navicella danneggiata e piccoli cantieri: la colonia cresce passo dopo
+          passo
         </p>
       </main>
     </div>

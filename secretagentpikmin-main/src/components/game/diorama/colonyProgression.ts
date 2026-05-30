@@ -28,7 +28,9 @@ const ARRIVAL_STAGE_BY_KEY: Partial<Record<BuildingKey, ColonyBuildingStage>> = 
   mercato: "buildable",
 };
 
-const ARRIVAL_PRESENTATION: Partial<Record<BuildingKey, Partial<Record<ColonyBuildingStage, Partial<ColonyBuildingPresentation>>>>> = {
+const ARRIVAL_PRESENTATION: Partial<
+  Record<BuildingKey, Partial<Record<ColonyBuildingStage, Partial<ColonyBuildingPresentation>>>>
+> = {
   centro_controllo: {
     level_1: {
       name: "Capsula comando",
@@ -90,11 +92,15 @@ function stageFromLevel(level: number): ColonyBuildingStage {
   return `level_${safeLevel}` as ColonyBuildingStage;
 }
 
-export function resolveColonyBuildingStage(def: DioramaBuildingDef, building?: DbVillageBuilding): ColonyBuildingStage {
+export function resolveColonyBuildingStage(
+  def: DioramaBuildingDef,
+  building?: DbVillageBuilding,
+): ColonyBuildingStage {
   const status = building?.status;
   const level = building?.level ?? 0;
 
-  if (status === "locked" || status === "buildable" || status === "under_construction") return status;
+  if (status === "locked" || status === "buildable" || status === "under_construction")
+    return status;
   if (status === "building" || status === "upgrading") return "under_construction";
   if (status?.startsWith("level_")) return status as ColonyBuildingStage;
 
@@ -102,7 +108,11 @@ export function resolveColonyBuildingStage(def: DioramaBuildingDef, building?: D
 
   // Legacy seed rows marked every structure as active Lv1. Keep the arrival fantasy
   // until real progression pushes these structures beyond the initial placeholder.
-  if ((status === "active" || status === "idle" || !status) && level <= 1 && ARRIVAL_STAGE_BY_KEY[def.key]) {
+  if (
+    (status === "active" || status === "idle" || !status) &&
+    level <= 1 &&
+    ARRIVAL_STAGE_BY_KEY[def.key]
+  ) {
     return ARRIVAL_STAGE_BY_KEY[def.key]!;
   }
 
@@ -116,14 +126,20 @@ export function getColonyBuildingPresentation(
   const level = stage.startsWith("level_") ? Number(stage.replace("level_", "")) : 0;
   const override = ARRIVAL_PRESENTATION[def.key]?.[stage] ?? {};
   const isAccessible = level > 0 && stage !== "locked";
-  const route = isAccessible ? def.route : stage === "buildable" || stage === "under_construction" ? "/villaggio/edifici" : undefined;
+  const route = isAccessible
+    ? def.route
+    : stage === "buildable" || stage === "under_construction"
+      ? "/villaggio/edifici"
+      : undefined;
 
   return {
     name: override.name ?? def.name,
     emoji: override.emoji ?? def.emoji,
     role: override.role ?? def.role,
-    label: override.label ?? (level > 0 ? `Lv${level}` : stage === "buildable" ? "Pronto" : "Cantiere"),
-    actionLabel: override.actionLabel ?? (isAccessible ? "Clicca per entrare" : "Cresce con la colonia"),
+    label:
+      override.label ?? (level > 0 ? `Lv${level}` : stage === "buildable" ? "Pronto" : "Cantiere"),
+    actionLabel:
+      override.actionLabel ?? (isAccessible ? "Clicca per entrare" : "Cresce con la colonia"),
     route,
     accessible: !!route,
   };
