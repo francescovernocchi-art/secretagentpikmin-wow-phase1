@@ -32,6 +32,57 @@
   isolation: isolate;
 }
 
+@media (max-width: 480px) {
+  .dioramaRoot {
+    border-radius: 0.9rem;
+  }
+
+  .dioramaHeader {
+    padding: 0.55rem 0.65rem;
+  }
+
+  .dioramaScene {
+    min-height: min(43dvh, 370px);
+    aspect-ratio: 10 / 9;
+  }
+
+  .isoStage {
+    width: 98%;
+    height: 58%;
+    bottom: 9%;
+  }
+
+  .buildingHit {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .arrivalBeacon {
+    left: 7%;
+    top: 27%;
+    font-size: 7px;
+    padding: 3px 5px;
+  }
+
+  .shipHangarHero {
+    transform: scale(0.86);
+  }
+
+  .shipMissingTags {
+    width: 132px;
+  }
+
+  .shipRepairFlags {
+    top: 20px;
+    width: 116px;
+  }
+
+  .shipRepairFlags span {
+    font-size: 6px;
+    padding: 2px 5px;
+  }
+}
+
 @media (min-width: 640px) {
   .dioramaScene {
     min-height: 320px;
@@ -1296,4 +1347,36 @@
   outline: 2px solid rgba(132, 255, 159, 0.6);
   outline-offset: 2px;
   border-radius: 0.5rem;
+}
+
+@media (max-width: 480px) {
+  .buildingHit {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .arrivalBeacon {
+    left: 7%;
+    top: 27%;
+    font-size: 7px;
+    padding: 3px 5px;
+  }
+
+  .shipHangarHero {
+    transform: scale(0.86);
+  }
+
+  .shipMissingTags {
+    width: 132px;
+  }
+
+  .shipRepairFlags {
+    top: 20px;
+    width: 116px;
+  }
+
+  .shipRepairFlags span {
+    font-size: 6px;
+    padding: 2px 5px;
+  }
 }

@@ -19,7 +19,14 @@ import { getSession } from "@/lib/session";
 import { HIDDEN_ROUTES, MAIN_NAV } from "@/data/secretPikminWorld";
 import { useGameNotifications, useHomeDashboard } from "@/hooks/useGameData";
 
-type NavItem = { to: string; icon: LucideIcon | "emoji"; label: string; emoji?: string; admin?: boolean; badgeKey?: "notif" | "mission" | "trade" };
+type NavItem = {
+  to: string;
+  icon: LucideIcon | "emoji";
+  label: string;
+  emoji?: string;
+  admin?: boolean;
+  badgeKey?: "notif" | "mission" | "trade";
+};
 
 const PRIMARY_NAV: NavItem[] = [
   { to: "/base", icon: Home, label: "Home", badgeKey: "notif" },
@@ -34,9 +41,15 @@ const PRIMARY_NAV: NavItem[] = [
 ];
 
 const ADMIN_LINKS = HIDDEN_ROUTES.filter((r) => "admin" in r && r.admin);
+const MOBILE_PRIMARY_COUNT = 5;
 
 function NavIcon({ item }: { item: NavItem }) {
-  if (item.icon === "emoji") return <span className="text-xl leading-none drop-shadow-[0_0_6px_rgba(132,255,159,0.35)]">{item.emoji}</span>;
+  if (item.icon === "emoji")
+    return (
+      <span className="text-xl leading-none drop-shadow-[0_0_6px_rgba(132,255,159,0.35)]">
+        {item.emoji}
+      </span>
+    );
   const Icon = item.icon;
   return <Icon className="h-6 w-6" strokeWidth={2.2} />;
 }
@@ -50,7 +63,10 @@ export function BottomNav() {
   const { data } = useHomeDashboard();
 
   const missionCount = (data?.expeditions.length ?? 0) + (data?.activeMissionCount ?? 0);
-  const familyOnline = (data?.family ?? []).filter((a) => a.online || Date.now() - new Date(a.last_seen_at).getTime() < 300000).length;
+  const familyOnline = (data?.family ?? []).filter(
+    (a) => a.online || Date.now() - new Date(a.last_seen_at).getTime() < 300000,
+  ).length;
+  const mobileOverflow = PRIMARY_NAV.slice(MOBILE_PRIMARY_COUNT);
 
   const badgeFor = (key?: NavItem["badgeKey"]) => {
     if (key === "notif" && unread > 0) return unread;
@@ -58,8 +74,7 @@ export function BottomNav() {
     return 0;
   };
 
-  const isActive = (to: string) =>
-    path === to || (to !== "/" && path.startsWith(to + "/"));
+  const isActive = (to: string) => path === to || (to !== "/" && path.startsWith(to + "/"));
 
   const activePrimary = PRIMARY_NAV.find((l) => isActive(l.to))?.to;
   const hiddenActive = HIDDEN_ROUTES.some((r) => isActive(r.to));
@@ -84,7 +99,9 @@ export function BottomNav() {
               className="fixed inset-x-2 bottom-[5.75rem] z-50 panel-strong p-4 safe-bottom max-h-[55vh] overflow-y-auto border border-primary/25"
             >
               <div className="flex items-center justify-between mb-3">
-                <p className="text-[10px] uppercase tracking-widest text-primary font-display">Collegamenti rapidi</p>
+                <p className="text-[10px] uppercase tracking-widest text-primary font-display">
+                  Collegamenti rapidi
+                </p>
                 {familyOnline > 0 && (
                   <span className="text-[9px] text-emerald-400 flex items-center gap-1">
                     <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -93,6 +110,22 @@ export function BottomNav() {
                 )}
               </div>
               <div className="grid grid-cols-3 gap-2">
+                {mobileOverflow.map((r) => (
+                  <Link
+                    key={`mobile-${r.to}`}
+                    to={r.to}
+                    onClick={() => {
+                      hapticTap();
+                      setShowMore(false);
+                    }}
+                    className={`panel p-3 text-center text-[10px] uppercase tracking-wide min-h-[56px] flex flex-col items-center justify-center gap-1 sm:hidden ${isActive(r.to) ? "ring-1 ring-primary/60 bg-primary/10" : ""}`}
+                  >
+                    <span className="text-primary">
+                      <NavIcon item={r} />
+                    </span>
+                    {r.label}
+                  </Link>
+                ))}
                 {HIDDEN_ROUTES.filter((r) => !("admin" in r) || !r.admin || isAdmin).map((r) => (
                   <Link
                     key={r.to}
@@ -133,16 +166,19 @@ export function BottomNav() {
           <span className="hud-corner tr" />
           <span className="hud-corner bl" />
           <span className="hud-corner br" />
-          <ul className="relative flex gap-0.5 overflow-x-auto no-scrollbar">
-            {PRIMARY_NAV.map((l) => {
+          <ul className="relative flex gap-0.5 overflow-hidden">
+            {PRIMARY_NAV.map((l, index) => {
               const active = activePrimary === l.to;
               const badge = badgeFor(l.badgeKey);
               return (
-                <li key={l.to} className="shrink-0 flex-1 min-w-[54px]">
+                <li
+                  key={l.to}
+                  className={`shrink-0 flex-1 min-w-0 ${index >= MOBILE_PRIMARY_COUNT ? "hidden sm:block" : ""}`}
+                >
                   <Link
                     to={l.to}
                     onClick={hapticTap}
-                    className="relative flex flex-col items-center justify-center w-full rounded-xl px-0.5 py-2 text-[9px] font-semibold"
+                    className="relative flex min-h-[52px] flex-col items-center justify-center w-full rounded-xl px-0.5 py-2 text-[8px] sm:text-[9px] font-semibold"
                   >
                     {active && (
                       <motion.span
@@ -151,7 +187,9 @@ export function BottomNav() {
                         transition={{ type: "spring", stiffness: 500, damping: 35 }}
                       />
                     )}
-                    <span className={`relative z-10 ${active ? "text-primary scale-110" : "text-muted-foreground"}`}>
+                    <span
+                      className={`relative z-10 ${active ? "text-primary scale-110" : "text-muted-foreground"}`}
+                    >
                       <NavIcon item={l} />
                       {badge > 0 && (
                         <span className="absolute -top-1 -right-2 min-w-[14px] h-[14px] px-0.5 rounded-full bg-rose-500 text-[8px] font-bold text-white grid place-items-center leading-none">
@@ -159,27 +197,31 @@ export function BottomNav() {
                         </span>
                       )}
                     </span>
-                    <span className={`relative z-10 mt-1 tracking-wide uppercase leading-tight text-center ${active ? "text-primary text-glow" : "text-muted-foreground"}`}>
+                    <span
+                      className={`relative z-10 mt-1 tracking-wide uppercase leading-tight text-center ${active ? "text-primary text-glow" : "text-muted-foreground"}`}
+                    >
                       {l.label.split(" ")[0]}
                     </span>
                   </Link>
                 </li>
               );
             })}
-            <li className="shrink-0 min-w-[48px]">
+            <li className="shrink-0 min-w-[50px] sm:min-w-[48px]">
               <button
                 onClick={() => {
                   hapticTap();
                   setShowMore((v) => !v);
                 }}
-                className={`relative flex flex-col items-center justify-center w-full rounded-xl px-1 py-2 text-[9px] ${
+                className={`relative flex min-h-[52px] flex-col items-center justify-center w-full rounded-xl px-1 py-2 text-[8px] sm:text-[9px] ${
                   hiddenActive || showMore ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 {(hiddenActive || showMore) && (
                   <span className="absolute inset-0 rounded-xl bg-primary/12 ring-1 ring-primary/45" />
                 )}
-                <ChevronUp className={`relative z-10 h-6 w-6 ${showMore ? "rotate-180" : ""} transition`} />
+                <ChevronUp
+                  className={`relative z-10 h-6 w-6 ${showMore ? "rotate-180" : ""} transition`}
+                />
                 <span className="relative z-10 mt-1 uppercase font-semibold">Altro</span>
               </button>
             </li>
