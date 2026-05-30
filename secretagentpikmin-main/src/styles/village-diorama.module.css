@@ -1013,8 +1013,8 @@
 }
 
 .shipSvg {
-  width: 76px;
-  height: 57px;
+  width: 92px;
+  height: 69px;
 }
 
 .compact .shipSvg {
@@ -1076,9 +1076,9 @@
 .hangarPad {
   position: absolute;
   left: 50%;
-  bottom: 15px;
-  width: 104px;
-  height: 42px;
+  bottom: 10px;
+  width: 122px;
+  height: 48px;
   transform: translateX(-50%) perspective(120px) rotateX(54deg);
   border-radius: 50%;
   background:
@@ -1090,6 +1090,24 @@
     0 0 28px rgba(56, 189, 248, 0.2),
     inset 0 0 18px rgba(125, 211, 252, 0.18);
   animation: hangarPadGlow 3.4s ease-in-out infinite;
+}
+
+.shipHangar::after {
+  content: "NAVICELLA";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  z-index: 3;
+  transform: translate(-50%, 100%);
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(3, 10, 18, 0.68);
+  border: 1px solid rgba(125, 211, 252, 0.45);
+  color: #bae6fd;
+  font-size: 7px;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-shadow: 0 0 7px rgba(56, 189, 248, 0.75);
 }
 
 .hangarBeacon {
@@ -1294,8 +1312,8 @@
   }
 
   .shipSvg {
-    width: 72px;
-    height: 54px;
+    width: 86px;
+    height: 64px;
   }
 
   .contextStrip {
@@ -1317,5 +1335,16 @@
   .hangarBeacon {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
+  }
+}
+
+@media (max-width: 640px) {
+  :global(.villaggio-mobile-safe-floats button[title="Attiva audio"]),
+  :global(.villaggio-mobile-safe-floats button[title="Silenzia"]) {
+    display: none !important;
+  }
+
+  :global(.villaggio-mobile-safe-floats div.fixed.right-3.bottom-24.safe-bottom) {
+    display: none !important;
   }
 }

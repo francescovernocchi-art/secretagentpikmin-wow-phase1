@@ -19,6 +19,7 @@ La V1.4 rende il diorama del villaggio piu abitato senza aggiungere meccaniche, 
 - `src/components/game/diorama/DioramaLivingColony.tsx`
 - `src/components/game/diorama/DioramaTerrain.tsx`
 - `src/components/game/diorama/DioramaShipHangar.tsx`
+- `src/routes/villaggio.tsx`
 - `src/styles/village-diorama.module.css`
 - `docs/FASE_V1_4_VILLAGGIO_VIVO.md`
 
@@ -49,11 +50,14 @@ La V1.4 rende il diorama del villaggio piu abitato senza aggiungere meccaniche, 
 
 ## Test mobile eseguiti
 
-- Da completare dopo smoke browser a 390x844.
-- Da completare dopo smoke browser a 430x932.
+- 390x844: `/villaggio` aperto, nessuno scroll orizzontale, bottom nav visibile, Pikmin e navicella leggibili.
+- 430x932: `/villaggio` aperto, nessuno scroll orizzontale, bottom nav visibile, quick action non coperte dai floating button.
+- Screenshot prodotti in `/opt/cursor/artifacts/villaggio_mobile_390x844_v14_final.png`.
+- Screenshot prodotti in `/opt/cursor/artifacts/villaggio_mobile_430x932_v14_final.png`.
+- Walkthrough video prodotto in `/opt/cursor/artifacts/villaggio_vivo_mobile_walkthrough_v14_final.webm`.
 
 ---
 
 ## Problemi rimasti
 
-- Nessuno noto prima della verifica finale.
+- `npm run lint` globale fallisce ancora su errori preesistenti fuori scope; i file V1.4 modificati passano ESLint mirato.
