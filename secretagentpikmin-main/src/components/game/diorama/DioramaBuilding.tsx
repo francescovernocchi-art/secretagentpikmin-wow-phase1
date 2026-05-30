@@ -76,6 +76,13 @@ export function DioramaBuilding({ def, level, stage, onShipClick, compact }: Dio
               </div>
               {isConstruction && <div className={styles.scaffold} aria-hidden />}
             </div>
+            {isConstruction && (
+              <div className={styles.constructionSmoke} aria-hidden>
+                <span />
+                <span />
+                <span />
+              </div>
+            )}
             <div className={styles.buildingBase} aria-hidden />
           </>
         )}

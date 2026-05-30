@@ -17,6 +17,7 @@ import { DioramaTerrain } from "@/components/game/diorama/DioramaTerrain";
 import { DioramaBuilding } from "@/components/game/diorama/DioramaBuilding";
 import { DioramaPikminActor } from "@/components/game/diorama/DioramaPikminActor";
 import { DioramaShipHangar } from "@/components/game/diorama/DioramaShipHangar";
+import { DioramaAmbientLife } from "@/components/game/diorama/DioramaAmbientLife";
 import { DIORAMA_BUILDINGS, BIOME_DIORAMA_THEMES } from "@/components/game/diorama/diorama-data";
 import {
   isOperationalColonyStage,
@@ -89,6 +90,7 @@ export function VillageDiorama({
         }));
 
   const visiblePikmin = squad.length > 0 ? squad.slice(0, compact ? 3 : 6) : [];
+  const ambientPikminCount = Math.max(0, (compact ? 5 : 13) - visiblePikmin.length);
   const onMission = squad.filter((p) => p.status === "in_spedizione" || p.status === "in_missione");
   const hangarDef = DIORAMA_BUILDINGS.find((b) => b.key === "hangar")!;
   const sceneBuildings = displayBuildings.filter((b) => b.def.key !== "hangar");
@@ -170,19 +172,7 @@ export function VillageDiorama({
           <DioramaPikminActor key={p.id} pikmin={p} index={i} compact={compact} />
         ))}
 
-        {visiblePikmin.length === 0 &&
-          !loading &&
-          Array.from({ length: compact ? 2 : 4 }).map((_, i) => (
-            <motion.div
-              key={`placeholder-${i}`}
-              className={styles.pikminActor}
-              style={{ left: `${35 + i * 12}%`, top: `${55 + (i % 2) * 8}%`, zIndex: 55 + i }}
-              animate={{ x: [0, 5, 0], y: [0, -2, 0] }}
-              transition={{ repeat: Infinity, duration: 3 + i * 0.4 }}
-            >
-              <span className="text-2xl opacity-70">🌱</span>
-            </motion.div>
-          ))}
+        {!loading && <DioramaAmbientLife count={ambientPikminCount} compact={compact} />}
       </div>
 
       {showFooter && !compact && (

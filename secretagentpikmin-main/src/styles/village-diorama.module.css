@@ -124,6 +124,87 @@
   box-shadow: 2px 3px 4px rgba(0, 0, 0, 0.4);
 }
 
+.grassPatch {
+  position: absolute;
+  width: 18px;
+  height: 16px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.grassPatch span {
+  position: absolute;
+  bottom: 0;
+  width: 4px;
+  height: 14px;
+  border-radius: 999px 999px 0 0;
+  background: linear-gradient(180deg, #bbf7d0, #15803d);
+  transform-origin: center bottom;
+  animation: grassSway 2.8s ease-in-out infinite;
+}
+
+.grassPatch span:nth-child(1) {
+  left: 2px;
+  height: 10px;
+  animation-delay: 0.1s;
+}
+
+.grassPatch span:nth-child(2) {
+  left: 7px;
+  height: 15px;
+  animation-delay: 0.35s;
+}
+
+.grassPatch span:nth-child(3) {
+  left: 12px;
+  height: 12px;
+  animation-delay: 0.6s;
+}
+
+@keyframes grassSway {
+  0%,
+  100% {
+    transform: rotate(-7deg);
+  }
+  50% {
+    transform: rotate(9deg);
+  }
+}
+
+.natureDetail {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.42));
+  pointer-events: none;
+  animation: natureBob 4s ease-in-out infinite;
+}
+
+.naturebush {
+  font-size: 1.1rem;
+}
+
+.natureflower {
+  font-size: 0.95rem;
+}
+
+.naturemushroom {
+  font-size: 1rem;
+}
+
+.naturesapling {
+  font-size: 0.9rem;
+}
+
+@keyframes natureBob {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotate(-2deg);
+  }
+  50% {
+    transform: translate(-50%, calc(-50% - 2px)) rotate(2deg);
+  }
+}
+
 .decorItem {
   position: absolute;
   font-size: 1.25rem;
@@ -332,6 +413,55 @@
   transform: rotate(18deg);
 }
 
+.constructionSmoke {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  width: 34px;
+  height: 30px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.constructionSmoke span {
+  position: absolute;
+  bottom: 2px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(226, 232, 240, 0.45);
+  filter: blur(1px);
+  animation: smokeDrift 3s ease-in-out infinite;
+}
+
+.constructionSmoke span:nth-child(1) {
+  left: 6px;
+}
+
+.constructionSmoke span:nth-child(2) {
+  left: 14px;
+  animation-delay: 0.65s;
+}
+
+.constructionSmoke span:nth-child(3) {
+  left: 22px;
+  animation-delay: 1.15s;
+}
+
+@keyframes smokeDrift {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.65);
+  }
+  35% {
+    opacity: 0.45;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-18px) scale(1.35);
+  }
+}
+
 .buildingEmoji {
   font-size: 1.25rem;
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
@@ -523,6 +653,63 @@
   opacity: 1;
 }
 
+.ambientPikmin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.45));
+}
+
+.carryCrate {
+  position: absolute;
+  left: -7px;
+  top: 13px;
+  z-index: 2;
+  width: 14px;
+  height: 12px;
+  display: grid;
+  place-items: center;
+  border-radius: 3px;
+  background: linear-gradient(135deg, #a16207, #713f12);
+  border: 1px solid rgba(254, 243, 199, 0.5);
+  color: #fde68a;
+  font-size: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.45);
+  animation: crateBob 0.9s ease-in-out infinite;
+}
+
+.workMark {
+  position: absolute;
+  right: -4px;
+  top: -2px;
+  color: #facc15;
+  font-size: 12px;
+  text-shadow: 0 0 8px rgba(250, 204, 21, 0.85);
+  animation: workBlink 1.1s ease-in-out infinite;
+}
+
+@keyframes crateBob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-3deg);
+  }
+  50% {
+    transform: translateY(-2px) rotate(4deg);
+  }
+}
+
+@keyframes workBlink {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
 /* Ship hangar */
 .shipHangar {
   position: relative;
@@ -540,6 +727,45 @@
   outline: 2px solid rgba(56, 189, 248, 0.7);
   outline-offset: 4px;
   border-radius: 8px;
+}
+
+.hangarLightRig {
+  position: absolute;
+  left: 50%;
+  top: -10px;
+  display: flex;
+  gap: 5px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.hangarLightRig span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.9);
+  animation: hangarLightPulse 1.7s ease-in-out infinite;
+}
+
+.hangarLightRig span:nth-child(2) {
+  animation-delay: 0.35s;
+}
+
+.hangarLightRig span:nth-child(3) {
+  animation-delay: 0.7s;
+}
+
+@keyframes hangarLightPulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
 }
 
 .shipModel {
