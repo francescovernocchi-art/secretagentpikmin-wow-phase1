@@ -9,9 +9,11 @@ interface VillageGameHUDProps {
   biomeEmoji?: string;
   /** Nasconde bioma/alert extra (es. quando già in header villaggio) */
   compactExtras?: boolean;
+  /** HUD a chip singola riga per la schermata fullscreen villaggio mobile */
+  micro?: boolean;
 }
 
-export function VillageGameHUD({ biomeLabel, biomeEmoji, compactExtras }: VillageGameHUDProps) {
+export function VillageGameHUD({ biomeLabel, biomeEmoji, compactExtras, micro }: VillageGameHUDProps) {
   const { data, loading } = useHomeDashboard();
   const { unread } = useGameNotifications();
   const { squad } = usePikminSquad();
@@ -29,6 +31,19 @@ export function VillageGameHUD({ biomeLabel, biomeEmoji, compactExtras }: Villag
     { icon: "🎯", label: "Missioni", value: loading ? "…" : `${(data?.expeditions.length ?? 0) + (data?.activeMissionCount ?? 0)}`, bar: 0, color: "#a78bfa" },
     { icon: "🌱", label: "Pikmin", value: `${available.length}/${squad.length}`, bar: squad.length ? Math.round((available.length / squad.length) * 100) : 0, color: "#4ade80" },
   ];
+
+  if (micro) {
+    return (
+      <div className={styles.microHud} role="region" aria-label="Stato pianeta compatto">
+        {stats.slice(0, 4).map((s) => (
+          <div key={s.label} className={styles.microHudChip} title={`${s.label}: ${s.value}`}>
+            <span className={styles.microHudIcon} aria-hidden>{s.icon}</span>
+            <span className={styles.microHudValue}>{s.value}</span>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className={styles.gameHud} role="region" aria-label="Stato pianeta e squadra">
