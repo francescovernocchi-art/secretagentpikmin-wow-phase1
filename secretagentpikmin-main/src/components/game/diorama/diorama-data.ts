@@ -6,6 +6,7 @@ export type BuildingKey =
   | "accademia"
   | "laboratorio"
   | "mercato"
+  | "controllo_remoto"
   | "hangar";
 
 export interface DioramaBuildingDef {
@@ -13,6 +14,8 @@ export interface DioramaBuildingDef {
   name: string;
   emoji: string;
   role: string;
+  variant: "command" | "storage" | "lab" | "academy" | "market" | "remote" | "hangar";
+  requirement: string;
   /** % position on isometric plane */
   x: number;
   y: number;
@@ -23,12 +26,97 @@ export interface DioramaBuildingDef {
 }
 
 export const DIORAMA_BUILDINGS: DioramaBuildingDef[] = [
-  { key: "centro_controllo", name: "Centro Controllo", emoji: "🎛️", role: "Comando remoto", x: 48, y: 28, z: 40, route: "/base", color: "#4ade80" },
-  { key: "hangar", name: "Hangar Navicella", emoji: "🚀", role: "Costruzione", x: 72, y: 52, z: 35, action: "ship", color: "#38bdf8" },
-  { key: "accademia", name: "Accademia Pikmin", emoji: "🎓", role: "Specializzazioni", x: 22, y: 38, z: 30, route: "/archivio", color: "#fbbf24" },
-  { key: "magazzino", name: "Magazzino", emoji: "📦", role: "Risorse", x: 30, y: 62, z: 25, route: "/inventario", color: "#a78bfa" },
-  { key: "laboratorio", name: "Laboratorio", emoji: "🔬", role: "Trasformazioni", x: 58, y: 68, z: 28, route: "/lab", color: "#f472b6" },
-  { key: "mercato", name: "Mercato", emoji: "🏪", role: "Scambi", x: 78, y: 28, z: 32, route: "/villaggio/scambi", color: "#fb923c" },
+  {
+    key: "centro_controllo",
+    name: "Centro di Controllo",
+    emoji: "🎛️",
+    role: "Comando colonia",
+    variant: "command",
+    requirement: "Base iniziale",
+    x: 45,
+    y: 27,
+    z: 44,
+    route: "/base",
+    color: "#4ade80",
+  },
+  {
+    key: "hangar",
+    name: "Hangar Navicella",
+    emoji: "🚀",
+    role: "Ricostruzione navicella",
+    variant: "hangar",
+    requirement: "Recupera pezzi navicella",
+    x: 74,
+    y: 54,
+    z: 35,
+    action: "ship",
+    color: "#38bdf8",
+  },
+  {
+    key: "accademia",
+    name: "Accademia Pikmin",
+    emoji: "🎓",
+    role: "Specializzazioni",
+    variant: "academy",
+    requirement: "Centro Lv2",
+    x: 19,
+    y: 40,
+    z: 30,
+    route: "/archivio",
+    color: "#fbbf24",
+  },
+  {
+    key: "magazzino",
+    name: "Magazzino",
+    emoji: "📦",
+    role: "Risorse",
+    variant: "storage",
+    requirement: "Base iniziale",
+    x: 30,
+    y: 64,
+    z: 25,
+    route: "/inventario",
+    color: "#a78bfa",
+  },
+  {
+    key: "laboratorio",
+    name: "Laboratorio",
+    emoji: "🔬",
+    role: "Ricerca e analisi",
+    variant: "lab",
+    requirement: "Materiali villaggio",
+    x: 58,
+    y: 70,
+    z: 28,
+    route: "/lab",
+    color: "#f472b6",
+  },
+  {
+    key: "controllo_remoto",
+    name: "Centro Controllo Remoto",
+    emoji: "📡",
+    role: "Raggio operativo",
+    variant: "remote",
+    requirement: "Centro Lv3",
+    x: 60,
+    y: 43,
+    z: 38,
+    route: "/base",
+    color: "#22d3ee",
+  },
+  {
+    key: "mercato",
+    name: "Mercato",
+    emoji: "🏪",
+    role: "Scambi",
+    variant: "market",
+    requirement: "Centro Lv2",
+    x: 80,
+    y: 30,
+    z: 32,
+    route: "/villaggio/scambi",
+    color: "#fb923c",
+  },
 ];
 
 export interface BiomeTheme {
@@ -131,7 +219,10 @@ export const PIKMIN_TYPE_TO_SPRITE: Record<string, string> = {
   luminoso: "white",
 };
 
-export function statusToAnimation(status: string, spec?: string): "walk" | "run" | "carry" | "work" | "idle" | "sleep" {
+export function statusToAnimation(
+  status: string,
+  spec?: string,
+): "walk" | "run" | "carry" | "work" | "idle" | "sleep" {
   if (status === "in_spedizione") return "run";
   if (status === "in_missione") return "run";
   if (status === "addestramento") return "work";

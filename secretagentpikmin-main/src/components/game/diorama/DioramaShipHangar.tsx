@@ -15,8 +15,11 @@ export function DioramaShipHangar({ parts, percent, onClick, compact }: DioramaS
   const uid = useId().replace(/:/g, "");
   const hullId = `shipHull-${uid}`;
   const darkId = `shipDark-${uid}`;
+  const clipId = `shipClip-${uid}`;
   const collected = parts.filter((p) => p.collected);
+  const complete = percent >= 100;
   const glow = percent >= 50;
+  const buildHeight = Math.max(10, Math.min(58, (percent / 100) * 58));
 
   return (
     <button
@@ -25,9 +28,9 @@ export function DioramaShipHangar({ parts, percent, onClick, compact }: DioramaS
       onClick={onClick}
       aria-label={`Hangar navicella, ${percent}% completata, ${collected.length} di ${parts.length} pezzi`}
     >
-      <ParticleEffect variant="ship-glow" />
+      <ParticleEffect variant={glow ? "ship-glow" : "dust"} />
       <motion.div
-        className={`${styles.shipModel} ${glow ? styles.shipGlow : ""}`}
+        className={`${styles.shipModel} ${glow ? styles.shipGlow : ""} ${!complete ? styles.shipUnderConstruction : ""}`}
         animate={{ y: [0, -4, 0] }}
         transition={{ repeat: Infinity, duration: 2.8, ease: "easeInOut" }}
         aria-hidden
@@ -42,13 +45,49 @@ export function DioramaShipHangar({ parts, percent, onClick, compact }: DioramaS
               <stop offset="0%" stopColor="#1e3a5f" />
               <stop offset="100%" stopColor="#0c1929" />
             </linearGradient>
+            <clipPath id={clipId}>
+              <rect x="0" y={60 - buildHeight} width="80" height={buildHeight} />
+            </clipPath>
           </defs>
           <ellipse cx="40" cy="48" rx="28" ry="8" fill="#00000044" />
-          <path d="M 40 8 L 62 42 L 40 52 L 18 42 Z" fill={`url(#${hullId})`} stroke="#7dd3fc" strokeWidth="1.5" />
-          <path d="M 40 18 L 52 40 L 40 46 L 28 40 Z" fill={`url(#${darkId})`} opacity="0.6" />
-          <ellipse cx="40" cy="28" rx="6" ry="8" fill="#bae6fd" opacity="0.8" />
-          <path d="M 18 38 L 8 44 L 18 42 Z" fill="#0284c7" />
-          <path d="M 62 38 L 72 44 L 62 42 Z" fill="#0284c7" />
+          {!complete && (
+            <>
+              <path
+                d="M16 12 L16 48 M64 12 L64 48 M16 22 L64 22 M16 34 L64 34"
+                stroke="#fbbf24"
+                strokeWidth="2"
+                opacity="0.75"
+              />
+              <path
+                d="M16 48 L30 22 M64 48 L50 22"
+                stroke="#fde68a"
+                strokeWidth="1.2"
+                opacity="0.7"
+              />
+            </>
+          )}
+          <g clipPath={complete ? undefined : `url(#${clipId})`}>
+            <path
+              d="M 40 8 L 62 42 L 40 52 L 18 42 Z"
+              fill={`url(#${hullId})`}
+              stroke="#7dd3fc"
+              strokeWidth="1.5"
+            />
+            <path d="M 40 18 L 52 40 L 40 46 L 28 40 Z" fill={`url(#${darkId})`} opacity="0.6" />
+            <ellipse cx="40" cy="28" rx="6" ry="8" fill="#bae6fd" opacity="0.8" />
+            <path d="M 18 38 L 8 44 L 18 42 Z" fill="#0284c7" />
+            <path d="M 62 38 L 72 44 L 62 42 Z" fill="#0284c7" />
+          </g>
+          {!complete && (
+            <path
+              d="M 40 8 L 62 42 L 40 52 L 18 42 Z"
+              fill="none"
+              stroke="#7dd3fc"
+              strokeWidth="1"
+              strokeDasharray="4 3"
+              opacity="0.55"
+            />
+          )}
         </svg>
 
         {!compact && (
