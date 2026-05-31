@@ -36,6 +36,9 @@ export function DioramaTerrain({ theme }: DioramaTerrainProps) {
       <ParticleEffect variant="energy" density="low" className="opacity-60" />
       <div className={styles.sunGlow} style={{ boxShadow: `0 0 80px 40px ${theme.accent}33` }} />
       <div className={styles.isoStage}>
+        <div className={`${styles.terrainDepthLayer} ${styles.terrainDepthLayerOne}`} aria-hidden />
+        <div className={`${styles.terrainDepthLayer} ${styles.terrainDepthLayerTwo}`} aria-hidden />
+        <div className={`${styles.terrainDepthLayer} ${styles.terrainDepthLayerThree}`} aria-hidden />
         <div
           className={styles.groundPlate}
           style={{
@@ -48,6 +51,8 @@ export function DioramaTerrain({ theme }: DioramaTerrainProps) {
           <div className={`${styles.elevationPatch} ${styles.elevationPatchLow}`} aria-hidden />
           <div className={styles.scavataRidge} aria-hidden />
           <div className={styles.scavataRidgeAlt} aria-hidden />
+          <div className={styles.cliffFaceFront} aria-hidden />
+          <div className={styles.cliffFaceSide} aria-hidden />
           <svg className={styles.pathSvg} viewBox="0 0 100 100" preserveAspectRatio="none">
             <path d="M 8 66 C 18 58 26 60 35 50 C 45 39 58 44 67 37 C 75 31 83 35 92 28" fill="none" stroke={theme.path} strokeWidth="7" strokeLinecap="round" opacity="0.72" />
             <path d="M 32 52 C 41 57 43 66 38 77 C 35 84 29 86 22 80" fill="none" stroke={theme.path} strokeWidth="4.6" strokeLinecap="round" opacity="0.58" />
@@ -58,6 +63,17 @@ export function DioramaTerrain({ theme }: DioramaTerrainProps) {
           <div className={styles.waterPond} style={{ background: water, boxShadow: `inset 0 0 20px ${theme.accent}55` }} aria-hidden />
           {[12, 68, 82, 25, 47, 90, 6, 55].map((left, i) => (
             <div key={i} className={styles.rock} style={{ left: `${left}%`, top: `${[72, 78, 65, 82, 33, 48, 42, 86][i]}%`, opacity: 0.45 + (i % 3) * 0.16 }} />
+          ))}
+          {[
+            { left: 4, top: 48, item: "🌿" },
+            { left: 14, top: 87, item: "🪨" },
+            { left: 37, top: 95, item: "🌿" },
+            { left: 71, top: 90, item: "🪨" },
+            { left: 95, top: 49, item: "🌿" },
+          ].map((d, i) => (
+            <span key={`edge-${i}`} className={`${styles.decorItem} ${styles.edgeScrub}`} style={{ left: `${d.left}%`, top: `${d.top}%` }}>
+              {d.item}
+            </span>
           ))}
           {decor.map((d, i) => (
             <span

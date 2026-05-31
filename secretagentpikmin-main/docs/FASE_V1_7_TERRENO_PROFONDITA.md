@@ -34,8 +34,14 @@ Eliminare l'effetto "rettangolo verde con edifici sopra" e trasformare il villag
 
 ## QA richiesto
 
-- `/villaggio` a 390x844
-- `/villaggio` a 430x932
-- Screenshot reali
-- Video walkthrough
-- `npm run build`
+- ✅ `/villaggio` a 390x844
+- ✅ `/villaggio` a 430x932
+- ✅ Screenshot reali: `/opt/cursor/artifacts/villaggio_v17_390x844_final_clearance.webp`, `/opt/cursor/artifacts/villaggio_v17_430x932_final_centered.webp`
+- ✅ Video walkthrough: `/opt/cursor/artifacts/villaggio_v17_terreno_profondita_final.mp4`
+- ✅ `npm run build`
+
+---
+
+## Esito
+
+Il villaggio non legge più come piattaforma piatta: il terreno ha strati visibili, scarpate, bordo naturale, acqua, sentieri curvi, dettagli esterni agli edifici e hangar/navicella come landmark principale. La verifica mobile conferma che la bottom nav non copre elementi chiave.
