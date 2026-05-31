@@ -9,7 +9,7 @@ import { shipProgressPercent } from "@/lib/game/spaceship";
 import { getBiomeByKey } from "@/data/secretPikminWorld";
 import { SpaceshipAssemblyPanel } from "@/components/game/SpaceshipAssemblyPanel";
 import { DioramaTerrain } from "@/components/game/diorama/DioramaTerrain";
-import { DioramaBuilding } from "@/components/game/diorama/DioramaBuilding";
+import { DioramaBuilding, type DioramaBuildingStatus } from "@/components/game/diorama/DioramaBuilding";
 import { DioramaPikminActor } from "@/components/game/diorama/DioramaPikminActor";
 import { DioramaShipHangar } from "@/components/game/diorama/DioramaShipHangar";
 import { DIORAMA_BUILDINGS, BIOME_DIORAMA_THEMES } from "@/components/game/diorama/diorama-data";
@@ -56,7 +56,7 @@ export function VillageDiorama({
   const biomeDef = getBiomeByKey(biome);
 
   const levelMap = new Map(buildings.map((b) => [b.building_key, b.level]));
-  const statusMap = new Map(buildings.map((b) => [b.building_key, b.status as "active" | "upgrading" | "locked"]));
+  const statusMap = new Map(buildings.map((b) => [b.building_key, b.status as DioramaBuildingStatus]));
 
   const displayBuildings =
     buildings.length > 0
@@ -77,8 +77,8 @@ export function VillageDiorama({
   const sceneBuildings = displayBuildings.filter((b) => b.def.key !== "hangar");
 
   return (
-    <section className={`${styles.dioramaRoot} ${compact ? styles.compact : ""} ${fullScreen ? "rounded-none border-0 min-h-[50vh]" : ""}`}>
-      {!compact && villageName && (
+    <section className={`${styles.dioramaRoot} ${compact ? styles.compact : ""} ${fullScreen ? styles.fullScreenRoot : ""}`}>
+      {!compact && villageName && !fullScreen && (
         <div className={styles.dioramaHeader}>
           <div>
             <p className="text-[10px] uppercase tracking-[0.35em] text-primary/90 font-display">{villageName}</p>
@@ -94,7 +94,7 @@ export function VillageDiorama({
         </div>
       )}
 
-      <div className={styles.dioramaScene} role="img" aria-label={`Villaggio ${villageName || ""} nel bioma ${biomeDef?.label ?? biome}`}>
+      <div className={`${styles.dioramaScene} ${fullScreen ? styles.fullScreenScene : ""}`} role="img" aria-label={`Villaggio ${villageName || ""} nel bioma ${biomeDef?.label ?? biome}`}>
         <DioramaTerrain theme={theme} />
 
         {sceneBuildings.map(({ def, level, status }) => (

@@ -12,6 +12,13 @@
   max-width: 100%;
 }
 
+.fullScreenRoot {
+  border: 0;
+  border-radius: 0;
+  min-height: calc(100dvh - 7.75rem);
+  background: rgba(0, 0, 0, 0.18);
+}
+
 .dioramaHeader {
   position: relative;
   z-index: 20;
@@ -32,6 +39,12 @@
   isolation: isolate;
 }
 
+.fullScreenScene {
+  min-height: calc(100dvh - 10.8rem);
+  max-height: none;
+  aspect-ratio: auto;
+}
+
 @media (min-width: 640px) {
   .dioramaScene {
     min-height: 320px;
@@ -42,6 +55,32 @@
 .compact .dioramaScene {
   min-height: 180px;
   max-height: 220px;
+}
+
+@media (max-width: 639px) {
+  .fullScreenRoot {
+    min-height: calc(100dvh - 7.75rem);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.04),
+      0 18px 48px rgba(0, 0, 0, 0.5);
+  }
+
+  .fullScreenScene {
+    min-height: calc(100dvh - 11rem);
+  }
+}
+
+@media (min-width: 640px) {
+  .fullScreenRoot {
+    border: 2px solid oklch(0.55 0.12 145 / 0.35);
+    border-radius: 1.25rem;
+    min-height: 560px;
+  }
+
+  .fullScreenScene {
+    min-height: 520px;
+    aspect-ratio: 16 / 10;
+  }
 }
 
 .terrainWrap {
@@ -71,6 +110,20 @@
   width: 88%;
   max-width: 420px;
   height: 55%;
+}
+
+.fullScreenScene .isoStage {
+  bottom: 14%;
+  width: 112%;
+  max-width: 560px;
+  height: 64%;
+}
+
+@media (max-width: 420px) {
+  .fullScreenScene .isoStage {
+    width: 118%;
+    max-width: 540px;
+  }
 }
 
 .groundPlate {
@@ -148,6 +201,11 @@
   touch-action: manipulation;
 }
 
+.fullScreenScene .buildingHit {
+  min-width: 64px;
+  min-height: 68px;
+}
+
 .buildingHit:focus-visible {
   outline: 2px solid rgba(132, 255, 159, 0.75);
   outline-offset: 3px;
@@ -176,6 +234,11 @@
   height: 52px;
 }
 
+.fullScreenScene .buildingBody {
+  width: 58px;
+  height: 64px;
+}
+
 .buildingRoof {
   position: absolute;
   top: 0;
@@ -185,6 +248,11 @@
   height: 18px;
   clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.fullScreenScene .buildingRoof {
+  width: 54px;
+  height: 22px;
 }
 
 .buildingWall {
@@ -201,6 +269,12 @@
   box-shadow: inset 0 -4px 8px rgba(0, 0, 0, 0.2);
 }
 
+.fullScreenScene .buildingWall {
+  top: 18px;
+  width: 50px;
+  height: 40px;
+}
+
 .buildingBase {
   position: absolute;
   bottom: 0;
@@ -212,9 +286,18 @@
   border-radius: 2px;
 }
 
+.fullScreenScene .buildingBase {
+  width: 56px;
+  height: 8px;
+}
+
 .buildingEmoji {
   font-size: 1.25rem;
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+}
+
+.fullScreenScene .buildingEmoji {
+  font-size: 1.45rem;
 }
 
 .buildingLabel {
@@ -235,6 +318,11 @@
   letter-spacing: 0.08em;
   color: rgba(255, 255, 255, 0.85);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.fullScreenScene .buildingName,
+.fullScreenScene .buildingLevel {
+  font-size: 8px;
 }
 
 .buildingLevel {
@@ -299,6 +387,23 @@
 .buildingLocked {
   opacity: 0.45;
   filter: grayscale(0.6);
+}
+
+.buildingBuildable .buildingBody {
+  filter: drop-shadow(0 0 10px rgba(132, 255, 159, 0.45));
+}
+
+.buildingBuildable .buildingWall {
+  border-color: rgba(132, 255, 159, 0.5);
+}
+
+.buildingConstruction .buildingBody {
+  filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.4));
+}
+
+.buildingConstruction .buildingWall {
+  border-color: rgba(251, 191, 36, 0.55);
+  background-image: repeating-linear-gradient(135deg, rgba(251, 191, 36, 0.16) 0 6px, transparent 6px 12px);
 }
 
 /* Pikmin */
@@ -408,6 +513,11 @@
   height: 48px;
 }
 
+.fullScreenScene .shipSvg {
+  width: 88px;
+  height: 66px;
+}
+
 .compact .shipSvg {
   width: 48px;
   height: 36px;
@@ -445,6 +555,10 @@
   border: 1px solid rgba(56, 189, 248, 0.3);
 }
 
+.fullScreenScene .shipProgressBar {
+  width: 76px;
+}
+
 .shipProgressFill {
   height: 100%;
   background: linear-gradient(90deg, #0ea5e9, #38bdf8);
@@ -456,6 +570,10 @@
   color: rgba(255, 255, 255, 0.7);
   margin-top: 2px;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.fullScreenScene .shipProgressLabel {
+  font-size: 9px;
 }
 
 /* Context strip */
@@ -511,6 +629,49 @@
   border-bottom: 1px solid rgba(132, 255, 159, 0.15);
   max-width: 100%;
   overflow: hidden;
+}
+
+.microHud {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.25rem;
+  overflow: hidden;
+}
+
+.microHudChip {
+  min-width: 0;
+  flex: 1 1 0;
+  max-width: 4.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.18rem;
+  padding: 0.22rem 0.28rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(132, 255, 159, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.microHudIcon {
+  font-size: 10px;
+  line-height: 1;
+}
+
+.microHudValue {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-display, inherit);
+  font-size: 9px;
+  line-height: 1;
+  font-weight: 700;
+  color: #d9f99d;
+  text-shadow: 0 0 6px rgba(132, 255, 159, 0.24);
 }
 
 @media (min-width: 640px) {
