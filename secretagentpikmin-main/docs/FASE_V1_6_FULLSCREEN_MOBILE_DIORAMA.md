@@ -34,7 +34,14 @@ Il villaggio diventa la schermata principale mobile: micro HUD in alto, diorama 
 
 ## QA richiesto
 
-- `/villaggio` a 390x844
-- `/villaggio` a 430x932
-- Screenshot reali
-- `npm run build`
+- ✅ `/villaggio` a 390x844
+- ✅ `/villaggio` a 430x932
+- ✅ Screenshot reali: `/opt/cursor/artifacts/villaggio_390x844_final.webp`, `/opt/cursor/artifacts/villaggio_430x932_final.webp`
+- ✅ Video walkthrough: `/opt/cursor/artifacts/villaggio_fullscreen_mobile_diorama_clean.mp4`
+- ✅ `npm run build`
+
+---
+
+## Esito
+
+Il villaggio risulta protagonista del primo viewport mobile: HUD su una sola riga, diorama subito visibile, hangar/navicella presente senza scroll iniziale e bottom nav in overlay basso senza coprire edifici chiave.
