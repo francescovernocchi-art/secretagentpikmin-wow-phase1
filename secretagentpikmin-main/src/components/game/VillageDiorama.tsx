@@ -12,6 +12,7 @@ import { DioramaTerrain } from "@/components/game/diorama/DioramaTerrain";
 import { DioramaBuilding } from "@/components/game/diorama/DioramaBuilding";
 import { DioramaPikminActor } from "@/components/game/diorama/DioramaPikminActor";
 import { DioramaShipHangar } from "@/components/game/diorama/DioramaShipHangar";
+import { AnimatedPikmin } from "@/components/pikmin/AnimatedPikmin";
 import { DIORAMA_BUILDINGS, BIOME_DIORAMA_THEMES } from "@/components/game/diorama/diorama-data";
 import styles from "@/styles/village-diorama.module.css";
 import type { BiomeKey } from "@/types/secretPikmin";
@@ -24,6 +25,22 @@ interface VillageDioramaProps {
   showFooter?: boolean;
   fullScreen?: boolean;
 }
+
+const VISUAL_PIKMIN = [
+  { x: 70, y: 46, z: 62, type: "blue", color: "#60a5fa", zone: "hangar", animation: "work" },
+  { x: 76, y: 50, z: 63, type: "yellow", color: "#fde047", zone: "hangar", animation: "carry" },
+  { x: 67, y: 56, z: 64, type: "red", color: "#f87171", zone: "hangar", animation: "work" },
+  { x: 44, y: 45, z: 58, type: "white", color: "#e5e7eb", zone: "cantiere", animation: "carry" },
+  { x: 53, y: 52, z: 59, type: "rock", color: "#a3a3a3", zone: "cantiere", animation: "work" },
+  { x: 58, y: 62, z: 60, type: "purple", color: "#c084fc", zone: "cantiere", animation: "work" },
+  { x: 36, y: 51, z: 56, type: "red", color: "#fb7185", zone: "sentiero", animation: "walk" },
+  { x: 46, y: 57, z: 57, type: "yellow", color: "#facc15", zone: "sentiero", animation: "walk" },
+  { x: 62, y: 48, z: 58, type: "blue", color: "#38bdf8", zone: "sentiero", animation: "run" },
+  { x: 26, y: 61, z: 54, type: "purple", color: "#a78bfa", zone: "deposito", animation: "carry" },
+  { x: 31, y: 68, z: 55, type: "white", color: "#f8fafc", zone: "deposito", animation: "work" },
+  { x: 20, y: 75, z: 50, type: "red", color: "#f43f5e", zone: "libero", animation: "walk" },
+  { x: 84, y: 36, z: 52, type: "yellow", color: "#fde047", zone: "libero", animation: "idle" },
+] as const;
 
 /** Diorama isometrico 2.5D — vista principale del villaggio */
 export function VillageDiorama({
@@ -77,7 +94,7 @@ export function VillageDiorama({
   const sceneBuildings = displayBuildings.filter((b) => b.def.key !== "hangar");
 
   return (
-    <section className={`${styles.dioramaRoot} ${compact ? styles.compact : ""} ${fullScreen ? "rounded-none border-0 min-h-[50vh]" : ""}`}>
+    <section className={`${styles.dioramaRoot} ${compact ? styles.compact : ""} ${fullScreen ? `${styles.fullScreen} rounded-none border-0 min-h-[50vh]` : ""}`}>
       {!compact && villageName && (
         <div className={styles.dioramaHeader}>
           <div>
@@ -119,6 +136,29 @@ export function VillageDiorama({
 
         {visiblePikmin.map((p, i) => (
           <DioramaPikminActor key={p.id} pikmin={p} index={i} compact={compact} />
+        ))}
+
+        {!compact && VISUAL_PIKMIN.map((p, i) => (
+          <motion.div
+            key={`visual-pikmin-${p.zone}-${i}`}
+            className={`${styles.pikminActor} ${styles.visualPikmin}`}
+            style={{ left: `${p.x}%`, top: `${p.y}%`, zIndex: p.z }}
+            aria-label={`Pikmin visuale ${p.zone}`}
+            data-village-pikmin="visual"
+            data-village-zone={p.zone}
+            animate={{ x: [0, 4, -2, 0], y: [0, -2, 1, 0] }}
+            transition={{ repeat: Infinity, duration: 3.2 + (i % 5) * 0.35, delay: i * 0.12 }}
+          >
+            <div className={styles.pikminShadow} />
+            <AnimatedPikmin
+              type={p.type}
+              animation={p.animation}
+              size={26 + (i % 3)}
+              tintColor={p.color}
+              showShadow={false}
+              showDust={p.animation === "run" || p.animation === "carry"}
+            />
+          </motion.div>
         ))}
 
         {visiblePikmin.length === 0 && !loading && (

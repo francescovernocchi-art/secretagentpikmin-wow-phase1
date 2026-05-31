@@ -14,6 +14,29 @@ interface DioramaTerrainProps {
   };
 }
 
+const NATURE_DETAILS = [
+  { kind: "bush", x: 12, y: 48, z: 9, icon: "🌿" },
+  { kind: "bush", x: 22, y: 74, z: 10, icon: "🌱" },
+  { kind: "bush", x: 86, y: 38, z: 12, icon: "🌿" },
+  { kind: "flower", x: 16, y: 83, z: 13, icon: "🌼" },
+  { kind: "flower", x: 74, y: 30, z: 12, icon: "🌸" },
+  { kind: "flower", x: 89, y: 56, z: 14, icon: "🌻" },
+  { kind: "mushroom", x: 24, y: 88, z: 15, icon: "🍄" },
+  { kind: "mushroom", x: 35, y: 68, z: 13, icon: "🍄" },
+  { kind: "grass", x: 18, y: 28, z: 9, icon: "〽" },
+  { kind: "grass", x: 44, y: 82, z: 13, icon: "〽" },
+  { kind: "grass", x: 63, y: 72, z: 15, icon: "〽" },
+  { kind: "leaf", x: 58, y: 38, z: 11, icon: "🍃" },
+  { kind: "leaf", x: 82, y: 72, z: 15, icon: "🍂" },
+  { kind: "log", x: 30, y: 78, z: 12, icon: "▰" },
+  { kind: "log", x: 71, y: 62, z: 14, icon: "▰" },
+  { kind: "stone", x: 40, y: 57, z: 12, icon: "●" },
+  { kind: "stone", x: 51, y: 74, z: 16, icon: "●" },
+  { kind: "stone", x: 66, y: 41, z: 12, icon: "●" },
+  { kind: "seed", x: 10, y: 70, z: 10, icon: "✦" },
+  { kind: "seed", x: 92, y: 28, z: 12, icon: "✦" },
+] as const;
+
 export function DioramaTerrain({ theme }: DioramaTerrainProps) {
   return (
     <div className={styles.terrainWrap} style={{ background: theme.sky }}>
@@ -45,6 +68,16 @@ export function DioramaTerrain({ theme }: DioramaTerrainProps) {
               style={{ left: `${[8, 88, 5, 92, 18][i % 5]}%`, top: `${[15, 20, 75, 80, 45][i % 5]}%`, animationDelay: `${i * 0.7}s` }}
             >
               {d}
+            </span>
+          ))}
+          {NATURE_DETAILS.map((detail, i) => (
+            <span
+              key={`${detail.kind}-${i}`}
+              className={`${styles.natureDetail} ${styles[`nature${detail.kind[0].toUpperCase()}${detail.kind.slice(1)}`]}`}
+              style={{ left: `${detail.x}%`, top: `${detail.y}%`, zIndex: detail.z, animationDelay: `${i * 0.18}s` }}
+              aria-hidden
+            >
+              {detail.icon}
             </span>
           ))}
         </div>

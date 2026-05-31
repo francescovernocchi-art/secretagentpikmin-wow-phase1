@@ -32,10 +32,20 @@
   isolation: isolate;
 }
 
+.fullScreen .dioramaScene {
+  min-height: clamp(500px, 62svh, 620px);
+  aspect-ratio: auto;
+  max-height: none;
+}
+
 @media (min-width: 640px) {
   .dioramaScene {
     min-height: 320px;
     aspect-ratio: 16 / 10;
+  }
+
+  .fullScreen .dioramaScene {
+    min-height: clamp(520px, 58svh, 680px);
   }
 }
 
@@ -73,6 +83,13 @@
   height: 55%;
 }
 
+.fullScreen .isoStage {
+  width: 118%;
+  max-width: 560px;
+  height: 58%;
+  bottom: 11%;
+}
+
 .groundPlate {
   position: relative;
   width: 100%;
@@ -83,6 +100,13 @@
     0 25px 50px rgba(0, 0, 0, 0.5),
     inset 0 2px 20px rgba(255, 255, 255, 0.08);
   transform-style: preserve-3d;
+}
+
+.fullScreen .groundPlate {
+  border-width: 4px;
+  box-shadow:
+    0 34px 70px rgba(0, 0, 0, 0.56),
+    inset 0 3px 28px rgba(255, 255, 255, 0.1);
 }
 
 .pathSvg {
@@ -125,9 +149,52 @@
   pointer-events: none;
 }
 
+.fullScreen .decorItem {
+  font-size: 1.55rem;
+}
+
 @keyframes decorSway {
   0%, 100% { transform: rotate(-3deg) translateY(0); }
   50% { transform: rotate(3deg) translateY(-3px); }
+}
+
+.natureDetail {
+  position: absolute;
+  transform: translate(-50%, -50%) rotate(45deg);
+  pointer-events: none;
+  font-size: 0.95rem;
+  line-height: 1;
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.45));
+  animation: natureBob 3.6s ease-in-out infinite;
+}
+
+.natureBush,
+.natureGrass,
+.natureLeaf {
+  color: #86efac;
+  text-shadow: 0 0 8px rgba(34, 197, 94, 0.35);
+}
+
+.natureFlower,
+.natureMushroom {
+  font-size: 1.05rem;
+}
+
+.natureLog {
+  color: #8b5a2b;
+  font-size: 1.15rem;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+}
+
+.natureStone,
+.natureSeed {
+  color: rgba(226, 232, 240, 0.75);
+  font-size: 0.75rem;
+}
+
+@keyframes natureBob {
+  0%, 100% { transform: translate(-50%, -50%) rotate(45deg) translateY(0); }
+  50% { transform: translate(-50%, -50%) rotate(45deg) translateY(-3px); }
 }
 
 /* Buildings */
@@ -159,6 +226,19 @@
   cursor: pointer;
 }
 
+.buildingFootprint {
+  position: absolute;
+  left: 50%;
+  bottom: -9px;
+  width: 62px;
+  height: 24px;
+  transform: translateX(-50%) skewX(-22deg);
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.72), rgba(255, 255, 255, 0.08));
+  border: 1px solid color-mix(in srgb, var(--bld-color, #86efac) 45%, transparent);
+  box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.06);
+}
+
 .buildingShadow {
   position: absolute;
   bottom: -4px;
@@ -176,6 +256,11 @@
   height: 52px;
 }
 
+.fullScreen .buildingBody {
+  width: 58px;
+  height: 64px;
+}
+
 .buildingRoof {
   position: absolute;
   top: 0;
@@ -185,6 +270,11 @@
   height: 18px;
   clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.fullScreen .buildingRoof {
+  width: 54px;
+  height: 22px;
 }
 
 .buildingWall {
@@ -201,6 +291,12 @@
   box-shadow: inset 0 -4px 8px rgba(0, 0, 0, 0.2);
 }
 
+.fullScreen .buildingWall {
+  top: 17px;
+  width: 49px;
+  height: 40px;
+}
+
 .buildingBase {
   position: absolute;
   bottom: 0;
@@ -212,10 +308,93 @@
   border-radius: 2px;
 }
 
+.fullScreen .buildingBase {
+  width: 56px;
+  height: 8px;
+}
+
 .buildingEmoji {
   font-size: 1.25rem;
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
 }
+
+.buildingDoor {
+  position: absolute;
+  left: 7px;
+  bottom: 3px;
+  width: 8px;
+  height: 12px;
+  border-radius: 3px 3px 1px 1px;
+  background: rgba(7, 12, 18, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.45);
+}
+
+.buildingWindow {
+  position: absolute;
+  right: 7px;
+  top: 8px;
+  width: 10px;
+  height: 8px;
+  border-radius: 2px;
+  background: rgba(186, 230, 253, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--bld-color, #86efac) 65%, transparent);
+}
+
+.buildingMaterials {
+  position: absolute;
+  right: -14px;
+  bottom: -8px;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  transform: rotate(-8deg);
+}
+
+.buildingMaterials span {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--bld-color, #86efac) 48%, #111827);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.4);
+}
+
+.buildingMaterials span:nth-child(2) {
+  height: 13px;
+}
+
+.buildingMaterials span:nth-child(3) {
+  width: 10px;
+  height: 5px;
+  border-radius: 999px;
+}
+
+.buildingScaffold {
+  position: absolute;
+  left: -13px;
+  top: 11px;
+  width: 20px;
+  height: 40px;
+  border-left: 2px solid rgba(251, 191, 36, 0.72);
+  border-right: 2px solid rgba(251, 191, 36, 0.52);
+  transform: skewY(-12deg);
+}
+
+.buildingScaffold span {
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  height: 2px;
+  background: rgba(251, 191, 36, 0.66);
+  box-shadow: 0 0 5px rgba(251, 191, 36, 0.25);
+}
+
+.buildingScaffold span:nth-child(1) { top: 8px; }
+.buildingScaffold span:nth-child(2) { top: 20px; }
+.buildingScaffold span:nth-child(3) { top: 31px; }
 
 .buildingLabel {
   position: absolute;
@@ -309,6 +488,11 @@
   max-width: 80px;
 }
 
+.visualPikmin {
+  pointer-events: none;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.45));
+}
+
 .pikminShadow {
   position: absolute;
   bottom: -2px;
@@ -386,6 +570,61 @@
   flex-direction: column;
   align-items: center;
   touch-action: manipulation;
+}
+
+.hangarPad {
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  width: 88px;
+  height: 34px;
+  transform: translateX(-50%) skewX(-24deg);
+  border-radius: 12px;
+  background:
+    linear-gradient(90deg, rgba(56, 189, 248, 0.28), transparent 58%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.12) 0 7px, transparent 7px 14px),
+    rgba(8, 18, 28, 0.82);
+  border: 1px solid rgba(125, 211, 252, 0.42);
+  box-shadow:
+    inset 0 0 18px rgba(56, 189, 248, 0.18),
+    0 12px 24px rgba(0, 0, 0, 0.42);
+}
+
+.hangarScaffold {
+  position: absolute;
+  left: -8px;
+  top: 7px;
+  width: 72px;
+  height: 45px;
+  border-left: 2px solid rgba(125, 211, 252, 0.6);
+  border-right: 2px solid rgba(125, 211, 252, 0.45);
+  transform: skewY(-10deg);
+  opacity: 0.9;
+}
+
+.hangarScaffold span {
+  position: absolute;
+  left: -3px;
+  right: -3px;
+  height: 2px;
+  background: rgba(125, 211, 252, 0.58);
+}
+
+.hangarScaffold span:nth-child(1) { top: 9px; }
+.hangarScaffold span:nth-child(2) { top: 22px; }
+.hangarScaffold span:nth-child(3) { top: 35px; }
+
+.hangarMaterials {
+  position: absolute;
+  right: -20px;
+  bottom: 4px;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  color: #bae6fd;
+  font-size: 11px;
+  text-shadow: 0 0 8px rgba(56, 189, 248, 0.45);
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.45));
 }
 
 .shipHangar:focus-visible {

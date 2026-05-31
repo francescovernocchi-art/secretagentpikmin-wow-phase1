@@ -25,6 +25,17 @@ export function DioramaShipHangar({ parts, percent, onClick, compact }: DioramaS
       onClick={onClick}
       aria-label={`Hangar navicella, ${percent}% completata, ${collected.length} di ${parts.length} pezzi`}
     >
+      <div className={styles.hangarPad} aria-hidden />
+      <div className={styles.hangarScaffold} aria-hidden>
+        <span />
+        <span />
+        <span />
+      </div>
+      <div className={styles.hangarMaterials} aria-hidden>
+        <span>▣</span>
+        <span>▰</span>
+        <span>●</span>
+      </div>
       <ParticleEffect variant="ship-glow" />
       <motion.div
         className={`${styles.shipModel} ${glow ? styles.shipGlow : ""}`}
