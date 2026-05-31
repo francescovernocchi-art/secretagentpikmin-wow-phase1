@@ -15,6 +15,21 @@ interface DioramaTerrainProps {
 }
 
 export function DioramaTerrain({ theme }: DioramaTerrainProps) {
+  const water = theme.water ?? "rgba(56,189,248,0.36)";
+  const decor = [
+    { item: theme.decor[0] ?? "🌲", cls: styles.decorLargeTree, left: 10, top: 18 },
+    { item: theme.decor[1] ?? "🌳", cls: styles.decorLargeTree, left: 86, top: 22 },
+    { item: "🌲", cls: styles.decorLargeTree, left: 7, top: 76 },
+    { item: "🪵", cls: styles.decorLog, left: 22, top: 82 },
+    { item: theme.decor[2] ?? "🍄", cls: styles.decorMushroom, left: 12, top: 64 },
+    { item: "🍄", cls: styles.decorMushroom, left: 72, top: 74 },
+    { item: "🌿", cls: styles.decorBush, left: 18, top: 48 },
+    { item: "🌿", cls: styles.decorBush, left: 64, top: 26 },
+    { item: "🌸", cls: styles.decorFlower, left: 34, top: 72 },
+    { item: "🌼", cls: styles.decorFlower, left: 82, top: 58 },
+    { item: theme.decor[3] ?? "🌿", cls: styles.decorBush, left: 91, top: 78 },
+  ];
+
   return (
     <div className={styles.terrainWrap} style={{ background: theme.sky }}>
       <ParticleEffect variant="dust" density="medium" />
@@ -28,23 +43,29 @@ export function DioramaTerrain({ theme }: DioramaTerrainProps) {
             borderColor: `${theme.accent}44`,
           }}
         >
+          <div className={styles.terrainTexture} aria-hidden />
+          <div className={`${styles.elevationPatch} ${styles.elevationPatchHigh}`} aria-hidden />
+          <div className={`${styles.elevationPatch} ${styles.elevationPatchLow}`} aria-hidden />
+          <div className={styles.scavataRidge} aria-hidden />
+          <div className={styles.scavataRidgeAlt} aria-hidden />
           <svg className={styles.pathSvg} viewBox="0 0 100 100" preserveAspectRatio="none">
-            <path d="M 15 55 Q 35 48 50 52 Q 65 56 85 45" fill="none" stroke={theme.path} strokeWidth="6" strokeLinecap="round" opacity="0.7" />
-            <path d="M 50 52 Q 55 65 48 78 Q 42 85 35 75" fill="none" stroke={theme.path} strokeWidth="4" strokeLinecap="round" opacity="0.5" />
+            <path d="M 8 66 C 18 58 26 60 35 50 C 45 39 58 44 67 37 C 75 31 83 35 92 28" fill="none" stroke={theme.path} strokeWidth="7" strokeLinecap="round" opacity="0.72" />
+            <path d="M 32 52 C 41 57 43 66 38 77 C 35 84 29 86 22 80" fill="none" stroke={theme.path} strokeWidth="4.6" strokeLinecap="round" opacity="0.58" />
+            <path d="M 58 42 C 62 52 69 58 80 60" fill="none" stroke={theme.path} strokeWidth="4" strokeLinecap="round" opacity="0.48" />
+            <path d="M 14 68 C 25 63 34 58 44 52 C 55 46 67 38 86 30" fill="none" stroke="#fff7d6" strokeWidth="1.2" strokeLinecap="round" opacity="0.24" />
           </svg>
-          {theme.water && (
-            <div className={styles.waterPond} style={{ background: theme.water, boxShadow: `inset 0 0 20px ${theme.accent}44` }} />
-          )}
-          {[12, 68, 82, 25].map((left, i) => (
-            <div key={i} className={styles.rock} style={{ left: `${left}%`, top: `${[72, 78, 65, 82][i]}%`, opacity: 0.5 + (i % 2) * 0.2 }} />
+          <div className={styles.waterStream} style={{ background: water, boxShadow: `inset 0 0 16px ${theme.accent}55` }} aria-hidden />
+          <div className={styles.waterPond} style={{ background: water, boxShadow: `inset 0 0 20px ${theme.accent}55` }} aria-hidden />
+          {[12, 68, 82, 25, 47, 90, 6, 55].map((left, i) => (
+            <div key={i} className={styles.rock} style={{ left: `${left}%`, top: `${[72, 78, 65, 82, 33, 48, 42, 86][i]}%`, opacity: 0.45 + (i % 3) * 0.16 }} />
           ))}
-          {theme.decor.map((d, i) => (
+          {decor.map((d, i) => (
             <span
               key={i}
-              className={styles.decorItem}
-              style={{ left: `${[8, 88, 5, 92, 18][i % 5]}%`, top: `${[15, 20, 75, 80, 45][i % 5]}%`, animationDelay: `${i * 0.7}s` }}
+              className={`${styles.decorItem} ${d.cls}`}
+              style={{ left: `${d.left}%`, top: `${d.top}%`, animationDelay: `${i * 0.35}s` }}
             >
-              {d}
+              {d.item}
             </span>
           ))}
         </div>

@@ -24,6 +24,14 @@ const posStyle = (def: DioramaBuildingDef): React.CSSProperties => ({
 export function DioramaBuilding({ def, level, status = "active", onShipClick, compact }: DioramaBuildingProps) {
   const ariaLabel = `${def.name}, livello ${level}. ${def.role}. Clicca per entrare.`;
   const isConstruction = status === "upgrading" || status === "under_construction" || status === "building";
+  const siteClass = styles[`buildingSite_${def.key}`] ?? "";
+  const exteriorDetails: Record<string, string[]> = {
+    centro_controllo: ["📡", "💡"],
+    accademia: ["🌱", "🪧"],
+    magazzino: ["📦", "📦", "🪵"],
+    laboratorio: ["📡", "🧪", "🔧"],
+    mercato: ["🧺", "📦", "🏮"],
+  };
   const statusLabel =
     status === "locked"
       ? "Bloccato"
@@ -41,6 +49,13 @@ export function DioramaBuilding({ def, level, status = "active", onShipClick, co
       whileTap={{ scale: 0.96 }}
     >
       <div className={styles.buildingShadow} aria-hidden />
+      <div className={`${styles.buildingFootprint} ${siteClass}`} aria-hidden>
+        {(exteriorDetails[def.key] ?? []).map((detail, i) => (
+          <span key={`${def.key}-detail-${i}`} className={styles.buildingExteriorItem}>
+            {detail}
+          </span>
+        ))}
+      </div>
 
       <div className={styles.buildingBody}>
         <div className={styles.buildingRoof} style={{ background: `linear-gradient(135deg, ${def.color}cc, ${def.color}66)` }} />
