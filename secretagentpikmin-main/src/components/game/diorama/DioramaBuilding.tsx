@@ -21,6 +21,7 @@ const posStyle = (def: DioramaBuildingDef): React.CSSProperties => ({
 
 export function DioramaBuilding({ def, level, status = "active", onShipClick, compact }: DioramaBuildingProps) {
   const ariaLabel = `${def.name}, livello ${level}. ${def.role}. Clicca per entrare.`;
+  const hasScaffold = def.key === "laboratorio" || def.key === "magazzino" || def.key === "centro_controllo";
 
   const inner = (
     <motion.div
@@ -29,18 +30,35 @@ export function DioramaBuilding({ def, level, status = "active", onShipClick, co
       whileHover={{ scale: 1.08, y: -4 }}
       whileTap={{ scale: 0.96 }}
     >
+      <div className={styles.buildingFootprint} aria-hidden />
       <div className={styles.buildingShadow} aria-hidden />
 
       <div className={styles.buildingBody}>
         <div className={styles.buildingRoof} style={{ background: `linear-gradient(135deg, ${def.color}cc, ${def.color}66)` }} />
         <div className={styles.buildingWall} style={{ background: `linear-gradient(180deg, ${def.color}55, ${def.color}22)` }}>
           <span className={styles.buildingEmoji} aria-hidden>{def.emoji}</span>
+          <span className={styles.buildingDoor} aria-hidden />
+          <span className={styles.buildingWindow} aria-hidden />
           <div className="absolute inset-0 flex items-center justify-center opacity-50 pointer-events-none">
             <BuildingIconSvg buildingKey={def.key} size={26} color={def.color} />
           </div>
         </div>
         <div className={styles.buildingBase} aria-hidden />
       </div>
+
+      <div className={styles.buildingMaterials} aria-hidden>
+        <span />
+        <span />
+        <span />
+      </div>
+
+      {hasScaffold && (
+        <div className={styles.buildingScaffold} aria-hidden>
+          <span />
+          <span />
+          <span />
+        </div>
+      )}
 
       {!compact && (
         <div className={styles.buildingLabel} aria-hidden>
