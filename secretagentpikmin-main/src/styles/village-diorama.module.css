@@ -25,23 +25,163 @@
 .dioramaScene {
   position: relative;
   width: 100%;
-  min-height: 280px;
-  aspect-ratio: 16 / 11;
-  max-height: 420px;
+  min-height: 300px;
+  aspect-ratio: 390 / 420;
+  max-height: 480px;
   overflow: hidden;
   isolation: isolate;
 }
 
 @media (min-width: 640px) {
   .dioramaScene {
-    min-height: 320px;
-    aspect-ratio: 16 / 10;
+    min-height: 340px;
+    aspect-ratio: 16 / 11;
+    max-height: 460px;
   }
 }
 
 .compact .dioramaScene {
-  min-height: 180px;
-  max-height: 220px;
+  min-height: 200px;
+  max-height: 240px;
+  aspect-ratio: 16 / 12;
+}
+
+/* V1.8A — diorama eroe navicella */
+.heroMode {
+  border-radius: 0.65rem;
+  border-width: 1px;
+}
+
+.heroScene {
+  aspect-ratio: 390 / 480;
+  min-height: min(68dvh, 520px);
+  max-height: calc(100dvh - 9.5rem);
+}
+
+@media (max-width: 430px) {
+  .heroScene {
+    aspect-ratio: 390 / 500;
+    min-height: min(72dvh, 540px);
+    max-height: calc(100dvh - 8.75rem);
+  }
+}
+
+/* V1.8B — fullscreen diorama */
+.villageFullscreenPage {
+  --village-nav-h: 4.25rem;
+  --village-dock-h: 2rem;
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+  background: linear-gradient(180deg, oklch(0.12 0.04 250) 0%, oklch(0.08 0.03 280) 100%);
+  padding-bottom: var(--village-nav-h);
+}
+
+.villageTopChrome {
+  flex-shrink: 0;
+  z-index: 30;
+  border-bottom: 1px solid rgba(132, 255, 159, 0.12);
+  background: rgba(8, 12, 18, 0.92);
+  backdrop-filter: blur(10px);
+}
+
+.villageTitleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35rem;
+  padding: 0.2rem 0.35rem 0.1rem;
+}
+
+.villageTitle {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  font-family: var(--font-display, inherit);
+  font-size: 0.8125rem;
+  line-height: 1.1;
+  color: #86efac;
+  text-shadow: 0 0 10px rgba(132, 255, 159, 0.25);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.villageIconBtn {
+  padding: 0.3rem !important;
+  flex-shrink: 0;
+}
+
+.villageStage {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0.15rem 0.15rem 0;
+}
+
+.villageQuickDock {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  height: var(--village-dock-h);
+  margin-bottom: 0.15rem;
+  padding: 0 0.5rem;
+}
+
+.villageQuickIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(132, 255, 159, 0.15);
+  transition: transform 0.15s ease;
+}
+
+.villageQuickIcon:active {
+  transform: scale(0.92);
+}
+
+.fullscreenMode {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.5rem;
+  border-width: 1px;
+}
+
+.heroSceneFullscreen {
+  flex: 1;
+  min-height: 60dvh;
+  height: 100%;
+  max-height: none;
+  aspect-ratio: unset;
+}
+
+.fullscreenMode .heroSceneFullscreen {
+  min-height: 0;
+}
+
+.fullscreenMode .hangarAnchor {
+  transform: translate(-50%, -54%);
+}
+
+.fullscreenMode .shipProgressLabel {
+  font-size: 7px;
+  margin-top: 2px;
+}
+
+.fullscreenMode .shipProgressBar {
+  height: 4px;
+  margin-top: 4px;
 }
 
 .terrainWrap {
@@ -264,7 +404,8 @@
 
 .building:hover .buildingTooltip,
 .buildingHit:hover .buildingTooltip,
-.buildingHit:focus-visible .buildingTooltip {
+.buildingHit:focus-visible .buildingTooltip,
+.buildingRevealed .buildingTooltip {
   opacity: 1;
   transform: translateX(-50%) scale(1);
 }
@@ -375,7 +516,20 @@
   opacity: 1;
 }
 
-/* Ship hangar */
+/* ─── Ship hangar — eroe visivo V1.8 ─── */
+
+.hangarAnchor {
+  position: absolute;
+  transform: translate(-50%, -52%);
+  width: min(98vw, 400px);
+  max-width: 100%;
+  pointer-events: none;
+}
+
+.hangarAnchor > .shipHangar {
+  pointer-events: auto;
+}
+
 .shipHangar {
   position: relative;
   background: none;
@@ -386,84 +540,670 @@
   flex-direction: column;
   align-items: center;
   touch-action: manipulation;
+  width: 100%;
+}
+
+.shipHangarCompact {
+  transform: scale(0.72);
+  transform-origin: center top;
 }
 
 .shipHangar:focus-visible {
   outline: 2px solid rgba(56, 189, 248, 0.7);
   outline-offset: 4px;
-  border-radius: 8px;
+  border-radius: 12px;
+}
+
+.hangarCompound {
+  position: relative;
+  width: 100%;
+  min-height: 210px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 0.15rem;
+}
+
+/* Struttura hangar */
+.hangarRoof {
+  position: absolute;
+  top: -2%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 96%;
+  height: 48%;
+  pointer-events: none;
+}
+
+.hangarTruss {
+  position: absolute;
+  top: 18%;
+  left: 8%;
+  width: 84%;
+  height: 3px;
+  background: linear-gradient(90deg, #475569, #94a3b8 50%, #475569);
+  border-radius: 2px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+  transform: rotate(-2deg);
+}
+
+.hangarTrussAlt {
+  top: 32%;
+  transform: rotate(2deg);
+  opacity: 0.85;
+}
+
+.hangarRoofSheet {
+  position: absolute;
+  top: 0;
+  left: 5%;
+  width: 90%;
+  height: 55%;
+  background: linear-gradient(180deg, rgba(30, 41, 59, 0.92) 0%, rgba(15, 23, 42, 0.4) 100%);
+  clip-path: polygon(0 100%, 8% 12%, 92% 12%, 100% 100%);
+  border-top: 2px solid rgba(148, 163, 184, 0.45);
+}
+
+.hangarScaffoldL,
+.hangarScaffoldR {
+  position: absolute;
+  bottom: 18%;
+  width: 5px;
+  height: 58%;
+  background: linear-gradient(180deg, #64748b, #334155);
+  border-radius: 2px;
+  box-shadow: 1px 0 4px rgba(0, 0, 0, 0.4);
+}
+
+.hangarScaffoldL {
+  left: 6%;
+}
+
+.hangarScaffoldR {
+  right: 6%;
+}
+
+.hangarScaffoldCenter {
+  position: absolute;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 42%;
+  background: linear-gradient(180deg, #94a3b8, #475569);
+  border-radius: 2px;
+  opacity: 0.85;
+}
+
+.hangarMaintenanceBay {
+  position: absolute;
+  left: 2%;
+  bottom: 8%;
+  width: 18%;
+  height: 22%;
+  border: 1px dashed rgba(56, 189, 248, 0.35);
+  border-radius: 6px;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  pointer-events: none;
+}
+
+.hangarToolRack {
+  font-size: 0.85rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.hangarScaffoldL::after,
+.hangarScaffoldR::after {
+  content: "";
+  position: absolute;
+  top: 35%;
+  left: -10px;
+  width: 24px;
+  height: 3px;
+  background: #64748b;
+  border-radius: 1px;
+}
+
+.hangarCrane {
+  position: absolute;
+  top: 4%;
+  right: 4%;
+  width: 44px;
+  height: 55%;
+  pointer-events: none;
+}
+
+.hangarCraneArm {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 5px;
+  background: #fbbf24;
+  border-radius: 2px;
+  transform-origin: right center;
+  animation: craneSway 5s ease-in-out infinite;
+}
+
+.hangarCraneCable {
+  position: absolute;
+  top: 5px;
+  left: 6px;
+  width: 2px;
+  height: 36px;
+  background: repeating-linear-gradient(180deg, #94a3b8 0 3px, transparent 3px 6px);
+}
+
+.hangarCraneHook {
+  position: absolute;
+  top: 38px;
+  left: 4px;
+  width: 8px;
+  height: 8px;
+  border: 2px solid #fbbf24;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+}
+
+@keyframes craneSway {
+  0%, 100% { transform: rotate(-4deg); }
+  50% { transform: rotate(6deg); }
+}
+
+.hangarCrate,
+.hangarCrateSm {
+  position: absolute;
+  font-size: 1.1rem;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.5));
+  pointer-events: none;
+  animation: crateBob 3.5s ease-in-out infinite;
+}
+
+.hangarCrateSm {
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+@keyframes crateBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+.hangarCableL,
+.hangarCableR {
+  position: absolute;
+  bottom: 30%;
+  width: 2px;
+  height: 22%;
+  background: linear-gradient(180deg, #38bdf8, #6366f1);
+  opacity: 0.55;
+  animation: cablePulse 2.2s ease-in-out infinite;
+}
+
+.hangarCableL {
+  left: 22%;
+  transform: rotate(-6deg);
+}
+
+.hangarCableR {
+  right: 22%;
+  transform: rotate(6deg);
+}
+
+@keyframes cablePulse {
+  0%, 100% { opacity: 0.4; box-shadow: none; }
+  50% { opacity: 0.85; box-shadow: 0 0 8px rgba(56, 189, 248, 0.5); }
+}
+
+.hangarCableCenter {
+  position: absolute;
+  bottom: 28%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 18%;
+  background: linear-gradient(180deg, #38bdf8, #6366f1);
+  opacity: 0.45;
+  animation: cablePulse 2.2s ease-in-out infinite 0.4s;
+}
+
+.hangarGuideLightL,
+.hangarGuideLightR,
+.hangarGuideLightLL,
+.hangarGuideLightRR {
+  position: absolute;
+  bottom: 12%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  box-shadow: 0 0 12px currentColor;
+}
+
+.hangarGuideLightL {
+  left: 14%;
+  background: #ef4444;
+  color: #ef4444;
+  animation: guideBlinkRed 1.4s step-end infinite;
+}
+
+.hangarGuideLightR {
+  right: 14%;
+  background: #38bdf8;
+  color: #38bdf8;
+  animation: guideBlinkBlue 1.4s step-end infinite 0.7s;
+}
+
+.hangarGuideLightLL {
+  left: 28%;
+  width: 7px;
+  height: 7px;
+  background: #fbbf24;
+  color: #fbbf24;
+  animation: guideBlinkRed 1.8s step-end infinite 0.3s;
+}
+
+.hangarGuideLightRR {
+  right: 28%;
+  width: 7px;
+  height: 7px;
+  background: #fbbf24;
+  color: #fbbf24;
+  animation: guideBlinkBlue 1.8s step-end infinite 0.9s;
+}
+
+@keyframes guideBlinkRed {
+  0%, 45% { opacity: 1; }
+  50%, 100% { opacity: 0.25; }
+}
+
+@keyframes guideBlinkBlue {
+  0%, 45% { opacity: 1; }
+  50%, 100% { opacity: 0.3; }
+}
+
+.hangarLandingPad {
+  position: absolute;
+  bottom: 2%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 88%;
+  height: 24%;
+  background: radial-gradient(ellipse, rgba(51, 65, 85, 0.98) 0%, rgba(15, 23, 42, 0.65) 70%);
+  border-radius: 50%;
+  border: 2px solid rgba(100, 116, 139, 0.65);
+  box-shadow: inset 0 6px 16px rgba(0, 0, 0, 0.55), 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.hangarPadGlow {
+  position: absolute;
+  bottom: 6%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  height: 14%;
+  background: radial-gradient(ellipse, rgba(56, 189, 248, 0.22) 0%, transparent 72%);
+  pointer-events: none;
+  animation: padRingPulse 3s ease-in-out infinite;
+}
+
+.hangarPadChevron {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 10px solid rgba(56, 189, 248, 0.45);
+}
+
+.hangarPadRing {
+  position: absolute;
+  inset: 18%;
+  border: 1px dashed rgba(56, 189, 248, 0.45);
+  border-radius: 50%;
+  animation: padRingPulse 3s ease-in-out infinite;
+}
+
+.hangarPadMark {
+  position: absolute;
+  inset: 42%;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 50%;
+}
+
+@keyframes padRingPulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.04); }
 }
 
 .shipModel {
   position: relative;
-  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+  z-index: 5;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.55));
 }
 
 .shipGlow {
-  filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.6)) drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+  filter:
+    drop-shadow(0 0 16px rgba(56, 189, 248, 0.65))
+    drop-shadow(0 0 32px rgba(14, 165, 233, 0.35))
+    drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5));
+}
+
+.shipTier_wreck {
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.6)) saturate(0.65) brightness(0.85);
+}
+
+.shipTier_p25 {
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.5)) saturate(0.8);
+}
+
+.shipTier_p50 {
+  filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.25)) drop-shadow(0 10px 18px rgba(0, 0, 0, 0.45));
+}
+
+.shipTier_p75 {
+  filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.45)) drop-shadow(0 10px 20px rgba(0, 0, 0, 0.4));
+}
+
+.shipTier_complete {
+  filter:
+    drop-shadow(0 0 18px rgba(56, 189, 248, 0.7))
+    drop-shadow(0 0 36px rgba(125, 211, 252, 0.35))
+    drop-shadow(0 12px 24px rgba(0, 0, 0, 0.45));
 }
 
 .shipSvg {
-  width: 64px;
-  height: 48px;
+  width: clamp(200px, 58vw, 290px);
+  height: auto;
+  display: block;
 }
 
 .compact .shipSvg {
-  width: 48px;
-  height: 36px;
+  width: clamp(80px, 28vw, 110px);
+}
+
+.heroMode .shipSvg {
+  width: clamp(210px, 62vw, 300px);
+}
+
+.shipFxSoft {
+  opacity: 0.45;
+}
+
+.shipFxStrong {
+  opacity: 1;
+}
+
+.shipSmoke {
+  position: absolute;
+  bottom: 28%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 24px;
+  background: radial-gradient(ellipse, rgba(148, 163, 184, 0.35) 0%, transparent 70%);
+  animation: smokeDrift 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 4;
+}
+
+@keyframes smokeDrift {
+  0%, 100% { opacity: 0.35; transform: translateX(-50%) translateY(0) scale(1); }
+  50% { opacity: 0.6; transform: translateX(-48%) translateY(-6px) scale(1.15); }
+}
+
+.shipSparks {
+  position: absolute;
+  bottom: 32%;
+  left: 42%;
+  width: 20px;
+  height: 12px;
+  pointer-events: none;
+  z-index: 6;
+  background:
+    radial-gradient(circle at 30% 50%, #fbbf24 0 1px, transparent 2px),
+    radial-gradient(circle at 70% 30%, #fb923c 0 1px, transparent 2px),
+    radial-gradient(circle at 50% 80%, #fde68a 0 1px, transparent 2px);
+  animation: sparkFlicker 0.8s steps(2) infinite;
+}
+
+@keyframes sparkFlicker {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
+.shipEnginePulse {
+  animation: enginePulse 1.8s ease-in-out infinite;
+}
+
+@keyframes enginePulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.shipAntennaBlink {
+  animation: antennaBlink 2s ease-in-out infinite;
+}
+
+@keyframes antennaBlink {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+.shipNavLightRed {
+  animation: navRed 1.2s step-end infinite;
+}
+
+.shipNavLightBlue {
+  animation: navBlue 1.2s step-end infinite 0.6s;
+}
+
+@keyframes navRed {
+  0%, 40% { opacity: 1; }
+  45%, 100% { opacity: 0.2; }
+}
+
+@keyframes navBlue {
+  0%, 40% { opacity: 1; }
+  45%, 100% { opacity: 0.25; }
 }
 
 .shipPartsRow {
   display: flex;
-  gap: 2px;
+  gap: 3px;
   justify-content: center;
-  margin-top: 2px;
+  margin-top: 4px;
 }
 
 .shipPartDot {
-  font-size: 10px;
+  font-size: 11px;
   transition: opacity 0.3s, filter 0.3s;
 }
 
 .shipPartOn {
   opacity: 1;
-  filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.8));
+  filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.85));
 }
 
 .shipPartOff {
-  opacity: 0.25;
+  opacity: 0.22;
   filter: grayscale(1);
 }
 
 .shipProgressBar {
-  width: 56px;
-  height: 4px;
-  background: rgba(0, 0, 0, 0.5);
+  width: clamp(72px, 40%, 100px);
+  height: 5px;
+  background: rgba(0, 0, 0, 0.55);
   border-radius: 999px;
   overflow: hidden;
-  margin-top: 4px;
-  border: 1px solid rgba(56, 189, 248, 0.3);
+  margin-top: 6px;
+  border: 1px solid rgba(56, 189, 248, 0.35);
 }
 
 .shipProgressFill {
   height: 100%;
-  background: linear-gradient(90deg, #0ea5e9, #38bdf8);
+  background: linear-gradient(90deg, #0ea5e9, #38bdf8, #7dd3fc);
   border-radius: 999px;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
 }
 
 .shipProgressLabel {
   font-size: 8px;
-  color: rgba(255, 255, 255, 0.7);
-  margin-top: 2px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  color: rgba(255, 255, 255, 0.82);
+  margin-top: 3px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Pikmin tecnici hangar */
+.techPikmin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.techPikminShadow {
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 5px;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.35) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.techProp {
+  position: absolute;
+  top: -10px;
+  right: -8px;
+  font-size: 0.75rem;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5));
+  z-index: 2;
+}
+
+.techRole {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(186, 230, 253, 0.9);
+  white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+  background: rgba(8, 12, 18, 0.65);
+  padding: 1px 4px;
+  border-radius: 4px;
+  border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+@media (max-width: 430px) {
+  .hangarAnchor {
+    width: 98vw;
+  }
+
+  .hangarCompound {
+    min-height: 198px;
+  }
+
+  .shipSvg {
+    width: clamp(205px, 60vw, 280px);
+  }
+
+  .heroMode .shipSvg {
+    width: clamp(215px, 64vw, 290px);
+  }
+}
+
+/* HUD compatto villaggio */
+.gameHudDense {
+  gap: 0.2rem;
+  padding: 0.3rem 0.35rem;
+}
+
+.gameHudDense .hudStat {
+  padding: 0.25rem 0.15rem;
+  border-radius: 0.45rem;
+}
+
+.gameHudDense .hudIcon {
+  font-size: 11px;
+}
+
+.gameHudDense .hudValue {
+  font-size: 11px;
+}
+
+.gameHudDense .hudLabel {
+  font-size: 6px;
+  letter-spacing: 0.08em;
+}
+
+.gameHudDense .hudBar {
+  height: 2px;
+  margin-top: 1px;
+}
+
+/* V1.8B — HUD a singola fascia */
+.gameHud.gameHudStrip {
+  display: flex !important;
+  flex-wrap: nowrap;
+  grid-template-columns: unset !important;
+  gap: 0.15rem;
+  padding: 0.15rem 0.25rem 0.2rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.gameHudStrip::-webkit-scrollbar {
+  display: none;
+}
+
+.gameHudStrip .hudStat {
+  flex: 1 1 0;
+  min-width: 2.75rem;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  padding: 0.12rem 0.1rem;
+  border-radius: 0.35rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.04);
+}
+
+.gameHudStrip .hudIcon {
+  font-size: 9px;
+  line-height: 1;
+}
+
+.gameHudStrip .hudValue {
+  font-size: 9px;
+  font-weight: 600;
+  text-shadow: none;
+}
+
+.gameHudStrip .hudLabel,
+.gameHudStrip .hudBar {
+  display: none;
 }
 
 /* Context strip */
 .contextStrip {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
+  gap: 0.35rem;
+  padding: 0.4rem 0.65rem;
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.5) 0%, transparent 100%);
   position: relative;
   z-index: 15;
@@ -581,3 +1321,1403 @@
   outline-offset: 2px;
   border-radius: 0.5rem;
 }
+
+/* ═══ V1.9 — Asset pass edifici e ambientazione ═══ */
+
+.buildingUnique {
+  min-width: 58px;
+}
+
+.buildingHit:has(.buildingUnique) {
+  min-width: 62px;
+  min-height: 64px;
+}
+
+/* — Silhouette comuni — */
+.silRoof {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 52px;
+  height: 16px;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+
+.silRoofFlat {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 8px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid;
+  border-radius: 2px 2px 0 0;
+}
+
+.silWall {
+  position: relative;
+  width: 48px;
+  height: 36px;
+  margin: 12px auto 0;
+  background: linear-gradient(180deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 3px;
+  box-shadow: inset 0 -4px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* Accademia */
+.silhouetteAccademia {
+  position: relative;
+  width: 56px;
+  height: 58px;
+}
+
+.silFlag {
+  position: absolute;
+  top: -14px;
+  width: 3px;
+  height: 14px;
+  background: #64748b;
+}
+
+.silFlag::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 3px;
+  width: 10px;
+  height: 7px;
+  background: var(--bld-color, #fbbf24);
+  animation: flagWave 2s ease-in-out infinite;
+}
+
+.silFlagAlt {
+  left: 78%;
+  animation-delay: 0.4s;
+}
+
+@keyframes flagWave {
+  0%, 100% { transform: skewX(0deg); }
+  50% { transform: skewX(12deg); }
+}
+
+.silDummy {
+  position: absolute;
+  bottom: 6px;
+  left: 8px;
+  width: 8px;
+  height: 18px;
+  background: #475569;
+  border-radius: 4px 4px 2px 2px;
+}
+
+.silTarget {
+  position: absolute;
+  bottom: 8px;
+  right: 6px;
+  font-size: 10px;
+}
+
+.silYard {
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 2px;
+}
+
+.silPole {
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  width: 2px;
+  height: 12px;
+  background: #94a3b8;
+  transform: translateX(-50%);
+}
+
+.silMat {
+  position: absolute;
+  bottom: 2px;
+  right: 4px;
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Laboratorio */
+.silhouetteLab {
+  position: relative;
+  width: 52px;
+  height: 54px;
+}
+
+.silAntenna {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 14px;
+  background: #94a3b8;
+}
+
+.silAntenna::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  width: 8px;
+  height: 8px;
+  border: 2px solid #38bdf8;
+  border-radius: 50%;
+  animation: antennaBlink 2s ease-in-out infinite;
+}
+
+.silTube {
+  position: absolute;
+  top: 8px;
+  left: 6px;
+  font-size: 11px;
+}
+
+.silGen {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  width: 12px;
+  height: 10px;
+  background: #334155;
+  border: 1px solid #64748b;
+  border-radius: 2px;
+}
+
+.silLabLight {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #f472b6;
+  box-shadow: 0 0 8px #f472b6;
+  animation: guideBlinkBlue 1.5s step-end infinite;
+}
+
+.silLabGlow {
+  position: absolute;
+  inset: -4px;
+  border-radius: 6px;
+  background: radial-gradient(ellipse, rgba(244, 114, 182, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Mercato */
+.silhouetteMercato {
+  position: relative;
+  width: 54px;
+  height: 56px;
+}
+
+.silAwning {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 54px;
+  height: 14px;
+  clip-path: polygon(0 0, 100% 0, 92% 100%, 8% 100%);
+  border-radius: 2px 2px 0 0;
+}
+
+.silSign {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.silGoods {
+  position: absolute;
+  bottom: 6px;
+  left: 8px;
+  font-size: 10px;
+}
+
+.silGoodsR {
+  left: 62%;
+}
+
+.silCratesRow {
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 4px;
+  font-size: 10px;
+}
+
+/* Magazzino */
+.silhouetteMagazzino {
+  position: relative;
+  width: 58px;
+  height: 52px;
+}
+
+.silContainer {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 52px;
+  height: 28px;
+  background: linear-gradient(180deg, #475569, #334155);
+  border: 2px solid;
+  border-radius: 2px;
+}
+
+.silContainer::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.silWallWide {
+  position: relative;
+  width: 54px;
+  height: 18px;
+  margin: 32px auto 0;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0 0 3px 3px;
+}
+
+.silPallet {
+  position: absolute;
+  left: 6px;
+  bottom: 4px;
+  font-size: 8px;
+  color: #a78bfa;
+}
+
+.silStack {
+  position: absolute;
+  right: 6px;
+  bottom: 2px;
+  font-size: 9px;
+  line-height: 0.9;
+}
+
+/* Centro Controllo */
+.silhouetteCC {
+  position: relative;
+  width: 54px;
+  height: 58px;
+}
+
+.silDish {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 10px;
+  background: #475569;
+  border-radius: 50% 50% 0 0;
+  border: 1px solid #94a3b8;
+}
+
+.silRadarSweep {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  width: 18px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #4ade80, transparent);
+  transform-origin: left center;
+  animation: radarSweep 3s linear infinite;
+}
+
+@keyframes radarSweep {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.silOpLight {
+  position: absolute;
+  top: 10px;
+  left: 8px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #4ade80;
+  animation: guideBlinkRed 1.2s step-end infinite;
+}
+
+.silOpLightR {
+  left: auto;
+  right: 12%;
+  animation-delay: 0.6s;
+}
+
+.silTower {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 14px;
+  background: linear-gradient(180deg, #64748b, #334155);
+  border-radius: 1px;
+}
+
+.silParabolaL,
+.silParabolaR {
+  position: absolute;
+  top: -10px;
+  width: 14px;
+  height: 8px;
+  background: #334155;
+  border: 1px solid #64748b;
+  border-radius: 50% 50% 0 0;
+}
+
+.silParabolaL {
+  left: 4px;
+  transform: rotate(-18deg);
+}
+
+.silParabolaR {
+  right: 4px;
+  transform: rotate(18deg);
+}
+
+.silSensorTurret {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 6px;
+  background: #475569;
+  border-radius: 3px 3px 1px 1px;
+}
+
+.silSensorTurret::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 6px #4ade80;
+  animation: guideBlinkBlue 1.8s step-end infinite;
+}
+
+.silDataLink {
+  position: absolute;
+  top: 14px;
+  right: 4px;
+  width: 12px;
+  height: 2px;
+  background: repeating-linear-gradient(90deg, #38bdf8 0 3px, transparent 3px 6px);
+  opacity: 0.75;
+  animation: dataPulse 2s ease-in-out infinite;
+}
+
+@keyframes dataPulse {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 0.95; }
+}
+
+/* Natura */
+.sceneNature {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.natureItem,
+.groundNature {
+  position: absolute;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.45));
+}
+
+.natureItem {
+  animation: decorSway 4s ease-in-out infinite;
+}
+
+.nature_sm { font-size: 0.75rem; }
+.nature_md { font-size: 1rem; }
+.nature_lg { font-size: 1.35rem; }
+
+.groundNature {
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.tallGrass {
+  position: absolute;
+  width: 8px;
+  height: 14px;
+  background: repeating-linear-gradient(180deg, #3d7a4a 0 3px, #2d5c38 3px 6px);
+  border-radius: 2px 2px 0 0;
+  opacity: 0.7;
+  transform: skewX(-6deg);
+}
+
+.hangarPathOverlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Hangar yard V1.9 */
+.hangarYard {
+  position: absolute;
+  bottom: -2%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 94%;
+  height: 28%;
+  background: linear-gradient(180deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.75) 100%);
+  border: 1px dashed rgba(56, 189, 248, 0.25);
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.hangarRunwayStrip {
+  position: absolute;
+  top: 30%;
+  left: 10%;
+  right: 10%;
+  height: 3px;
+  background: repeating-linear-gradient(90deg, rgba(251, 191, 36, 0.6) 0 8px, transparent 8px 16px);
+  opacity: 0.7;
+}
+
+.hangarFloodLight {
+  position: absolute;
+  top: 8%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fef08a;
+  box-shadow: 0 0 14px #fef08a;
+  animation: guideBlinkBlue 2s step-end infinite;
+}
+
+.hangarForklift {
+  position: absolute;
+  bottom: 18%;
+  left: 12%;
+  font-size: 1rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+  animation: crateBob 3s ease-in-out infinite;
+}
+
+.hangarMiniCart {
+  position: absolute;
+  bottom: 20%;
+  right: 14%;
+  font-size: 0.9rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.hangarMaterialPile {
+  position: absolute;
+  bottom: 22%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 2px;
+  font-size: 0.75rem;
+  opacity: 0.9;
+}
+
+.hangarWorkBench {
+  position: absolute;
+  top: 12%;
+  right: 18%;
+  font-size: 0.7rem;
+  padding: 2px 4px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.hangarYardCrate {
+  position: absolute;
+  bottom: 8%;
+  font-size: 0.85rem;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5));
+}
+
+/* Pikmin ambientali */
+.ambientPikmin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.hangarCompound {
+  min-height: 230px;
+}
+
+@media (max-width: 430px) {
+  .hangarCompound {
+    min-height: 218px;
+  }
+
+  .silhouetteAccademia,
+  .silhouetteLab,
+  .silhouetteMercato,
+  .silhouetteMagazzino,
+  .silhouetteCC {
+    transform: scale(0.92);
+    transform-origin: center bottom;
+  }
+}
+
+/* ═══ V2.0 — Piazza centrale viva ═══ */
+
+.centralPlazaWrap {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 34;
+}
+
+.plazaBridge {
+  position: absolute;
+  left: 50%;
+  top: 22%;
+  transform: translateX(-50%);
+  width: 18%;
+  height: 14%;
+  background: linear-gradient(180deg, rgba(196, 165, 116, 0.15) 0%, rgba(196, 165, 116, 0.45) 100%);
+  border-left: 2px solid rgba(196, 165, 116, 0.35);
+  border-right: 2px solid rgba(196, 165, 116, 0.35);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.plazaBridgeStripe {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(180deg, transparent 0 6px, rgba(251, 191, 36, 0.12) 6px 8px);
+  animation: plazaStripeFlow 3s linear infinite;
+}
+
+@keyframes plazaStripeFlow {
+  from { transform: translateY(0); }
+  to { transform: translateY(8px); }
+}
+
+.centralPlaza {
+  position: absolute;
+  left: 50%;
+  top: 38%;
+  transform: translate(-50%, -50%);
+  width: 38%;
+  height: 16%;
+  min-width: 120px;
+  min-height: 52px;
+}
+
+.plazaPavement {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at center, rgba(196, 165, 116, 0.55) 0%, rgba(140, 120, 90, 0.35) 70%, transparent 100%),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.04) 0 4px, transparent 4px 8px);
+  border: 2px solid rgba(196, 165, 116, 0.5);
+  border-radius: 50% / 40%;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.35),
+    inset 0 2px 12px rgba(255, 255, 255, 0.08);
+}
+
+.plazaRing {
+  position: absolute;
+  inset: 12%;
+  border: 1px dashed rgba(251, 191, 36, 0.45);
+  border-radius: 50%;
+  animation: plazaPulse 4s ease-in-out infinite;
+}
+
+@keyframes plazaPulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.03); }
+}
+
+.plazaMaterialZone {
+  position: absolute;
+  bottom: 8%;
+  left: 10%;
+  display: flex;
+  gap: 3px;
+  font-size: 0.65rem;
+  padding: 2px 4px;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 4px;
+  border: 1px solid rgba(167, 139, 250, 0.35);
+}
+
+.plazaOpsZone {
+  position: absolute;
+  bottom: 10%;
+  right: 8%;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.plazaCone {
+  font-size: 0.55rem;
+  color: #fbbf24;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+}
+
+.plazaOpsLight {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ef4444;
+  box-shadow: 0 0 8px #ef4444;
+  animation: guideBlinkRed 1.4s step-end infinite;
+}
+
+.plazaGather {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.plazaGatherMark {
+  font-size: 1.1rem;
+  color: rgba(132, 255, 159, 0.65);
+  text-shadow: 0 0 10px rgba(132, 255, 159, 0.4);
+  animation: plazaPulse 3s ease-in-out infinite;
+}
+
+.groundPlazaHub {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  transform: translate(-50%, -50%);
+  width: 28%;
+  height: 22%;
+  background: radial-gradient(ellipse, rgba(196, 165, 116, 0.5) 0%, rgba(196, 165, 116, 0.15) 70%, transparent 100%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.groundPlazaInner {
+  position: absolute;
+  inset: 18%;
+  border: 2px dashed;
+  border-radius: 50%;
+  opacity: 0.6;
+}
+
+.colonyPoi {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+  animation: decorSway 3.5s ease-in-out infinite;
+}
+
+.poiIcon {
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.poiLabel {
+  font-size: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.55);
+  white-space: nowrap;
+}
+
+.poi_campfire .poiIcon {
+  filter: drop-shadow(0 0 6px rgba(251, 146, 60, 0.8));
+  animation: campfireFlicker 2s ease-in-out infinite;
+}
+
+@keyframes campfireFlicker {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.08); opacity: 0.85; }
+}
+
+.poi_well .poiIcon {
+  filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.7));
+}
+
+.poi_antenna .poiIcon {
+  animation: antennaBlink 3s ease-in-out infinite;
+}
+
+/* Traffico Pikmin V2.0 — legacy route dots */
+.trafficPikmin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  will-change: left, top;
+}
+
+/* V2.3 — Agent traffic system (CSS keyframes, no framer-motion) */
+.trafficAgent {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  will-change: left, top;
+  contain: layout style;
+}
+
+.trafficAgentBody {
+  display: block;
+  border-radius: 50% 50% 45% 45%;
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.45);
+  opacity: 0.88;
+}
+
+.trafficAnim_walk {
+  animation: trafficBob 0.6s ease-in-out infinite;
+}
+
+.trafficAnim_carry {
+  animation: trafficBob 0.5s ease-in-out infinite;
+}
+
+.trafficAnim_work {
+  animation: trafficWork 0.8s ease-in-out infinite;
+}
+
+.trafficAnim_idle {
+  animation: trafficIdle 1.2s ease-in-out infinite;
+}
+
+@keyframes trafficBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+@keyframes trafficWork {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(1px) scale(0.95); }
+}
+
+@keyframes trafficIdle {
+  0%, 100% { opacity: 0.75; }
+  50% { opacity: 0.95; }
+}
+
+.trafficCargo {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  font-size: 0.55rem;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
+  pointer-events: none;
+}
+
+.trafficAgentDebug {
+  pointer-events: auto;
+  cursor: help;
+}
+
+.trafficAgentLabel {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(132, 255, 159, 0.9);
+  white-space: nowrap;
+  margin-top: 1px;
+}
+
+.trafficDebugOverlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 70;
+}
+
+.trafficDebugSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.trafficDebugLine {
+  stroke: rgba(251, 191, 36, 0.45);
+  stroke-width: 0.35;
+  stroke-dasharray: 1.5 1;
+}
+
+.trafficDebugDest {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(251, 191, 36, 0.7);
+  border: 1px solid #fff;
+  z-index: 71;
+}
+
+@media (max-width: 430px) {
+  .trafficAgentBody {
+    border-width: 1px;
+  }
+
+  .trafficCargo {
+    font-size: 0.5rem;
+  }
+}
+
+/* Hangar yard V2.0 — base in costruzione */
+.hangarYardTape {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: repeating-linear-gradient(90deg, #fbbf24 0 8px, #1e293b 8px 16px);
+  opacity: 0.75;
+}
+
+.hangarWarningLight {
+  position: absolute;
+  top: 18%;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #f97316;
+  box-shadow: 0 0 10px #f97316;
+  animation: guideBlinkRed 1.2s step-end infinite;
+}
+
+.hangarCart2 {
+  position: absolute;
+  bottom: 14%;
+  left: 38%;
+  font-size: 0.75rem;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5));
+  animation: crateBob 4s ease-in-out infinite 0.5s;
+}
+
+.hangarPalletStack {
+  position: absolute;
+  bottom: 10%;
+  right: 22%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.7rem;
+  gap: 1px;
+}
+
+.hangarPallet {
+  color: #a78bfa;
+  font-size: 0.55rem;
+}
+
+.hangarTechSpot {
+  position: absolute;
+  top: 22%;
+  left: 28%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.75rem;
+}
+
+.hangarTechBadge {
+  font-size: 5px;
+  letter-spacing: 0.1em;
+  color: rgba(56, 189, 248, 0.8);
+  background: rgba(0, 0, 0, 0.45);
+  padding: 1px 3px;
+  border-radius: 2px;
+}
+
+.hangarYardMaterial {
+  position: absolute;
+  bottom: 6%;
+  font-size: 0.7rem;
+  opacity: 0.85;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+}
+
+@media (max-width: 430px) {
+  .centralPlaza {
+    width: 42%;
+    top: 37%;
+  }
+
+  .plazaBridge {
+    width: 20%;
+    top: 21%;
+  }
+
+  .poiIcon {
+    font-size: 0.75rem;
+  }
+}
+
+/* ═══ V2.0 Engine — immagine + overlay (non disegno CSS) ═══ */
+
+.engineImageMode .dioramaScene {
+  background: #050810;
+}
+
+.engineImageMode .engineBackground {
+  object-fit: contain;
+  object-position: center center;
+}
+
+.engineBuildingHit:hover .buildingTooltip,
+.engineBuildingHit:focus-within .buildingTooltip {
+  opacity: 1;
+}
+
+.engineBuildingSpriteWrap .buildingTooltip {
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 4px;
+}
+
+.engineStage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.engineCssWrap {
+  position: absolute;
+  inset: 0;
+}
+
+.engineBackground {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  pointer-events: none;
+  user-select: none;
+}
+
+.engineLayer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.engineBuildingHit {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  touch-action: manipulation;
+}
+
+.engineBuildingSpriteWrap {
+  position: relative;
+  transform-origin: center center;
+}
+
+.engineBuildingSprite {
+  max-width: 72px;
+  max-height: 72px;
+  width: auto;
+  height: auto;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.55));
+  pointer-events: none;
+}
+
+.engineBuildingBadge {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 7px;
+  padding: 1px 4px;
+  background: rgba(0, 0, 0, 0.65);
+  border-radius: 4px;
+  color: #86efac;
+  white-space: nowrap;
+}
+
+.engineBuildingUpgrading {
+  filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.5));
+}
+
+.engineBuildingGlow {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(132, 255, 159, 0.35) 0%, transparent 70%);
+  pointer-events: none;
+  animation: plazaPulse 2.5s ease-in-out infinite;
+}
+
+.engineConstructionDust {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 32px;
+  height: 32px;
+  background: radial-gradient(circle, rgba(196, 165, 116, 0.4) 0%, transparent 70%);
+  pointer-events: none;
+  animation: decorSway 2s ease-in-out infinite;
+}
+
+.engineHangarLights {
+  position: absolute;
+  top: 8%;
+  left: 0;
+  right: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.engineHangarLight {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fef08a;
+  box-shadow: 0 0 12px #fef08a;
+  animation: guideBlinkBlue 2s step-end infinite;
+}
+
+.engineEditorFrame {
+  max-width: 100%;
+}
+
+.engineEditorScene {
+  min-height: 360px;
+  max-height: 420px;
+}
+
+.engineEditorMarker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  z-index: 80;
+}
+
+.engineEditorMarkerDot {
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(56, 189, 248, 0.85);
+  border: 2px solid #fff;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+}
+
+.engineEditorMarkerSelected .engineEditorMarkerDot {
+  background: #86efac;
+  box-shadow: 0 0 10px rgba(132, 255, 159, 0.8);
+}
+
+.engineEditorMarkerLabel {
+  display: block;
+  font-size: 7px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.75);
+  text-align: center;
+  margin-bottom: 2px;
+  white-space: nowrap;
+}
+
+.engineClickMarker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  border: 2px solid #fbbf24;
+  border-radius: 50%;
+  background: rgba(251, 191, 36, 0.25);
+  z-index: 95;
+  pointer-events: none;
+}
+
+.engineRouteDot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(132, 255, 159, 0.45);
+  z-index: 40;
+  pointer-events: none;
+}
+
+/* Hotspot POI */
+.engineHotspot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  touch-action: manipulation;
+  text-decoration: none;
+  color: inherit;
+  min-width: 28px;
+  min-height: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.engineHotspotHit {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+
+.engineHotspotIcon {
+  font-size: 0.85rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+  pointer-events: none;
+}
+
+.engineHotspotLabel {
+  font-size: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.8);
+  white-space: nowrap;
+  margin-top: 1px;
+}
+
+.engineHotspotEditor {
+  border: 1px dashed rgba(56, 189, 248, 0.5);
+  border-radius: 8px;
+}
+
+.engineHotspotSelected {
+  border-color: #86efac;
+  background: rgba(132, 255, 159, 0.12);
+}
+
+/* Hangar sprite overlay */
+.engineHangarSpriteBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transform-origin: center center;
+}
+
+.engineHangarSprite {
+  max-width: 120px;
+  max-height: 100px;
+  width: auto;
+  height: auto;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.55));
+  pointer-events: none;
+}
+
+/* Road network preview */
+.engineRoadGroup {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 12;
+}
+
+.engineRoadGroup.engineRoadSelected {
+  pointer-events: auto;
+}
+
+.engineRoadSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.engineRoadPolyline {
+  stroke-width: 0.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.engineRoadMain {
+  stroke: rgba(196, 165, 116, 0.55);
+}
+
+.engineRoadForest {
+  stroke: rgba(74, 222, 128, 0.45);
+}
+
+.engineRoadHangar {
+  stroke: rgba(56, 189, 248, 0.5);
+}
+
+.engineRoadDot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  border: 1px solid #fff;
+  z-index: 14;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.engineRoadDot.engineRoadMain {
+  background: rgba(196, 165, 116, 0.85);
+}
+
+.engineRoadDot.engineRoadForest {
+  background: rgba(74, 222, 128, 0.85);
+}
+
+.engineRoadDot.engineRoadHangar {
+  background: rgba(56, 189, 248, 0.85);
+}
+
+.engineRoadSelected .engineRoadPolyline {
+  stroke-width: 1;
+  filter: drop-shadow(0 0 4px rgba(132, 255, 159, 0.6));
+}
+
+.engineEditorMarkerHidden .engineEditorMarkerDot {
+  opacity: 0.35;
+  border-style: dashed;
+}
+
+@media (max-width: 430px) {
+  .engineEditorScene {
+    min-height: 320px;
+    max-height: 380px;
+  }
+
+  .engineBuildingSprite {
+    max-width: 56px;
+    max-height: 56px;
+  }
+
+  .engineHangarSprite {
+    max-width: 96px;
+    max-height: 80px;
+  }
+}
+
+/* V2.4 Asset Manager */
+.engineHotspotSprite {
+  max-width: 28px;
+  max-height: 28px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+  pointer-events: none;
+}
+
+.assetManagerPreview {
+  min-height: 280px;
+  max-height: 420px;
+  aspect-ratio: 390 / 480;
+}
+
+.assetLibraryGrid {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 480px) {
+  .assetLibraryGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.assetLibraryCard {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(132, 255, 159, 0.15);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.assetThumbPlaceholder {
+  width: 48px;
+  height: 48px;
+  border-radius: 0.375rem;
+  background: rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+.assetThumbImg {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  border-radius: 0.375rem;
+  background: rgba(0, 0, 0, 0.35);
+  flex-shrink: 0;
+}
+

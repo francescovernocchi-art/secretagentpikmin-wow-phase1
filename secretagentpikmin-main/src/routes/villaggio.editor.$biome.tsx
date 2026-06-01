@@ -7,6 +7,8 @@ import { useCustomBiomes } from "@/hooks/useCustomBiomes";
 import { BiomeEditorTabs, type EditorTab } from "@/components/village/editor/BiomeEditorTabs";
 import { DioramaTab } from "@/components/village/editor/DioramaTab";
 import { SlotEditorTab } from "@/components/village/editor/SlotEditorTab";
+import { DioramaLayoutEditor } from "@/components/village/editor/DioramaLayoutEditor";
+import { DioramaAssetManager } from "@/components/village/editor/DioramaAssetManager";
 import { StructuresTab } from "@/components/village/editor/StructuresTab";
 
 
@@ -73,6 +75,8 @@ function BiomeEditorPage() {
 
         <div className="pt-4">
           {tab === "diorama" && <DioramaTab biomeKey={biome} />}
+          {tab === "layout" && <DioramaLayoutEditor biomeKey={biome} />}
+          {tab === "assets" && <DioramaAssetManager biomeKey={biome} />}
           {tab === "slots" && <SlotEditorTab biomeKey={biome} />}
           {tab === "structures" && <StructuresTab biomeKey={biome} />}
 

@@ -8,9 +8,10 @@ interface DioramaPikminActorProps {
   pikmin: PikminUnit;
   index: number;
   compact?: boolean;
+  hideBadges?: boolean;
 }
 
-export function DioramaPikminActor({ pikmin, index, compact }: DioramaPikminActorProps) {
+export function DioramaPikminActor({ pikmin, index, compact, hideBadges }: DioramaPikminActorProps) {
   const spriteType = PIKMIN_TYPE_TO_SPRITE[pikmin.type] ?? "red";
   const anim = statusToAnimation(pikmin.status, pikmin.specialization);
   const role = statusToRoleLabel(pikmin.status, pikmin.specialization);
@@ -43,7 +44,7 @@ export function DioramaPikminActor({ pikmin, index, compact }: DioramaPikminActo
         showDust={anim === "run" || anim === "carry"}
       />
 
-      {!compact && (
+      {!compact && !hideBadges && (
         <div className={styles.pikminBadge}>
           {pikmin.specBadge && <span className={styles.pikminSpecBadge}>{pikmin.specBadge}</span>}
           <span className={styles.pikminRole}>{role}</span>

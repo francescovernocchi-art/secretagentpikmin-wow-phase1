@@ -1,0 +1,30 @@
+{
+  "id": "colonia-bosco-v1",
+  "label": "Colonia Bosco",
+  "biome": "bosco",
+  "version": 1,
+  "backgroundImage": "/assets/dioramas/colonia-bosco-v1.webp",
+  "aspectRatio": "390 / 480",
+  "buildings": [
+    { "key": "centro_controllo", "x": 48, "y": 34, "z": 40, "scale": 1, "fallback": "silhouette", "clickable": true },
+    { "key": "hangar", "x": 50, "y": 12, "z": 90, "scale": 1, "fallback": "silhouette", "clickable": true },
+    { "key": "accademia", "x": 20, "y": 44, "z": 30, "scale": 1, "fallback": "silhouette", "clickable": true },
+    { "key": "magazzino", "x": 28, "y": 68, "z": 25, "scale": 1, "fallback": "silhouette", "clickable": true },
+    { "key": "laboratorio", "x": 58, "y": 72, "z": 28, "scale": 1, "fallback": "silhouette", "clickable": true },
+    { "key": "mercato", "x": 80, "y": 34, "z": 32, "scale": 1, "fallback": "silhouette", "clickable": true }
+  ],
+  "pikminRoutes": [
+    { "id": "tr-1", "type": "yellow", "anim": "carry", "duration": 14, "enabled": true, "waypoints": [{ "x": 50, "y": 26 }, { "x": 50, "y": 38 }, { "x": 50, "y": 42 }, { "x": 22, "y": 48 }, { "x": 50, "y": 42 }] },
+    { "id": "tr-2", "type": "red", "anim": "walk", "duration": 10, "enabled": true, "waypoints": [{ "x": 50, "y": 42 }, { "x": 78, "y": 38 }, { "x": 50, "y": 42 }] }
+  ],
+  "hotspots": [
+    { "id": "hs-plaza", "x": 50, "y": 40, "w": 18, "h": 12, "label": "Piazza centrale" },
+    { "id": "hs-hangar", "x": 50, "y": 12, "w": 40, "h": 28, "label": "Hangar", "action": "ship" }
+  ],
+  "effects": [
+    { "id": "fx-hangar-lights", "type": "hangar-lights", "target": "hangar", "z": 88 },
+    { "id": "fx-dust", "type": "particle-dust", "z": 5, "intensity": "medium" },
+    { "id": "fx-energy", "type": "particle-energy", "z": 6, "intensity": "low" }
+  ],
+  "layers": []
+}

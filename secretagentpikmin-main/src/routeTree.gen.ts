@@ -32,6 +32,7 @@ import { Route as ArchivioRouteImport } from './routes/archivio'
 import { Route as AgentiRouteImport } from './routes/agenti'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as VillaggioIndexRouteImport } from './routes/villaggio.index'
 import { Route as VillaggioScambiRouteImport } from './routes/villaggio.scambi'
 import { Route as VillaggioPhaserRouteImport } from './routes/villaggio.phaser'
 import { Route as VillaggioEdificiRouteImport } from './routes/villaggio.edifici'
@@ -154,6 +155,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VillaggioIndexRoute = VillaggioIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => VillaggioRoute,
+} as any)
 const VillaggioScambiRoute = VillaggioScambiRouteImport.update({
   id: '/scambi',
   path: '/scambi',
@@ -214,6 +220,7 @@ export interface FileRoutesByFullPath {
   '/villaggio/edifici': typeof VillaggioEdificiRoute
   '/villaggio/phaser': typeof VillaggioPhaserRoute
   '/villaggio/scambi': typeof VillaggioScambiRoute
+  '/villaggio/': typeof VillaggioIndexRoute
   '/villaggio/editor/$biome': typeof VillaggioEditorBiomeRoute
 }
 export interface FileRoutesByTo {
@@ -239,12 +246,12 @@ export interface FileRoutesByTo {
   '/ricette': typeof RicetteRoute
   '/ricordi': typeof RicordiRoute
   '/spedizioni': typeof SpedizioniRouteWithChildren
-  '/villaggio': typeof VillaggioRouteWithChildren
   '/spedizioni/$key': typeof SpedizioniKeyRoute
   '/villaggio/$agent': typeof VillaggioAgentRoute
   '/villaggio/edifici': typeof VillaggioEdificiRoute
   '/villaggio/phaser': typeof VillaggioPhaserRoute
   '/villaggio/scambi': typeof VillaggioScambiRoute
+  '/villaggio': typeof VillaggioIndexRoute
   '/villaggio/editor/$biome': typeof VillaggioEditorBiomeRoute
 }
 export interface FileRoutesById {
@@ -277,6 +284,7 @@ export interface FileRoutesById {
   '/villaggio/edifici': typeof VillaggioEdificiRoute
   '/villaggio/phaser': typeof VillaggioPhaserRoute
   '/villaggio/scambi': typeof VillaggioScambiRoute
+  '/villaggio/': typeof VillaggioIndexRoute
   '/villaggio/editor/$biome': typeof VillaggioEditorBiomeRoute
 }
 export interface FileRouteTypes {
@@ -310,6 +318,7 @@ export interface FileRouteTypes {
     | '/villaggio/edifici'
     | '/villaggio/phaser'
     | '/villaggio/scambi'
+    | '/villaggio/'
     | '/villaggio/editor/$biome'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -335,12 +344,12 @@ export interface FileRouteTypes {
     | '/ricette'
     | '/ricordi'
     | '/spedizioni'
-    | '/villaggio'
     | '/spedizioni/$key'
     | '/villaggio/$agent'
     | '/villaggio/edifici'
     | '/villaggio/phaser'
     | '/villaggio/scambi'
+    | '/villaggio'
     | '/villaggio/editor/$biome'
   id:
     | '__root__'
@@ -372,6 +381,7 @@ export interface FileRouteTypes {
     | '/villaggio/edifici'
     | '/villaggio/phaser'
     | '/villaggio/scambi'
+    | '/villaggio/'
     | '/villaggio/editor/$biome'
   fileRoutesById: FileRoutesById
 }
@@ -564,6 +574,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/villaggio/': {
+      id: '/villaggio/'
+      path: '/'
+      fullPath: '/villaggio/'
+      preLoaderRoute: typeof VillaggioIndexRouteImport
+      parentRoute: typeof VillaggioRoute
+    }
     '/villaggio/scambi': {
       id: '/villaggio/scambi'
       path: '/scambi'
@@ -626,6 +643,7 @@ interface VillaggioRouteChildren {
   VillaggioEdificiRoute: typeof VillaggioEdificiRoute
   VillaggioPhaserRoute: typeof VillaggioPhaserRoute
   VillaggioScambiRoute: typeof VillaggioScambiRoute
+  VillaggioIndexRoute: typeof VillaggioIndexRoute
   VillaggioEditorBiomeRoute: typeof VillaggioEditorBiomeRoute
 }
 
@@ -634,6 +652,7 @@ const VillaggioRouteChildren: VillaggioRouteChildren = {
   VillaggioEdificiRoute: VillaggioEdificiRoute,
   VillaggioPhaserRoute: VillaggioPhaserRoute,
   VillaggioScambiRoute: VillaggioScambiRoute,
+  VillaggioIndexRoute: VillaggioIndexRoute,
   VillaggioEditorBiomeRoute: VillaggioEditorBiomeRoute,
 }
 

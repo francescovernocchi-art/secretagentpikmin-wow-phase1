@@ -5,13 +5,12 @@ import { X } from "lucide-react";
 import { VILLAGE_BUILDINGS } from "@/data/secretPikminWorld";
 import { hapticTap } from "@/lib/haptic";
 import { useVillageDiorama, useSpaceshipParts, usePikminSquad, usePlayerBiome } from "@/hooks/useGameData";
+import { useDioramaLayout, useEngineMode } from "@/hooks/useDioramaLayout";
 import { shipProgressPercent } from "@/lib/game/spaceship";
+import { resolveBuildingVisualState } from "@/lib/diorama/dioramaAssets";
 import { getBiomeByKey } from "@/data/secretPikminWorld";
 import { SpaceshipAssemblyPanel } from "@/components/game/SpaceshipAssemblyPanel";
-import { DioramaTerrain } from "@/components/game/diorama/DioramaTerrain";
-import { DioramaBuilding } from "@/components/game/diorama/DioramaBuilding";
-import { DioramaPikminActor } from "@/components/game/diorama/DioramaPikminActor";
-import { DioramaShipHangar } from "@/components/game/diorama/DioramaShipHangar";
+import { DioramaEngine } from "@/components/game/diorama/engine/DioramaEngine";
 import { DIORAMA_BUILDINGS, BIOME_DIORAMA_THEMES } from "@/components/game/diorama/diorama-data";
 import styles from "@/styles/village-diorama.module.css";
 import type { BiomeKey } from "@/types/secretPikmin";
@@ -23,9 +22,11 @@ interface VillageDioramaProps {
   ownerAgent?: string;
   showFooter?: boolean;
   fullScreen?: boolean;
+  heroMode?: boolean;
+  fullscreenMode?: boolean;
 }
 
-/** Diorama isometrico 2.5D — vista principale del villaggio */
+/** Diorama Engine — sfondo immagine + overlay, fallback CSS */
 export function VillageDiorama({
   buildingCount,
   pikminCount = 12,
@@ -33,14 +34,23 @@ export function VillageDiorama({
   ownerAgent,
   showFooter = true,
   fullScreen = false,
+  heroMode = false,
+  fullscreenMode = false,
 }: VillageDioramaProps) {
+  const isHero = heroMode || fullscreenMode;
   const { buildings, villageName, controlLevel, maxVillages, loading } = useVillageDiorama(ownerAgent);
   const { parts } = useSpaceshipParts();
   const { squad } = usePikminSquad(ownerAgent);
   const { biome } = usePlayerBiome(ownerAgent);
+  const { layout } = useDioramaLayout(biome);
+  const engineMode = useEngineMode(layout);
   const shipPct = shipProgressPercent(parts);
   const [shipOpen, setShipOpen] = useState(false);
 
+  const openShip = useCallback(() => {
+    hapticTap();
+    setShipOpen(true);
+  }, []);
   const closeShip = useCallback(() => setShipOpen(false), []);
 
   useEffect(() => {
@@ -60,30 +70,38 @@ export function VillageDiorama({
 
   const displayBuildings =
     buildings.length > 0
-      ? DIORAMA_BUILDINGS.map((def) => ({
-          def,
-          level: levelMap.get(def.key) ?? 1,
-          status: statusMap.get(def.key) ?? "active",
-        }))
+      ? DIORAMA_BUILDINGS.map((def) => {
+          const level = levelMap.get(def.key) ?? 1;
+          const status = statusMap.get(def.key) ?? "active";
+          return {
+            def,
+            level,
+            status,
+            visualState: resolveBuildingVisualState(status, level),
+          };
+        })
       : DIORAMA_BUILDINGS.slice(0, (buildingCount ?? 3) + 3).map((def, i) => ({
           def,
           level: VILLAGE_BUILDINGS.find((b) => b.key === def.key)?.level ?? i + 1,
           status: "active" as const,
+          visualState: resolveBuildingVisualState("active", VILLAGE_BUILDINGS.find((b) => b.key === def.key)?.level ?? i + 1),
         }));
 
-  const visiblePikmin = squad.length > 0 ? squad.slice(0, compact ? 3 : 6) : [];
+  const visiblePikmin = squad.length > 0 ? squad.slice(0, compact ? 2 : isHero ? 2 : 4) : [];
   const onMission = squad.filter((p) => p.status === "in_spedizione" || p.status === "in_missione");
   const hangarDef = DIORAMA_BUILDINGS.find((b) => b.key === "hangar")!;
   const sceneBuildings = displayBuildings.filter((b) => b.def.key !== "hangar");
+  const trafficSize = compact ? 20 : isHero ? 24 : 26;
 
   return (
-    <section className={`${styles.dioramaRoot} ${compact ? styles.compact : ""} ${fullScreen ? "rounded-none border-0 min-h-[50vh]" : ""}`}>
-      {!compact && villageName && (
+    <section className={`${styles.dioramaRoot} ${compact ? styles.compact : ""} ${isHero ? styles.heroMode : ""} ${fullscreenMode ? styles.fullscreenMode : ""} ${engineMode === "image" ? styles.engineImageMode : ""} ${fullScreen ? "rounded-none border-0 min-h-0 flex-1 flex flex-col" : ""}`}>
+      {!compact && villageName && !isHero && (
         <div className={styles.dioramaHeader}>
           <div>
             <p className="text-[10px] uppercase tracking-[0.35em] text-primary/90 font-display">{villageName}</p>
             <p className="text-[9px] text-muted-foreground mt-0.5">
               {biomeDef?.emoji} {biomeDef?.label} · CC Lv{controlLevel} · max {maxVillages} villaggi
+              {engineMode === "image" && <span className="text-primary/60"> · engine</span>}
             </p>
           </div>
           {!fullScreen && (
@@ -94,49 +112,27 @@ export function VillageDiorama({
         </div>
       )}
 
-      <div className={styles.dioramaScene} role="img" aria-label={`Villaggio ${villageName || ""} nel bioma ${biomeDef?.label ?? biome}`}>
-        <DioramaTerrain theme={theme} />
+      <DioramaEngine
+        layout={layout}
+        mode={engineMode}
+        theme={theme}
+        compact={compact}
+        isHero={isHero}
+        fullscreenMode={fullscreenMode}
+        sceneBuildings={sceneBuildings}
+        hangarDef={hangarDef}
+        parts={parts}
+        shipPct={shipPct}
+        visiblePikmin={visiblePikmin}
+        loading={loading}
+        trafficSize={trafficSize}
+        labelsOnDemand={isHero}
+        onShipClick={openShip}
+        ariaLabel={`Villaggio ${villageName || ""} nel bioma ${biomeDef?.label ?? biome}`}
+        sceneClassName={`${styles.dioramaScene} ${isHero ? styles.heroScene : ""} ${fullscreenMode ? styles.heroSceneFullscreen : ""}`}
+      />
 
-        {sceneBuildings.map(({ def, level, status }) => (
-          <DioramaBuilding
-            key={def.key}
-            def={def}
-            level={level}
-            status={status}
-            compact={compact}
-            onShipClick={() => setShipOpen(true)}
-          />
-        ))}
-
-        <div style={{ position: "absolute", left: `${hangarDef.x}%`, top: `${hangarDef.y}%`, zIndex: hangarDef.z, transform: "translate(-50%, -50%)" }}>
-          <DioramaShipHangar
-            parts={parts}
-            percent={shipPct}
-            compact={compact}
-            onClick={() => { hapticTap(); setShipOpen(true); }}
-          />
-        </div>
-
-        {visiblePikmin.map((p, i) => (
-          <DioramaPikminActor key={p.id} pikmin={p} index={i} compact={compact} />
-        ))}
-
-        {visiblePikmin.length === 0 && !loading && (
-          Array.from({ length: compact ? 2 : 4 }).map((_, i) => (
-            <motion.div
-              key={`placeholder-${i}`}
-              className={styles.pikminActor}
-              style={{ left: `${35 + i * 12}%`, top: `${55 + (i % 2) * 8}%`, zIndex: 55 + i }}
-              animate={{ x: [0, 5, 0], y: [0, -2, 0] }}
-              transition={{ repeat: Infinity, duration: 3 + i * 0.4 }}
-            >
-              <span className="text-2xl opacity-70">🌱</span>
-            </motion.div>
-          ))
-        )}
-      </div>
-
-      {showFooter && !compact && (
+      {showFooter && !compact && !isHero && (
         <div className="relative px-4 pb-3 flex items-center justify-between gap-2 flex-wrap border-t border-primary/10 bg-black/20">
           <div className="text-[10px] uppercase tracking-widest py-2">
             <span className="text-primary">{squad.length || pikminCount}</span>{" "}

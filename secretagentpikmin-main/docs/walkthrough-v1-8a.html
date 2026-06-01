@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>V1.8A Walkthrough — Navicella Eroe</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; }
+    body {
+      font-family: system-ui, sans-serif;
+      background: #0a0e14;
+      color: #86efac;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+      gap: 1rem;
+    }
+    h1 { font-size: 1rem; letter-spacing: 0.2em; text-transform: uppercase; }
+    p { font-size: 0.75rem; opacity: 0.7; max-width: 390px; text-align: center; }
+    .phone {
+      width: min(390px, 100%);
+      border: 2px solid rgba(132,255,159,0.35);
+      border-radius: 1rem;
+      overflow: hidden;
+      background: #000;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    }
+    img { width: 100%; display: block; }
+    .caption {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      background: rgba(0,0,0,0.5);
+      border-top: 1px solid rgba(132,255,159,0.2);
+    }
+    .dots { display: flex; gap: 0.4rem; }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(132,255,159,0.25);
+      border: none; cursor: pointer;
+    }
+    .dot.active { background: #86efac; }
+  </style>
+</head>
+<body>
+  <h1>Secret Pikmin · V1.8A</h1>
+  <p>Walkthrough villaggio — navicella eroe, banner demo compatto, diorama mobile-first.</p>
+  <div class="phone">
+    <img id="frame" src="walkthrough-frames/frame-01-diorama.png" alt="Walkthrough frame" />
+    <div class="caption" id="caption">1/3 — Diorama hero 390×844</div>
+  </div>
+  <div class="dots" id="dots"></div>
+  <script>
+    const frames = [
+      { src: 'walkthrough-frames/frame-01-diorama.png', cap: '1/3 — Diorama hero 390×844, navicella dominante' },
+      { src: 'walkthrough-frames/frame-02-hangar-panel.png', cap: '2/3 — Tap navicella → pannello Hangar' },
+      { src: 'walkthrough-frames/frame-03-430-diorama.png', cap: '3/3 — Vista 430×932, banner demo pill' },
+    ];
+    let i = 0;
+    const img = document.getElementById('frame');
+    const cap = document.getElementById('caption');
+    const dots = document.getElementById('dots');
+    frames.forEach((_, j) => {
+      const b = document.createElement('button');
+      b.className = 'dot' + (j === 0 ? ' active' : '');
+      b.onclick = () => { i = j; show(); };
+      dots.appendChild(b);
+    });
+    function show() {
+      img.src = frames[i].src;
+      cap.textContent = frames[i].cap;
+      dots.querySelectorAll('.dot').forEach((d, j) => d.classList.toggle('active', j === i));
+    }
+    setInterval(() => { i = (i + 1) % frames.length; show(); }, 3500);
+  </script>
+</body>
+</html>

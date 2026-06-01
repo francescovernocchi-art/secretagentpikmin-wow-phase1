@@ -9,9 +9,13 @@ interface VillageGameHUDProps {
   biomeEmoji?: string;
   /** Nasconde bioma/alert extra (es. quando già in header villaggio) */
   compactExtras?: boolean;
+  /** V1.8A — HUD più basso per massimizzare diorama */
+  dense?: boolean;
+  /** V1.8B — singola fascia orizzontale, minimo ingombro */
+  strip?: boolean;
 }
 
-export function VillageGameHUD({ biomeLabel, biomeEmoji, compactExtras }: VillageGameHUDProps) {
+export function VillageGameHUD({ biomeLabel, biomeEmoji, compactExtras, dense, strip }: VillageGameHUDProps) {
   const { data, loading } = useHomeDashboard();
   const { unread } = useGameNotifications();
   const { squad } = usePikminSquad();
@@ -31,13 +35,17 @@ export function VillageGameHUD({ biomeLabel, biomeEmoji, compactExtras }: Villag
   ];
 
   return (
-    <div className={styles.gameHud} role="region" aria-label="Stato pianeta e squadra">
+    <div
+      className={`${styles.gameHud} ${strip ? styles.gameHudStrip : ""} ${dense && !strip ? styles.gameHudDense : ""}`}
+      role="region"
+      aria-label="Stato pianeta e squadra"
+    >
       {stats.map((s) => (
         <div key={s.label} className={styles.hudStat} title={`${s.label}: ${s.value}`}>
           <span className={styles.hudIcon} aria-hidden>{s.icon}</span>
           <span className={styles.hudValue}>{s.value}</span>
-          <span className={styles.hudLabel}>{s.label}</span>
-          {s.bar > 0 && (
+          {!strip && <span className={styles.hudLabel}>{s.label}</span>}
+          {!strip && s.bar > 0 && (
             <div className={styles.hudBar} aria-hidden>
               <div className={styles.hudBarFill} style={{ width: `${Math.min(100, s.bar)}%`, background: s.color }} />
             </div>

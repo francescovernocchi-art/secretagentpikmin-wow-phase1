@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { ImageIcon, MapPin, Building2, Palette, Sparkles, Layers } from "lucide-react";
+import { ImageIcon, MapPin, Building2, Palette, Sparkles, Layers, Crosshair, FolderOpen } from "lucide-react";
 
-export type EditorTab = "diorama" | "slots" | "structures" | "variants" | "bonus" | "events";
+export type EditorTab = "diorama" | "layout" | "assets" | "slots" | "structures" | "variants" | "bonus" | "events";
 
 interface TabDef {
   key: EditorTab;
@@ -11,6 +11,8 @@ interface TabDef {
 
 const TABS: TabDef[] = [
   { key: "diorama", label: "Diorama", icon: ImageIcon },
+  { key: "layout", label: "Layout", icon: Crosshair },
+  { key: "assets", label: "Asset", icon: FolderOpen },
   { key: "slots", label: "Slot", icon: MapPin },
   { key: "structures", label: "Strutture", icon: Building2 },
   { key: "variants", label: "Varianti", icon: Layers },

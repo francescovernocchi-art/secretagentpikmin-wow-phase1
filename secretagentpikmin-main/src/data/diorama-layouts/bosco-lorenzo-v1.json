@@ -1,0 +1,269 @@
+{
+  "id": "bosco-lorenzo-v1",
+  "label": "Bosco Lorenzo",
+  "biome": "bosco",
+  "version": 1,
+  "backgroundImage": "/assets/dioramas/bosco-lorenzo-v1.webp",
+  "aspectRatio": "390 / 480",
+  "zones": [
+    { "id": "hangar", "label": "Hangar", "x": 50, "y": 12, "w": 44, "h": 28 },
+    { "id": "piazza", "label": "Piazza Centrale", "x": 50, "y": 40, "w": 22, "h": 14 },
+    { "id": "accademia", "label": "Accademia", "x": 20, "y": 44, "w": 18, "h": 16 },
+    { "id": "magazzino", "label": "Magazzino", "x": 28, "y": 68, "w": 16, "h": 14 },
+    { "id": "laboratorio", "label": "Laboratorio", "x": 58, "y": 72, "w": 16, "h": 14 },
+    { "id": "mercato", "label": "Mercato", "x": 80, "y": 34, "w": 16, "h": 14 },
+    { "id": "centro_controllo", "label": "Centro Controllo Remoto", "x": 48, "y": 34, "w": 14, "h": 12 }
+  ],
+  "buildings": [
+    {
+      "key": "hangar",
+      "x": 50,
+      "y": 12,
+      "z": 90,
+      "scale": 1,
+      "zone": "hangar",
+      "assets": { "basePath": "/assets/buildings/hangar" },
+      "fallback": "silhouette",
+      "clickable": true
+    },
+    {
+      "key": "centro_controllo",
+      "x": 48,
+      "y": 34,
+      "z": 40,
+      "scale": 1,
+      "zone": "centro_controllo",
+      "assets": { "basePath": "/assets/buildings/centro_controllo" },
+      "fallback": "silhouette",
+      "clickable": true
+    },
+    {
+      "key": "accademia",
+      "x": 20,
+      "y": 44,
+      "z": 30,
+      "scale": 1,
+      "zone": "accademia",
+      "assets": { "basePath": "/assets/buildings/accademia" },
+      "fallback": "silhouette",
+      "clickable": true
+    },
+    {
+      "key": "magazzino",
+      "x": 28,
+      "y": 68,
+      "z": 25,
+      "scale": 1,
+      "zone": "magazzino",
+      "assets": { "basePath": "/assets/buildings/magazzino" },
+      "fallback": "silhouette",
+      "clickable": true
+    },
+    {
+      "key": "laboratorio",
+      "x": 58,
+      "y": 72,
+      "z": 28,
+      "scale": 1,
+      "zone": "laboratorio",
+      "assets": { "basePath": "/assets/buildings/laboratorio" },
+      "fallback": "silhouette",
+      "clickable": true
+    },
+    {
+      "key": "mercato",
+      "x": 80,
+      "y": 34,
+      "z": 32,
+      "scale": 1,
+      "zone": "mercato",
+      "assets": { "basePath": "/assets/buildings/mercato" },
+      "fallback": "silhouette",
+      "clickable": true
+    }
+  ],
+  "hangarAssets": {
+    "basePath": "/assets/buildings/hangar",
+    "hangar_lv1": "/assets/buildings/hangar/hangar_lv1.webp",
+    "hangar_lv2": "/assets/buildings/hangar/hangar_lv2.webp",
+    "hangar_lv3": "/assets/buildings/hangar/hangar_lv3.webp",
+    "hangar_lv4": "/assets/buildings/hangar/hangar_lv4.webp",
+    "hangar_complete": "/assets/buildings/hangar/hangar_complete.webp"
+  },
+  "hotspots": [
+    {
+      "id": "hs-wreck",
+      "kind": "wreck",
+      "x": 72,
+      "y": 18,
+      "w": 8,
+      "h": 8,
+      "label": "Relitto",
+      "icon": "🛸",
+      "action": "inspect",
+      "z": 35
+    },
+    {
+      "id": "hs-flower",
+      "kind": "rare_flower",
+      "x": 12,
+      "y": 55,
+      "w": 6,
+      "h": 6,
+      "label": "Fiore raro",
+      "icon": "🌸",
+      "action": "inspect",
+      "z": 20
+    },
+    {
+      "id": "hs-fruit",
+      "kind": "fruit",
+      "x": 85,
+      "y": 58,
+      "w": 6,
+      "h": 6,
+      "label": "Frutto",
+      "icon": "🍎",
+      "action": "inspect",
+      "z": 20
+    },
+    {
+      "id": "hs-cave",
+      "kind": "cave",
+      "x": 8,
+      "y": 78,
+      "w": 10,
+      "h": 8,
+      "label": "Grotta",
+      "icon": "🕳️",
+      "action": "inspect",
+      "z": 18
+    },
+    {
+      "id": "hs-mission",
+      "kind": "mission_entrance",
+      "x": 50,
+      "y": 52,
+      "w": 10,
+      "h": 8,
+      "label": "Ingresso missione",
+      "icon": "🎯",
+      "action": "mission",
+      "route": "/missioni",
+      "z": 45
+    },
+    {
+      "id": "hs-plaza",
+      "x": 50,
+      "y": 40,
+      "w": 18,
+      "h": 12,
+      "label": "Piazza centrale",
+      "kind": "custom",
+      "z": 15
+    },
+    {
+      "id": "hs-hangar",
+      "x": 50,
+      "y": 12,
+      "w": 40,
+      "h": 28,
+      "label": "Hangar",
+      "action": "ship",
+      "z": 88
+    }
+  ],
+  "roadNetwork": [
+    {
+      "id": "road-main",
+      "type": "main",
+      "enabled": true,
+      "waypoints": [
+        { "x": 50, "y": 78 },
+        { "x": 50, "y": 55 },
+        { "x": 50, "y": 42 },
+        { "x": 50, "y": 28 }
+      ]
+    },
+    {
+      "id": "road-forest-trail",
+      "type": "forest_trail",
+      "enabled": true,
+      "waypoints": [
+        { "x": 18, "y": 52 },
+        { "x": 28, "y": 48 },
+        { "x": 50, "y": 42 },
+        { "x": 22, "y": 68 }
+      ]
+    },
+    {
+      "id": "road-hangar-path",
+      "type": "hangar_path",
+      "enabled": true,
+      "waypoints": [
+        { "x": 50, "y": 42 },
+        { "x": 50, "y": 32 },
+        { "x": 50, "y": 22 },
+        { "x": 50, "y": 14 }
+      ]
+    }
+  ],
+  "pikminRoutes": [
+    {
+      "id": "tr-plaza-loop",
+      "type": "red",
+      "anim": "walk",
+      "duration": 12,
+      "enabled": true,
+      "waypoints": [
+        { "x": 50, "y": 42 },
+        { "x": 78, "y": 38 },
+        { "x": 50, "y": 42 }
+      ]
+    },
+    {
+      "id": "tr-hangar-supply",
+      "type": "yellow",
+      "anim": "carry",
+      "duration": 14,
+      "enabled": true,
+      "waypoints": [
+        { "x": 50, "y": 28 },
+        { "x": 50, "y": 40 },
+        { "x": 28, "y": 70 },
+        { "x": 50, "y": 40 }
+      ]
+    },
+    {
+      "id": "tr-workshop",
+      "type": "blue",
+      "anim": "work",
+      "duration": 9,
+      "enabled": true,
+      "waypoints": [
+        { "x": 48, "y": 40 },
+        { "x": 52, "y": 42 },
+        { "x": 50, "y": 44 },
+        { "x": 48, "y": 40 }
+      ]
+    }
+  ],
+  "effects": [
+    { "id": "fx-hangar-lights", "type": "hangar-lights", "target": "hangar", "z": 88 },
+    { "id": "fx-dust", "type": "particle-dust", "z": 5, "intensity": "low" }
+  ],
+  "layers": [],
+  "trafficConfig": {
+    "initialCount": 10,
+    "maxCount": 30,
+    "patterns": [
+      { "id": "tp-serra-magazzino", "from": "mercato", "to": "magazzino", "task": "carry", "cargo": "seed", "label": "Serra → Magazzino" },
+      { "id": "tp-magazzino-hangar", "from": "magazzino", "to": "hangar", "task": "carry", "cargo": "metal" },
+      { "id": "tp-accademia-piazza", "from": "accademia", "to": "piazza", "task": "walk" },
+      { "id": "tp-laboratorio-piazza", "from": "laboratorio", "to": "piazza", "task": "work" },
+      { "id": "tp-gather-flower", "from": "accademia", "to": "hs-flower", "task": "gather", "cargo": "leaf" },
+      { "id": "tp-gather-fruit", "from": "magazzino", "to": "hs-fruit", "task": "gather", "cargo": "fruit" },
+      { "id": "tp-idle-plaza", "from": "piazza", "to": "piazza", "task": "idle" }
+    ]
+  }
+}
