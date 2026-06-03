@@ -82,13 +82,13 @@ Tap edificio (non hangar) → pannello modale:
 - **Costruisci** (status buildable)
 - **Migliora** (status completed)
 
-Hangar → pannello navicella (invariato).
+Hangar → pannello navicella + sezione **Potenzia Hangar** (costruzione/miglioramento bonus riparazione).
 
 ---
 
 ## Editor layout
 
-Tab **Layout → Buildings**: box **Building System V2.5** con livello, stato, bonus e preview prossimo livello dal runtime.
+Tab **Layout → Buildings**: box **Building System V2.5** con livello, stato, bonus, costi prossimo livello; checkbox **Anteprima stato gioco** sincronizza gli sprite sullo stage con il runtime.
 
 ---
 
