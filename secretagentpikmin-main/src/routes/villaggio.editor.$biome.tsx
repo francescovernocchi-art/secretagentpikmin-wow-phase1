@@ -4,26 +4,19 @@ import { ArrowLeft, Lock, Mountain } from "lucide-react";
 import { getSession } from "@/lib/session";
 import { resolveBiome } from "@/lib/village/biomes";
 import { useCustomBiomes } from "@/hooks/useCustomBiomes";
-import { BiomeEditorTabs, type EditorTab } from "@/components/village/editor/BiomeEditorTabs";
+import {
+  BiomeEditorTabs,
+  type EditorTab,
+} from "@/components/village/editor/BiomeEditorTabs";
 import { DioramaTab } from "@/components/village/editor/DioramaTab";
 import { SlotEditorTab } from "@/components/village/editor/SlotEditorTab";
 import { DioramaLayoutEditor } from "@/components/village/editor/DioramaLayoutEditor";
 import { DioramaAssetManager } from "@/components/village/editor/DioramaAssetManager";
 import { StructuresTab } from "@/components/village/editor/StructuresTab";
 
-
 export const Route = createFileRoute("/villaggio/editor/$biome")({
   component: BiomeEditorPage,
-  head: () => ({
-    meta: [
-      { title: "Editor Bioma · Villaggio" },
-      {
-        name: "description",
-        content: "Gestisci diorama, slot, asset, varianti, bonus ed eventi di un bioma.",
-      },
-    ],
-  }),
-});
+  head: () => ({\n    meta: [\n      { title: "Editor Bioma · Villaggio" },\n      {\n        name: "description",\n        content:\n          "Gestisci diorama, slot, asset, varianti, bonus ed eventi di un bioma.",\n      },\n    ],\n  }),\n});
 
 function BiomeEditorPage() {
   const { biome } = Route.useParams();
@@ -36,13 +29,16 @@ function BiomeEditorPage() {
     setIsPapa(getSession()?.role === "papa");
   }, []);
 
-  const meta = allBiomes.find((b) => b.key === biome) ?? resolveBiome(biome);
+  const meta =
+    allBiomes.find((b) => b.key === biome) ?? resolveBiome(biome);
 
   if (isPapa === false) {
     return (
       <div className="min-h-[100dvh] flex flex-col items-center justify-center p-6 text-center">
         <Lock className="h-10 w-10 text-muted-foreground mb-3" />
-        <p className="text-sm">Solo i Comandanti possono accedere all'Editor Bioma.</p>
+        <p className="text-sm">
+          Solo i Comandanti possono accedere all'Editor Bioma.
+        </p>
         <Link to="/villaggio" className="btn-neon mt-4 px-4 py-2 text-xs">
           Torna al villaggio
         </Link>
