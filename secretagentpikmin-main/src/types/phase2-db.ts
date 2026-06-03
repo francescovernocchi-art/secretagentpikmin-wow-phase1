@@ -1,4 +1,9 @@
-import type { ChatChannelKey, PikminSpecializationKey, PikminTypeKey, BiomeKey } from "@/types/secretPikmin";
+import type {
+  ChatChannelKey,
+  PikminSpecializationKey,
+  PikminTypeKey,
+  BiomeKey,
+} from "@/types/secretPikmin";
 
 export type DataSource = "supabase" | "local";
 
@@ -56,7 +61,12 @@ export interface DbPikminUnit {
   specialization_key: PikminSpecializationKey | null;
   spec_badge?: string | null;
   total_xp_earned?: number;
-  stats: { forza: number; velocita: number; resistenza: number; intelligenza: number };
+  stats: {
+    forza: number;
+    velocita: number;
+    resistenza: number;
+    intelligenza: number;
+  };
   preferred_biome: BiomeKey;
   story: string | null;
   status: string;
