@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Crown, Coins, Zap, AlertTriangle, Sparkles, RefreshCw, Database } from "lucide-react";
@@ -23,80 +23,106 @@ export function AdminGodPanel() {
   const [eventTitle, setEventTitle] = useState("Evento speciale");
   const [eventDesc, setEventDesc] = useState("Il Comandante ha decretato un evento.");
 
-  const load = async () => {
+  const load = useCallback(async () => {
     const [b, c] = await Promise.all([
       supabase.from("bases").select("agent,name,level,faction").order("agent"),
       supabase.from("agent_coins").select("agent,coins").order("agent"),
     ]);
     setBases((b.data as BaseLite[]) ?? []);
     setCoins((c.data as AgentLite[]) ?? []);
-  };
+  }, []);
 
   useEffect(() => {
     load();
-  }, []);
+  }, [load]);
 
-  const grantCoins = async () => {
+  const grantCoins = useCallback(async () => {
     if (!coinTarget) return toast.error("Scegli un agente");
     setBusy(true);
     try {
       const cur = coins.find((c) => c.agent === coinTarget);
       const next = Math.max(0, (cur?.coins ?? 0) + coinDelta);
       if (cur) {
-        await supabase.from("agent_coins").update({ coins: next, updated_at: new Date().toISOString() }).eq("agent", coinTarget);
+        await supabase
+          .from("agent_coins")
+          .update({
+            coins: next,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("agent", coinTarget);
       } else {
-        await supabase.from("agent_coins").insert({ agent: coinTarget, coins: next });
+        await supabase.from("agent_coins").insert({
+          agent: coinTarget,
+          coins: next,
+        });
       }
       await supabase.from("coin_transactions").insert({
         agent: coinTarget,
         amount: coinDelta,
         reason: `Decreto Comandante`,
       });
-      toast.success(`${coinDelta >= 0 ? "+" : ""}${coinDelta} monete a ${coinTarget}`);
-      load();
+      toast.success(
+        `${coinDelta >= 0 ? "+" : ""}${coinDelta} monete a ${coinTarget}`
+      );
+      await load();
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Errore");
     } finally {
       setBusy(false);
     }
-  };
+  }, [coinTarget, coinDelta, coins, load]);
 
-  const setFaction = async () => {
+  const setFaction = useCallback(async () => {
     if (!factionTarget) return toast.error("Scegli un agente");
     setBusy(true);
     try {
       const { error } = await supabase
         .from("bases")
-        .update({ faction: newFaction, updated_at: new Date().toISOString() })
+        .update({
+          faction: newFaction,
+          updated_at: new Date().toISOString(),
+        })
         .eq("agent", factionTarget);
       if (error) throw error;
       toast.success(`Fazione di ${factionTarget} → ${newFaction}`);
-      load();
+      await load();
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Errore (forse solo il proprietario può cambiare la fazione)");
+      toast.error(
+        e instanceof Error
+          ? e.message
+          : "Errore (forse solo il proprietario può cambiare la fazione)"
+      );
     } finally {
       setBusy(false);
     }
-  };
+  }, [factionTarget, newFaction, load]);
 
-  const setLevel = async (agent: string, level: number) => {
-    setBusy(true);
-    try {
-      const { error } = await supabase
-        .from("bases")
-        .update({ level, updated_at: new Date().toISOString() })
-        .eq("agent", agent);
-      if (error) throw error;
-      toast.success(`${agent} → Lv ${level}`);
-      load();
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Errore (limitato dalle regole)");
-    } finally {
-      setBusy(false);
-    }
-  };
+  const setLevel = useCallback(
+    async (agent: string, level: number) => {
+      setBusy(true);
+      try {
+        const { error } = await supabase
+          .from("bases")
+          .update({
+            level,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("agent", agent);
+        if (error) throw error;
+        toast.success(`${agent} → Lv ${level}`);
+        await load();
+      } catch (e) {
+        toast.error(
+          e instanceof Error ? e.message : "Errore (limitato dalle regole)"
+        );
+      } finally {
+        setBusy(false);
+      }
+    },
+    [load]
+  );
 
-  const spawnEvent = async () => {
+  const spawnEvent = useCallback(async () => {
     if (!eventTarget) return toast.error("Scegli un agente");
     setBusy(true);
     try {
@@ -120,15 +146,19 @@ export function AdminGodPanel() {
     } finally {
       setBusy(false);
     }
-  };
+  }, [eventTarget, eventTitle, eventDesc]);
 
-  const clearAllEnemies = async () => {
+  const clearAllEnemies = useCallback(async () => {
     if (!confirm("Disattivare TUTTI i nemici sulla mappa?")) return;
     setBusy(true);
     try {
       await supabase
         .from("map_enemy_spawns")
-        .update({ active: false, defeated_at: new Date().toISOString(), defeated_by: "papa" })
+        .update({
+          active: false,
+          defeated_at: new Date().toISOString(),
+          defeated_by: "papa",
+        })
         .eq("active", true);
       toast.success("Mappa ripulita");
     } catch (e) {
@@ -136,6 +166,36 @@ export function AdminGodPanel() {
     } finally {
       setBusy(false);
     }
+  }, []);
+
+  const handleGrantCoins = () => {
+    hapticTap();
+    void grantCoins();
+  };
+
+  const handleSetFaction = () => {
+    hapticTap();
+    void setFaction();
+  };
+
+  const handleSetLevel = (agent: string, level: number) => {
+    if (factionTarget) {
+      void setLevel(agent, level);
+    }
+  };
+
+  const handleSpawnEvent = () => {
+    hapticTap();
+    void spawnEvent();
+  };
+
+  const handleClearAllEnemies = () => {
+    hapticTap();
+    void clearAllEnemies();
+  };
+
+  const handleLoadRefresh = () => {
+    void load();
   };
 
   return (
@@ -145,12 +205,17 @@ export function AdminGodPanel() {
         <h3 className="font-display text-sm uppercase tracking-widest text-amber-400">
           Modalità Dio
         </h3>
-        <button onClick={load} className="panel p-1 ml-auto" title="Ricarica">
+        <button
+          onClick={handleLoadRefresh}
+          className="panel p-1 ml-auto"
+          title="Ricarica"
+        >
           <RefreshCw className="h-3 w-3" />
         </button>
       </div>
       <p className="text-[11px] text-muted-foreground -mt-2">
-        Riservato al Comandante. Modifica monete, fazioni, livelli ed eventi senza toccare il database.
+        Riservato al Comandante. Modifica monete, fazioni, livelli ed eventi
+        senza toccare il database.
       </p>
 
       {/* GRANT COINS */}
@@ -166,7 +231,8 @@ export function AdminGodPanel() {
           <option value="">— Scegli agente —</option>
           {bases.map((b) => (
             <option key={b.agent} value={b.agent}>
-              {b.agent} ({coins.find((c) => c.agent === b.agent)?.coins ?? 0}💰)
+              {b.agent} ({coins.find((c) => c.agent === b.agent)?.coins ?? 0}
+              💰)
             </option>
           ))}
         </select>
@@ -177,7 +243,11 @@ export function AdminGodPanel() {
             onChange={(e) => setCoinDelta(parseInt(e.target.value) || 0)}
             className="flex-1 px-2 py-1.5 bg-night/60 rounded-lg border border-primary/20 text-xs"
           />
-          <button onClick={() => { hapticTap(); grantCoins(); }} disabled={busy} className="btn-neon px-3 text-xs">
+          <button
+            onClick={handleGrantCoins}
+            disabled={busy}
+            className="btn-neon px-3 text-xs"
+          >
             Eroga
           </button>
         </div>
@@ -211,7 +281,11 @@ export function AdminGodPanel() {
             <option value="battle">Battle</option>
             <option value="mystic">Mystic</option>
           </select>
-          <button onClick={() => { hapticTap(); setFaction(); }} disabled={busy} className="btn-neon px-3 text-xs">
+          <button
+            onClick={handleSetFaction}
+            disabled={busy}
+            className="btn-neon px-3 text-xs"
+          >
             Imposta
           </button>
         </div>
@@ -219,7 +293,7 @@ export function AdminGodPanel() {
           {[1, 2, 3, 5, 10].map((lv) => (
             <button
               key={lv}
-              onClick={() => factionTarget && setLevel(factionTarget, lv)}
+              onClick={() => handleSetLevel(factionTarget, lv)}
               disabled={busy || !factionTarget}
               className="panel px-2 py-1 text-[10px] disabled:opacity-50"
             >
@@ -241,7 +315,9 @@ export function AdminGodPanel() {
         >
           <option value="">— Destinatario —</option>
           {bases.map((b) => (
-            <option key={b.agent} value={b.agent}>{b.agent}</option>
+            <option key={b.agent} value={b.agent}>
+              {b.agent}
+            </option>
           ))}
         </select>
         <input
@@ -256,7 +332,11 @@ export function AdminGodPanel() {
           rows={2}
           className="px-2 py-1.5 bg-night/60 rounded-lg border border-primary/20 text-xs resize-none"
         />
-        <button onClick={() => { hapticTap(); spawnEvent(); }} disabled={busy} className="btn-neon px-3 py-1.5 text-xs">
+        <button
+          onClick={handleSpawnEvent}
+          disabled={busy}
+          className="btn-neon px-3 py-1.5 text-xs"
+        >
           Lancia decreto
         </button>
       </section>
@@ -267,14 +347,15 @@ export function AdminGodPanel() {
           <AlertTriangle className="h-3 w-3" /> Zona pericolosa
         </p>
         <button
-          onClick={() => { hapticTap(); clearAllEnemies(); }}
+          onClick={handleClearAllEnemies}
           disabled={busy}
           className="panel px-3 py-2 text-[11px] text-amber-300 border-amber-500/40"
         >
           Disattiva tutti i nemici sulla mappa
         </button>
         <p className="text-[10px] text-muted-foreground flex items-center gap-1">
-          <Database className="h-3 w-3" /> Tutte le modifiche sono tracciate negli eventi.
+          <Database className="h-3 w-3" /> Tutte le modifiche sono tracciate
+          negli eventi.
         </p>
       </section>
     </div>
