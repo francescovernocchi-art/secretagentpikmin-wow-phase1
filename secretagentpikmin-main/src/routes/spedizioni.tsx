@@ -17,7 +17,15 @@ import {
   type Expedition,
 } from "@/lib/expeditions";
 import { ExpeditionLaunchPanel } from "@/components/game/ExpeditionLaunchPanel";
-import { Rocket, Clock, Users, AlertTriangle, ChevronRight, Sparkles, Bell } from "lucide-react";
+import {
+  Rocket,
+  Clock,
+  Users,
+  AlertTriangle,
+  ChevronRight,
+  Sparkles,
+  Bell,
+} from "lucide-react";
 
 export const Route = createFileRoute("/spedizioni")({
   component: SpedizioniPage,
@@ -34,12 +42,19 @@ function SpedizioniPage() {
   const [, setTick] = useState(0);
 
   const load = async () => {
-    const [t, e] = await Promise.all([fetchTemplates(), fetchExpeditions()]);
+    const [t, e] = await Promise.all([
+      fetchTemplates(),
+      fetchExpeditions(),
+    ]);
     setTemplates(t);
     setExpeditions(e);
     // tenta la risoluzione delle spedizioni scadute
     for (const exp of e) {
-      if (exp.status === "active" && exp.end_at && new Date(exp.end_at).getTime() <= Date.now()) {
+      if (
+        exp.status === "active" &&
+        exp.end_at &&
+        new Date(exp.end_at).getTime() <= Date.now()
+      ) {
         try {
           await resolveExpedition(exp.id);
         } catch (err) {
@@ -53,8 +68,24 @@ function SpedizioniPage() {
     load();
     const ch = supabase
       .channel("expeditions-rt")
-      .on("postgres_changes", { event: "*", schema: "public", table: "expeditions" }, () => load())
-      .on("postgres_changes", { event: "*", schema: "public", table: "expedition_squads" }, () => load())
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "expeditions",
+        },
+        () => load()
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "expedition_squads",
+        },
+        () => load()
+      )
       .subscribe();
     const t = setInterval(() => setTick((x) => x + 1), 1000);
     return () => {
@@ -81,10 +112,16 @@ function SpedizioniPage() {
   }, [expeditions]);
 
   const active = expeditions.filter(
-    (e) => e.status === "active" || e.status === "waiting_partner" || e.status === "preparing",
+    (e) =>
+      e.status === "active" ||
+      e.status === "waiting_partner" ||
+      e.status === "preparing"
   );
   const history = expeditions.filter(
-    (e) => e.status === "completed" || e.status === "failed" || e.status === "cancelled",
+    (e) =>
+      e.status === "completed" ||
+      e.status === "failed" ||
+      e.status === "cancelled"
   );
 
   const notifications = useNotifications(agent);
@@ -139,7 +176,7 @@ function SpedizioniPage() {
 }
 
 function useNotifications(agent: string) {
-  const [items, setItems] = useState<any[]>([]);
+  const [items, setItems] = useState<Record<string, unknown>[]>([]);
   useEffect(() => {
     const load = async () => {
       const { data } = await supabase
@@ -155,8 +192,13 @@ function useNotifications(agent: string) {
       .channel(`notif-${agent}`)
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "mission_notifications", filter: `agent=eq.${agent}` },
-        () => load(),
+        {
+          event: "*",
+          schema: "public",
+          table: "mission_notifications",
+          filter: `agent=eq.${agent}`,
+        },
+        () => load()
       )
       .subscribe();
     return () => {
@@ -177,7 +219,11 @@ function AvailableList({ templates }: { templates: MissionTemplate[] }) {
   }, [templates]);
 
   if (templates.length === 0) {
-    return <p className="text-center text-xs text-muted-foreground py-10">Caricamento missioni…</p>;
+    return (
+      <p className="text-center text-xs text-muted-foreground py-10">
+        Caricamento missioni…
+      </p>
+    );
   }
 
   return (
@@ -188,7 +234,9 @@ function AvailableList({ templates }: { templates: MissionTemplate[] }) {
           <section key={biome} className="space-y-2">
             <div className="flex items-center gap-2 px-1">
               <span className="text-xl">{meta?.emoji}</span>
-              <h3 className="font-display text-base text-glow">{meta?.label ?? biome}</h3>
+              <h3 className="font-display text-base text-glow">
+                {meta?.label ?? biome}
+              </h3>
             </div>
             <div className="space-y-2">
               {list.map((t) => (
@@ -214,26 +262,38 @@ function TemplateCard({ template }: { template: MissionTemplate }) {
       <span className="hud-corner tl" />
       <span className="hud-corner br" />
       <div className="flex items-start gap-3">
-        <div className="text-3xl drop-shadow-[0_2px_6px_rgba(0,0,0,0.4)]">{biome.emoji}</div>
+        <div className="text-3xl drop-shadow-[0_2px_6px_rgba(0,0,0,0.4)]">
+          {biome.emoji}
+        </div>
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-1.5 mb-1">
-            <span className={`text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full border ${diff.color}`}>
+            <span
+              className={`text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full border ${diff.color}`}
+            >
               {diff.label}
             </span>
             <span className="text-[10px] uppercase tracking-widest text-muted-foreground flex items-center gap-1">
               <Clock className="h-3 w-3" /> {template.duration_minutes}m
             </span>
             <span className="text-[10px] uppercase tracking-widest text-muted-foreground flex items-center gap-1">
-              <Users className="h-3 w-3" /> {template.pikmin_min}–{template.pikmin_max}
+              <Users className="h-3 w-3" /> {template.pikmin_min}–
+              {template.pikmin_max}
             </span>
           </div>
-          <h4 className="font-display text-base text-foreground leading-tight">{template.title}</h4>
+          <h4 className="font-display text-base text-foreground leading-tight">
+            {template.title}
+          </h4>
           {template.description && (
-            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{template.description}</p>
+            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+              {template.description}
+            </p>
           )}
           <div className="mt-2 flex flex-wrap gap-1">
             {template.recommended_types.map((t) => (
-              <span key={t} className="text-[9px] uppercase tracking-widest panel px-1.5 py-0.5">
+              <span
+                key={t}
+                className="text-[9px] uppercase tracking-widest panel px-1.5 py-0.5"
+              >
                 {t}
               </span>
             ))}
@@ -245,14 +305,29 @@ function TemplateCard({ template }: { template: MissionTemplate }) {
   );
 }
 
-function ActiveList({ expeditions, agent }: { expeditions: Expedition[]; agent: string }) {
+function ActiveList({
+  expeditions,
+  agent,
+}: {
+  expeditions: Expedition[];
+  agent: string;
+}) {
   if (expeditions.length === 0)
-    return <p className="text-center text-xs text-muted-foreground py-10">Nessuna spedizione attiva.</p>;
+    return (
+      <p className="text-center text-xs text-muted-foreground py-10">
+        Nessuna spedizione attiva.
+      </p>
+    );
   return (
     <div className="space-y-2">
       <AnimatePresence>
         {expeditions.map((e) => (
-          <motion.div key={e.id} layout initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}>
+          <motion.div
+            key={e.id}
+            layout
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
             <ActiveCard exp={e} agent={agent} />
           </motion.div>
         ))}
@@ -261,13 +336,26 @@ function ActiveList({ expeditions, agent }: { expeditions: Expedition[]; agent: 
   );
 }
 
-function ActiveCard({ exp, agent }: { exp: Expedition; agent: string }) {
+function ActiveCard({
+  exp,
+  agent,
+}: {
+  exp: Expedition;
+  agent: string;
+}) {
   const biome = BIOME_META[exp.biome];
   const diff = DIFFICULTY_META[exp.difficulty];
   const risk = RISK_META[exp.risk];
-  const totalMs = exp.end_at && exp.started_at ? new Date(exp.end_at).getTime() - new Date(exp.started_at).getTime() : 1;
+  const totalMs =
+    exp.end_at && exp.started_at
+      ? new Date(exp.end_at).getTime() -
+        new Date(exp.started_at).getTime()
+      : 1;
   const leftMs = exp.end_at ? new Date(exp.end_at).getTime() - Date.now() : 0;
-  const pct = exp.status === "active" ? Math.max(0, Math.min(100, 100 - (leftMs / totalMs) * 100)) : 0;
+  const pct =
+    exp.status === "active"
+      ? Math.max(0, Math.min(100, 100 - (leftMs / totalMs) * 100))
+      : 0;
   const mins = Math.max(0, Math.ceil(leftMs / 60000));
   const isMine = exp.created_by === agent;
   const isInvited = exp.partner === agent && exp.status === "waiting_partner";
@@ -276,7 +364,9 @@ function ActiveCard({ exp, agent }: { exp: Expedition; agent: string }) {
     <Link
       to="/spedizioni/$key"
       params={{ key: exp.id }}
-      className={`block panel p-4 bg-gradient-to-br ${biome?.color ?? ""} relative overflow-hidden`}
+      className={`block panel p-4 bg-gradient-to-br ${
+        biome?.color ?? ""
+      } relative overflow-hidden`}
     >
       <span className="hud-corner tl" />
       <span className="hud-corner br" />
@@ -284,7 +374,9 @@ function ActiveCard({ exp, agent }: { exp: Expedition; agent: string }) {
         <div className="text-2xl">{biome?.emoji}</div>
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-1.5 mb-1">
-            <span className={`text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full border ${diff.color}`}>
+            <span
+              className={`text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full border ${diff.color}`}
+            >
               {diff.label}
             </span>
             {exp.is_coop && (
@@ -302,7 +394,9 @@ function ActiveCard({ exp, agent }: { exp: Expedition; agent: string }) {
           <div className="mt-2 flex items-center gap-3 text-[10px] uppercase tracking-widest text-muted-foreground">
             <span className="flex items-center gap-1">
               <Clock className="h-3 w-3" />
-              {exp.status === "active" ? `${mins}m al rientro` : "in attesa partner"}
+              {exp.status === "active"
+                ? `${mins}m al rientro`
+                : "in attesa partner"}
             </span>
             <span className={`flex items-center gap-1 ${risk.color}`}>
               <AlertTriangle className="h-3 w-3" /> {risk.label}
@@ -310,7 +404,10 @@ function ActiveCard({ exp, agent }: { exp: Expedition; agent: string }) {
           </div>
           {exp.status === "active" && (
             <div className="mt-2 h-1.5 w-full rounded-full bg-night/60 overflow-hidden">
-              <div className="h-full bg-primary glow-soft transition-all" style={{ width: `${pct}%` }} />
+              <div
+                className="h-full bg-primary glow-soft transition-all"
+                style={{ width: `${pct}%` }}
+              />
             </div>
           )}
         </div>
@@ -318,7 +415,9 @@ function ActiveCard({ exp, agent }: { exp: Expedition; agent: string }) {
       </div>
       {isInvited && (
         <div className="mt-3 text-[11px] text-amber-200 flex items-center gap-1.5">
-          <Sparkles className="h-3 w-3" /> {exp.created_by === "papa" ? "Papà" : "Lorenzo"} ti ha invitato a partecipare!
+          <Sparkles className="h-3 w-3" />{" "}
+          {exp.created_by === "papa" ? "Papà" : "Lorenzo"} ti ha invitato a
+          partecipare!
         </div>
       )}
       {!isMine && !isInvited && exp.is_coop && (
@@ -332,7 +431,11 @@ function ActiveCard({ exp, agent }: { exp: Expedition; agent: string }) {
 
 function HistoryList({ expeditions }: { expeditions: Expedition[] }) {
   if (expeditions.length === 0)
-    return <p className="text-center text-xs text-muted-foreground py-10">Nessuna spedizione conclusa.</p>;
+    return (
+      <p className="text-center text-xs text-muted-foreground py-10">
+        Nessuna spedizione conclusa.
+      </p>
+    );
   return (
     <div className="space-y-2">
       {expeditions.map((e) => (
@@ -352,7 +455,11 @@ function HistoryList({ expeditions }: { expeditions: Expedition[] }) {
                   ? "~ Parziale"
                   : e.result === "fallito"
                     ? "✗ Fallita"
-                    : e.status}
+                    : (
+                        <>
+                          {e.status}
+                        </>
+                      )}
             </p>
           </div>
           <Rocket className="h-4 w-4 text-primary/60" />
