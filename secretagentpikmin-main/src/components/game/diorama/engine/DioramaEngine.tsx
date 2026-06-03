@@ -31,6 +31,7 @@ export interface DioramaEngineSceneProps {
   trafficSize: number;
   labelsOnDemand?: boolean;
   onShipClick: () => void;
+  onBuildingClick?: (key: string) => void;
   ariaLabel: string;
   editorMode?: boolean;
   editorSection?: "buildings" | "hotspots" | "roads" | "traffic";

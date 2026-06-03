@@ -1,4 +1,5 @@
 import { VILLAGE_BUILDINGS, VILLAGE_RULES } from "@/data/secretPikminWorld";
+import { getInitialBuildingState } from "@/lib/game/buildingSystem";
 import { gameTable, safeGameQuery, isSupabaseConfigured } from "@/lib/game/db";
 import { localStore } from "@/lib/game/local-store";
 import { fetchPlayerLocation, isWithinVillageRadius } from "@/lib/game/player-location";
@@ -94,16 +95,21 @@ export async function createVillage(opts: {
     action_radius_m: VILLAGE_RULES.actionRadiusMeters,
   };
 
-  const seedBuildings: DbVillageBuilding[] = VILLAGE_BUILDINGS.map((b, i) => ({
-    id: `local-bld-${village.id}-${i}`,
-    village_id: village.id,
-    building_key: b.key,
-    name: b.name,
-    emoji: b.emoji,
-    level: b.level,
-    max_level: b.maxLevel,
-    status: "active",
-  }));
+  const seedBuildings: DbVillageBuilding[] = VILLAGE_BUILDINGS.map((b, i) => {
+    const initial = getInitialBuildingState(b.key);
+    return {
+      id: `local-bld-${village.id}-${i}`,
+      village_id: village.id,
+      building_key: b.key,
+      name: b.name,
+      emoji: b.emoji,
+      level: initial.level,
+      max_level: b.maxLevel,
+      status: initial.status,
+      build_end_at: null,
+      started_at: null,
+    };
+  });
 
   try {
     if (isSupabaseConfigured()) {

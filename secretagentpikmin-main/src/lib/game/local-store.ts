@@ -10,6 +10,7 @@ import {
   MOCK_MARKET_LISTINGS,
   VILLAGE_RULES,
 } from "@/data/secretPikminWorld";
+import { getInitialBuildingState } from "@/lib/game/buildingSystem";
 import type {
   DbBestiaryEntry,
   DbChatMessage,
@@ -98,13 +99,21 @@ function seedPikmin(): DbPikminUnit[] {
 }
 
 function seedInventory(agent: string): DbInventoryItem[] {
+  const buildingResources = [
+    { item_key: "legno", item_name: "Legno", emoji: "🪵", category: "materiale" as const, quantity: 80, sell_price: 8 },
+    { item_key: "resina", item_name: "Resina", emoji: "🍯", category: "materiale" as const, quantity: 40, sell_price: 12 },
+    { item_key: "semi", item_name: "Semi", emoji: "🌱", category: "materiale" as const, quantity: 50, sell_price: 10 },
+    { item_key: "rottami", item_name: "Rottami", emoji: "⚙️", category: "materiale" as const, quantity: 35, sell_price: 15 },
+  ];
   const base =
     agent === "papa"
       ? [
+          ...buildingResources,
           { item_key: "cristallo_rame", item_name: "Cristallo di rame", emoji: "💎", category: "oggetto" as const, quantity: 2, sell_price: 120 },
           { item_key: "miele_dorato", item_name: "Miele dorato", emoji: "🍯", category: "ingrediente" as const, quantity: 5, sell_price: 30 },
         ]
       : [
+          ...buildingResources,
           { item_key: "batteria_usata", item_name: "Batteria usata", emoji: "🔋", category: "materiale" as const, quantity: 3, sell_price: 45 },
           { item_key: "seme_rosso", item_name: "Seme rosso", emoji: "🔴", category: "ingrediente" as const, quantity: 8, sell_price: 15 },
         ];
@@ -127,16 +136,21 @@ function seedVillage(agent: string): DbVillage {
 }
 
 function seedVillageBuildings(villageId: string): DbVillageBuilding[] {
-  return VILLAGE_BUILDINGS.map((b, i) => ({
-    id: `local-bld-${villageId}-${i}`,
-    village_id: villageId,
-    building_key: b.key,
-    name: b.name,
-    emoji: b.emoji,
-    level: b.level,
-    max_level: b.maxLevel,
-    status: "active",
-  }));
+  return VILLAGE_BUILDINGS.map((b, i) => {
+    const initial = getInitialBuildingState(b.key);
+    return {
+      id: `local-bld-${villageId}-${i}`,
+      village_id: villageId,
+      building_key: b.key,
+      name: b.name,
+      emoji: b.emoji,
+      level: initial.level,
+      max_level: b.maxLevel,
+      status: initial.status,
+      build_end_at: null,
+      started_at: null,
+    };
+  });
 }
 
 function seedFamily(): DbFamilyMember[] {

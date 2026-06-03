@@ -26,6 +26,7 @@ export function DioramaCssFallback({
   trafficSize,
   labelsOnDemand,
   onShipClick,
+  onBuildingClick,
   fullscreenMode,
   editorMode,
   editorSection,
@@ -89,6 +90,7 @@ export function DioramaCssFallback({
             compact={compact}
             labelsOnDemand={labelsOnDemand}
             onShipClick={onShipClick}
+            onBuildingClick={onBuildingClick}
             editorMode={editorMode && editorSection === "buildings"}
             selected={selectedBuildingKey === def.key}
             onSelect={onSelectBuilding}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Link } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
@@ -8,10 +8,13 @@ import { useVillageDiorama, useSpaceshipParts, usePikminSquad, usePlayerBiome } 
 import { useDioramaLayout, useEngineMode } from "@/hooks/useDioramaLayout";
 import { shipProgressPercent } from "@/lib/game/spaceship";
 import { resolveBuildingVisualState } from "@/lib/diorama/dioramaAssets";
+import { applyConstructionTimers } from "@/lib/game/buildingActions";
+import { normalizeBuildingStatus, toDioramaRuntimeStatus } from "@/lib/game/buildingSystem";
 import { getBiomeByKey } from "@/data/secretPikminWorld";
 import { SpaceshipAssemblyPanel } from "@/components/game/SpaceshipAssemblyPanel";
+import { DioramaBuildingPanel } from "@/components/game/diorama/DioramaBuildingPanel";
 import { DioramaEngine } from "@/components/game/diorama/engine/DioramaEngine";
-import { DIORAMA_BUILDINGS, BIOME_DIORAMA_THEMES } from "@/components/game/diorama/diorama-data";
+import { DIORAMA_BUILDINGS, BIOME_DIORAMA_THEMES, type BuildingKey } from "@/components/game/diorama/diorama-data";
 import styles from "@/styles/village-diorama.module.css";
 import type { BiomeKey } from "@/types/secretPikmin";
 
@@ -38,7 +41,8 @@ export function VillageDiorama({
   fullscreenMode = false,
 }: VillageDioramaProps) {
   const isHero = heroMode || fullscreenMode;
-  const { buildings, villageName, controlLevel, maxVillages, loading } = useVillageDiorama(ownerAgent);
+  const { buildings, villageId, villageName, controlLevel, maxVillages, loading, reload, agent } =
+    useVillageDiorama(ownerAgent);
   const { parts } = useSpaceshipParts();
   const { squad } = usePikminSquad(ownerAgent);
   const { biome } = usePlayerBiome(ownerAgent);
@@ -46,6 +50,14 @@ export function VillageDiorama({
   const engineMode = useEngineMode(layout);
   const shipPct = shipProgressPercent(parts);
   const [shipOpen, setShipOpen] = useState(false);
+  const [buildingPanelKey, setBuildingPanelKey] = useState<BuildingKey | null>(null);
+
+  const liveBuildings = useMemo(() => applyConstructionTimers(buildings), [buildings]);
+
+  useEffect(() => {
+    const id = window.setInterval(() => reload(), 5000);
+    return () => window.clearInterval(id);
+  }, [reload]);
 
   const openShip = useCallback(() => {
     hapticTap();
@@ -53,26 +65,37 @@ export function VillageDiorama({
   }, []);
   const closeShip = useCallback(() => setShipOpen(false), []);
 
+  const openBuilding = useCallback((key: string) => {
+    if (key === "hangar") return;
+    hapticTap();
+    setBuildingPanelKey(key as BuildingKey);
+  }, []);
+  const closeBuilding = useCallback(() => setBuildingPanelKey(null), []);
+
   useEffect(() => {
-    if (!shipOpen) return;
+    if (!shipOpen && !buildingPanelKey) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeShip();
+      if (e.key === "Escape") {
+        closeShip();
+        closeBuilding();
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [shipOpen, closeShip]);
+  }, [shipOpen, buildingPanelKey, closeShip, closeBuilding]);
 
   const theme = BIOME_DIORAMA_THEMES[(biome as BiomeKey) ?? "bosco"] ?? BIOME_DIORAMA_THEMES.bosco;
   const biomeDef = getBiomeByKey(biome);
 
-  const levelMap = new Map(buildings.map((b) => [b.building_key, b.level]));
-  const statusMap = new Map(buildings.map((b) => [b.building_key, b.status as "active" | "upgrading" | "locked"]));
+  const buildingByKey = useMemo(() => new Map(liveBuildings.map((b) => [b.building_key, b])), [liveBuildings]);
 
   const displayBuildings =
-    buildings.length > 0
+    liveBuildings.length > 0
       ? DIORAMA_BUILDINGS.map((def) => {
-          const level = levelMap.get(def.key) ?? 1;
-          const status = statusMap.get(def.key) ?? "active";
+          const row = buildingByKey.get(def.key);
+          const gameStatus = normalizeBuildingStatus(row?.status ?? "completed");
+          const level = gameStatus === "buildable" ? 0 : (row?.level ?? 1);
+          const status = toDioramaRuntimeStatus(gameStatus);
           return {
             def,
             level,
@@ -86,6 +109,8 @@ export function VillageDiorama({
           status: "active" as const,
           visualState: resolveBuildingVisualState("active", VILLAGE_BUILDINGS.find((b) => b.key === def.key)?.level ?? i + 1),
         }));
+
+  const selectedBuilding = buildingPanelKey ? buildingByKey.get(buildingPanelKey) : undefined;
 
   const visiblePikmin = squad.length > 0 ? squad.slice(0, compact ? 2 : isHero ? 2 : 4) : [];
   const onMission = squad.filter((p) => p.status === "in_spedizione" || p.status === "in_missione");
@@ -128,6 +153,7 @@ export function VillageDiorama({
         trafficSize={trafficSize}
         labelsOnDemand={isHero}
         onShipClick={openShip}
+        onBuildingClick={openBuilding}
         ariaLabel={`Villaggio ${villageName || ""} nel bioma ${biomeDef?.label ?? biome}`}
         sceneClassName={`${styles.dioramaScene} ${isHero ? styles.heroScene : ""} ${fullscreenMode ? styles.heroSceneFullscreen : ""}`}
       />
@@ -176,6 +202,47 @@ export function VillageDiorama({
                 </button>
               </div>
               <SpaceshipAssemblyPanel />
+            </motion.div>
+          </motion.div>
+        )}
+
+        {buildingPanelKey && selectedBuilding && villageId && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-night/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-3"
+            onClick={closeBuilding}
+            role="presentation"
+          >
+            <motion.div
+              initial={{ y: 40, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 40, opacity: 0 }}
+              className="panel-strong w-full max-w-md p-4 max-h-[85vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="building-panel-title"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span id="building-panel-title" className="sr-only">{selectedBuilding.name}</span>
+                <button type="button" onClick={closeBuilding} className="panel p-1.5 ml-auto" aria-label="Chiudi pannello edificio">
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+              <DioramaBuildingPanel
+                building={selectedBuilding}
+                villageId={villageId}
+                agentKey={agent}
+                onUpdated={(next) => {
+                  reload();
+                  if (buildingPanelKey && !next.find((b) => b.building_key === buildingPanelKey)) {
+                    closeBuilding();
+                  }
+                }}
+                onClose={closeBuilding}
+              />
             </motion.div>
           </motion.div>
         )}

@@ -10,6 +10,7 @@ interface DioramaBuildingProps {
   level: number;
   status?: "active" | "upgrading" | "locked";
   onShipClick?: () => void;
+  onBuildingClick?: (key: BuildingKey) => void;
   compact?: boolean;
   labelsOnDemand?: boolean;
 }
@@ -99,7 +100,7 @@ function BuildingSilhouette({ buildingKey, color, compact }: { buildingKey: Buil
   }
 }
 
-export function DioramaBuilding({ def, level, status = "active", onShipClick, compact, labelsOnDemand }: DioramaBuildingProps) {
+export function DioramaBuilding({ def, level, status = "active", onShipClick, onBuildingClick, compact, labelsOnDemand }: DioramaBuildingProps) {
   const [revealed, setRevealed] = useState(false);
   const ariaLabel = `${def.name}, livello ${level}. ${def.role}. Clicca per entrare.`;
   const hidePermanentLabels = labelsOnDemand === true;
@@ -152,6 +153,20 @@ export function DioramaBuilding({ def, level, status = "active", onShipClick, co
     return (
       <button type="button" className={styles.buildingHit} style={posStyle(def)} aria-label={ariaLabel}
         onClick={() => { hapticBuildingClick(); revealBriefly(); onShipClick?.(); }}>
+        {inner}
+      </button>
+    );
+  }
+
+  if (def.route && onBuildingClick) {
+    return (
+      <button
+        type="button"
+        onClick={() => { hapticBuildingClick(); revealBriefly(); onBuildingClick(def.key); }}
+        className={styles.buildingHit}
+        style={posStyle(def)}
+        aria-label={ariaLabel}
+      >
         {inner}
       </button>
     );

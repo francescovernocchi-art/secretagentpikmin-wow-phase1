@@ -25,6 +25,7 @@ export function DioramaImageStage({
   trafficSize,
   labelsOnDemand,
   onShipClick,
+  onBuildingClick,
   fullscreenMode,
   editorMode,
   editorSection,
@@ -105,6 +106,7 @@ export function DioramaImageStage({
             compact={compact}
             labelsOnDemand={labelsOnDemand}
             onShipClick={onShipClick}
+            onBuildingClick={onBuildingClick}
             editorMode={editorMode && editorSection === "buildings"}
             selected={selectedBuildingKey === def.key}
             onSelect={onSelectBuilding}

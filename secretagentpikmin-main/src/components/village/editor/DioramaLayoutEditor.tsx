@@ -17,7 +17,9 @@ import {
 } from "@/data/dioramaLayouts";
 import { buildingAssetBasePath } from "@/lib/diorama/dioramaAssets";
 import { generateTrafficAgents, saveTrafficCountOverride } from "@/lib/diorama/pikminTraffic";
+import { getCurrentBonus, getLevelConfig, getNextTargetLevel, normalizeBuildingStatus } from "@/lib/game/buildingSystem";
 import { useDioramaLayout, useEngineMode } from "@/hooks/useDioramaLayout";
+import { useVillageDiorama } from "@/hooks/useGameData";
 import { useSpaceshipParts } from "@/hooks/useGameData";
 import { shipProgressPercent } from "@/lib/game/spaceship";
 import type { BiomeKey } from "@/types/secretPikmin";
@@ -64,6 +66,16 @@ export function DioramaLayoutEditor({ biomeKey }: Props) {
   const { parts } = useSpaceshipParts();
   const shipPct = shipProgressPercent(parts);
   const theme = BIOME_DIORAMA_THEMES[layoutBiome as BiomeKey] ?? BIOME_DIORAMA_THEMES.bosco;
+  const { buildings: gameBuildings } = useVillageDiorama();
+  const selectedGameBuilding = gameBuildings.find((b) => b.building_key === selectedKey);
+  const gameStatus = selectedGameBuilding ? normalizeBuildingStatus(selectedGameBuilding.status) : null;
+  const gameBonus = selectedGameBuilding && gameStatus
+    ? getCurrentBonus(selectedGameBuilding.building_key, selectedGameBuilding.level, gameStatus)
+    : null;
+  const nextLevel = selectedGameBuilding && gameStatus
+    ? getNextTargetLevel(selectedGameBuilding.level, gameStatus)
+    : null;
+  const nextLevelCfg = selectedKey && nextLevel ? getLevelConfig(selectedKey, nextLevel) : null;
 
   const sceneBuildings = useMemo(
     () =>
@@ -357,6 +369,17 @@ export function DioramaLayoutEditor({ biomeKey }: Props) {
 
           {selectedBuilding && (
             <div className="grid grid-cols-2 gap-3 text-[10px]">
+              {selectedGameBuilding && (
+                <div className="col-span-2 panel px-3 py-2 space-y-1 border border-primary/20">
+                  <p className="text-[9px] uppercase tracking-widest text-primary">Building System · V2.5</p>
+                  <p>Livello: {selectedGameBuilding.level} / {selectedGameBuilding.max_level}</p>
+                  <p>Stato: {gameStatus}</p>
+                  {gameBonus && <p>Bonus: {gameBonus.label}</p>}
+                  {nextLevelCfg && gameStatus !== "under_construction" && (
+                    <p className="text-muted-foreground">Prossimo: {nextLevelCfg.bonus.label} · {nextLevelCfg.buildTimeSec}s</p>
+                  )}
+                </div>
+              )}
               <label className="col-span-2 flex items-center gap-2">
                 <input
                   type="checkbox"

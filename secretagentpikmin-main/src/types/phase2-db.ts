@@ -94,7 +94,10 @@ export interface DbVillageBuilding {
   emoji: string;
   level: number;
   max_level: number;
+  /** locked | buildable | under_construction | completed (legacy: active) */
   status: string;
+  started_at?: string | null;
+  build_end_at?: string | null;
 }
 
 export interface DbScanResult {

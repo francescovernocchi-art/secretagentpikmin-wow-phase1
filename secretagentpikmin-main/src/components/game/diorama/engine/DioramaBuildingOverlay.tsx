@@ -19,6 +19,7 @@ interface Props {
   compact?: boolean;
   labelsOnDemand?: boolean;
   onShipClick?: () => void;
+  onBuildingClick?: (key: string) => void;
   editorMode?: boolean;
   selected?: boolean;
   onSelect?: (key: string) => void;
@@ -33,6 +34,7 @@ export function DioramaBuildingOverlay({
   compact,
   labelsOnDemand,
   onShipClick,
+  onBuildingClick,
   editorMode,
   selected,
   onSelect,
@@ -106,6 +108,19 @@ export function DioramaBuildingOverlay({
         </button>
       );
     }
+    if (def.route && layoutBuilding.clickable !== false && onBuildingClick) {
+      return (
+        <button
+          type="button"
+          className={styles.engineBuildingHit}
+          style={posStyle}
+          onClick={() => { hapticBuildingClick(); onBuildingClick(layoutBuilding.key); }}
+          aria-label={`${def.name}, livello ${level}`}
+        >
+          {inner}
+        </button>
+      );
+    }
     if (def.route && layoutBuilding.clickable !== false) {
       return (
         <Link to={def.route} className={styles.engineBuildingHit} style={posStyle} onClick={hapticBuildingClick} aria-label={`${def.name}, livello ${level}`}>
@@ -125,6 +140,7 @@ export function DioramaBuildingOverlay({
         compact={compact}
         labelsOnDemand={labelsOnDemand}
         onShipClick={onShipClick}
+        onBuildingClick={onBuildingClick}
       />
     );
   }
@@ -137,6 +153,7 @@ export function DioramaBuildingOverlay({
       compact={compact}
       labelsOnDemand={labelsOnDemand}
       onShipClick={onShipClick}
+      onBuildingClick={onBuildingClick}
     />
   );
 }

@@ -91,27 +91,31 @@ export function useVillageDiorama(ownerAgent?: string) {
   const session = typeof window !== "undefined" ? getSession() : null;
   const agent = ownerAgent ?? agentKeyFromSession(session?.role);
   const [buildings, setBuildings] = useState<DbVillageBuilding[]>([]);
+  const [villageId, setVillageId] = useState("");
   const [villageName, setVillageName] = useState("");
   const [controlLevel, setControlLevel] = useState(1);
   const [maxVillages, setMaxVillages] = useState(1);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    (async () => {
-      setLoading(true);
-      try {
-        const res = await fetchPrimaryVillage(agent);
-        setBuildings(res.buildings);
-        setVillageName(res.village.name);
-        setControlLevel(res.controlCenterLevel);
-        setMaxVillages(res.maxVillages);
-      } finally {
-        setLoading(false);
-      }
-    })();
+  const reload = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetchPrimaryVillage(agent);
+      setBuildings(res.buildings);
+      setVillageId(res.village.id);
+      setVillageName(res.village.name);
+      setControlLevel(res.controlCenterLevel);
+      setMaxVillages(res.maxVillages);
+    } finally {
+      setLoading(false);
+    }
   }, [agent]);
 
-  return { buildings, villageName, controlLevel, maxVillages, loading };
+  useEffect(() => {
+    reload();
+  }, [reload]);
+
+  return { buildings, villageId, villageName, controlLevel, maxVillages, loading, reload, agent };
 }
 
 export function useMarket(agentKey?: string) {
