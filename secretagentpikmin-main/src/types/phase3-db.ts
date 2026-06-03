@@ -71,12 +71,54 @@ export const EXPEDITION_OBJECTIVES: Array<{
   xpPerPikmin: number;
   specBonus: PikminSpecializationKey[];
 }> = [
-  { key: "raccolta", label: "Raccolta", emoji: "🍃", baseDuration: 20, xpPerPikmin: 25, specBonus: ["raccolta", "trasporto"] },
-  { key: "ricerca_navicella", label: "Ricerca pezzi navicella", emoji: "🚀", baseDuration: 35, xpPerPikmin: 40, specBonus: ["ricerca", "scouting"] },
-  { key: "studio_mostri", label: "Studio mostri", emoji: "👾", baseDuration: 25, xpPerPikmin: 35, specBonus: ["spionaggio", "combattimento"] },
-  { key: "scouting", label: "Scouting bioma", emoji: "🗺️", baseDuration: 18, xpPerPikmin: 20, specBonus: ["scouting", "ricerca"] },
-  { key: "ingredienti", label: "Recupero ingredienti", emoji: "🍯", baseDuration: 22, xpPerPikmin: 22, specBonus: ["raccolta", "ricerca"] },
-  { key: "difesa", label: "Difesa villaggio", emoji: "🛡️", baseDuration: 30, xpPerPikmin: 45, specBonus: ["combattimento", "supporto"] },
+  {
+    key: "raccolta",
+    label: "Raccolta",
+    emoji: "🍃",
+    baseDuration: 20,
+    xpPerPikmin: 25,
+    specBonus: ["raccolta", "trasporto"],
+  },
+  {
+    key: "ricerca_navicella",
+    label: "Ricerca pezzi navicella",
+    emoji: "🚀",
+    baseDuration: 35,
+    xpPerPikmin: 40,
+    specBonus: ["ricerca", "scouting"],
+  },
+  {
+    key: "studio_mostri",
+    label: "Studio mostri",
+    emoji: "👾",
+    baseDuration: 25,
+    xpPerPikmin: 35,
+    specBonus: ["spionaggio", "combattimento"],
+  },
+  {
+    key: "scouting",
+    label: "Scouting bioma",
+    emoji: "🗺️",
+    baseDuration: 18,
+    xpPerPikmin: 20,
+    specBonus: ["scouting", "ricerca"],
+  },
+  {
+    key: "ingredienti",
+    label: "Recupero ingredienti",
+    emoji: "🍯",
+    baseDuration: 22,
+    xpPerPikmin: 22,
+    specBonus: ["raccolta", "ricerca"],
+  },
+  {
+    key: "difesa",
+    label: "Difesa villaggio",
+    emoji: "🛡️",
+    baseDuration: 30,
+    xpPerPikmin: 45,
+    specBonus: ["combattimento", "supporto"],
+  },
 ];
 
 export const SPEC_BADGES: Record<PikminSpecializationKey, string[]> = {
