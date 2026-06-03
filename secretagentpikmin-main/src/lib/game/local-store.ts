@@ -10,7 +10,7 @@ import {
   MOCK_MARKET_LISTINGS,
   VILLAGE_RULES,
 } from "@/data/secretPikminWorld";
-import { getInitialBuildingState } from "@/lib/game/buildingSystem";
+import { getBuildingDef, getInitialBuildingState } from "@/lib/game/buildingSystem";
 import type {
   DbBestiaryEntry,
   DbChatMessage,
@@ -138,14 +138,15 @@ function seedVillage(agent: string): DbVillage {
 function seedVillageBuildings(villageId: string): DbVillageBuilding[] {
   return VILLAGE_BUILDINGS.map((b, i) => {
     const initial = getInitialBuildingState(b.key);
+    const sys = getBuildingDef(b.key);
     return {
       id: `local-bld-${villageId}-${i}`,
       village_id: villageId,
       building_key: b.key,
-      name: b.name,
+      name: sys?.name ?? b.name,
       emoji: b.emoji,
       level: initial.level,
-      max_level: b.maxLevel,
+      max_level: sys?.maxLevel ?? b.maxLevel,
       status: initial.status,
       build_end_at: null,
       started_at: null,

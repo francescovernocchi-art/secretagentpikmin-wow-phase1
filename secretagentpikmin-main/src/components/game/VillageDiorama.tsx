@@ -111,6 +111,7 @@ export function VillageDiorama({
         }));
 
   const selectedBuilding = buildingPanelKey ? buildingByKey.get(buildingPanelKey) : undefined;
+  const hangarBuilding = buildingByKey.get("hangar");
 
   const visiblePikmin = squad.length > 0 ? squad.slice(0, compact ? 2 : isHero ? 2 : 4) : [];
   const onMission = squad.filter((p) => p.status === "in_spedizione" || p.status === "in_missione");
@@ -202,6 +203,18 @@ export function VillageDiorama({
                 </button>
               </div>
               <SpaceshipAssemblyPanel />
+              {hangarBuilding && villageId && (
+                <div className="mt-4 pt-4 border-t border-border/40">
+                  <p className="text-[10px] uppercase tracking-widest text-primary mb-2">Hangar · Building System</p>
+                  <DioramaBuildingPanel
+                    building={hangarBuilding}
+                    villageId={villageId}
+                    agentKey={agent}
+                    onUpdated={() => reload()}
+                    onClose={closeShip}
+                  />
+                </div>
+              )}
             </motion.div>
           </motion.div>
         )}

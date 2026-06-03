@@ -15,9 +15,16 @@ import {
   type DioramaHotspotKind,
   type DioramaRoadType,
 } from "@/data/dioramaLayouts";
-import { buildingAssetBasePath } from "@/lib/diorama/dioramaAssets";
+import { buildingAssetBasePath, resolveBuildingVisualState } from "@/lib/diorama/dioramaAssets";
 import { generateTrafficAgents, saveTrafficCountOverride } from "@/lib/diorama/pikminTraffic";
-import { getCurrentBonus, getLevelConfig, getNextTargetLevel, normalizeBuildingStatus } from "@/lib/game/buildingSystem";
+import {
+  formatBuildingCosts,
+  getCurrentBonus,
+  getLevelConfig,
+  getNextTargetLevel,
+  normalizeBuildingStatus,
+  toDioramaRuntimeStatus,
+} from "@/lib/game/buildingSystem";
 import { useDioramaLayout, useEngineMode } from "@/hooks/useDioramaLayout";
 import { useVillageDiorama } from "@/hooks/useGameData";
 import { useSpaceshipParts } from "@/hooks/useGameData";
@@ -60,6 +67,7 @@ export function DioramaLayoutEditor({ biomeKey }: Props) {
   const [forceCss, setForceCss] = useState(layout.forceCssFallback ?? false);
   const [trafficCount, setTrafficCount] = useState(layout.trafficConfig?.initialCount ?? 10);
   const [trafficDebug, setTrafficDebug] = useState(true);
+  const [useGameBuildingPreview, setUseGameBuildingPreview] = useState(true);
   const stageRef = useRef<HTMLDivElement>(null);
 
   const engineMode = useEngineMode({ ...draft, forceCssFallback: forceCss });
@@ -79,17 +87,31 @@ export function DioramaLayoutEditor({ biomeKey }: Props) {
 
   const sceneBuildings = useMemo(
     () =>
-      DIORAMA_BUILDINGS.filter((b) => b.key !== "hangar").map((def) => ({
-        def,
-        level: previewVisualState.startsWith("level_") ? Number(previewVisualState.split("_")[1]) : 1,
-        status: (previewVisualState === "locked"
-          ? "locked"
-          : previewVisualState === "under_construction"
-            ? "upgrading"
-            : "active") as "active" | "upgrading" | "locked",
-        visualState: previewVisualState,
-      })),
-    [previewVisualState],
+      DIORAMA_BUILDINGS.filter((b) => b.key !== "hangar").map((def) => {
+        const row = gameBuildings.find((b) => b.building_key === def.key);
+        if (useGameBuildingPreview && row) {
+          const gs = normalizeBuildingStatus(row.status);
+          const level = gs === "buildable" ? 0 : row.level;
+          const status = toDioramaRuntimeStatus(gs);
+          return {
+            def,
+            level,
+            status,
+            visualState: resolveBuildingVisualState(status, level),
+          };
+        }
+        return {
+          def,
+          level: previewVisualState.startsWith("level_") ? Number(previewVisualState.split("_")[1]) : 1,
+          status: (previewVisualState === "locked"
+            ? "locked"
+            : previewVisualState === "under_construction"
+              ? "upgrading"
+              : "active") as "active" | "upgrading" | "locked",
+          visualState: previewVisualState,
+        };
+      }),
+    [previewVisualState, useGameBuildingPreview, gameBuildings],
   );
   const hangarDef = DIORAMA_BUILDINGS.find((b) => b.key === "hangar")!;
 
@@ -354,11 +376,21 @@ export function DioramaLayoutEditor({ biomeKey }: Props) {
             ))}
           </div>
 
+          <label className="flex items-center gap-2 text-[10px] mb-2">
+            <input
+              type="checkbox"
+              checked={useGameBuildingPreview}
+              onChange={(e) => setUseGameBuildingPreview(e.target.checked)}
+            />
+            Anteprima stato gioco (livello/status runtime)
+          </label>
+
           <label className="block text-[10px]">
-            Preview stato sprite
+            Preview stato sprite {useGameBuildingPreview ? "(override manuale disattivo)" : ""}
             <select
               className="mt-1 w-full panel px-2 py-1.5 text-xs"
               value={previewVisualState}
+              disabled={useGameBuildingPreview}
               onChange={(e) => setPreviewVisualState(e.target.value as DioramaBuildingVisualState)}
             >
               {VISUAL_STATES.map((s) => (
@@ -374,9 +406,12 @@ export function DioramaLayoutEditor({ biomeKey }: Props) {
                   <p className="text-[9px] uppercase tracking-widest text-primary">Building System · V2.5</p>
                   <p>Livello: {selectedGameBuilding.level} / {selectedGameBuilding.max_level}</p>
                   <p>Stato: {gameStatus}</p>
-                  {gameBonus && <p>Bonus: {gameBonus.label}</p>}
+                  {gameBonus && <p>Bonus attivo: {gameBonus.label}</p>}
                   {nextLevelCfg && gameStatus !== "under_construction" && (
-                    <p className="text-muted-foreground">Prossimo: {nextLevelCfg.bonus.label} · {nextLevelCfg.buildTimeSec}s</p>
+                    <>
+                      <p className="text-muted-foreground">Prossimo: {nextLevelCfg.bonus.label} · {nextLevelCfg.buildTimeSec}s</p>
+                      <p className="text-muted-foreground">Costi: {formatBuildingCosts(nextLevelCfg.costs).join(" · ")}</p>
+                    </>
                   )}
                 </div>
               )}
