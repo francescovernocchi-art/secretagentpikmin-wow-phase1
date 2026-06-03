@@ -13,9 +13,10 @@ if (-not (Test-Path $SyncScript)) {
 $Action = New-ScheduledTaskAction -Execute "powershell.exe" `
     -Argument "-NoProfile -ExecutionPolicy Bypass -File `"$SyncScript`""
 
+# RepetitionDuration must be finite on Windows (max ~10 years).
 $Trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) `
     -RepetitionInterval (New-TimeSpan -Minutes 5) `
-    -RepetitionDuration ([TimeSpan]::MaxValue)
+    -RepetitionDuration (New-TimeSpan -Days 3650)
 
 $Settings = New-ScheduledTaskSettingsSet `
     -AllowStartIfOnBatteries `
