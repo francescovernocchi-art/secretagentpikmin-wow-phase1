@@ -1,4 +1,10 @@
-export type FamilyTradeStatus = "draft" | "pending" | "accepted" | "rejected" | "cancelled" | "completed";
+export type FamilyTradeStatus =
+  | "draft"
+  | "pending"
+  | "accepted"
+  | "rejected"
+  | "cancelled"
+  | "completed";
 
 export type FamilyTradeSide = "offer" | "request";
 
