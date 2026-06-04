@@ -64,10 +64,13 @@ export async function downloadBiomeAssetPack(layout: DioramaLayout): Promise<voi
   URL.revokeObjectURL(url);
 }
 
-export async function importBiomeAssetPack(raw: unknown): Promise<{ layout: DioramaLayout; imported: number }> {
+export async function importBiomeAssetPack(
+  raw: unknown,
+): Promise<{ layout: DioramaLayout; imported: number }> {
   if (!raw || typeof raw !== "object") throw new Error("Pacchetto non valido");
   const pack = raw as BiomeAssetPack;
-  if (!pack.layout?.id || !Array.isArray(pack.assets)) throw new Error("Formato pacchetto incompleto");
+  if (!pack.layout?.id || !Array.isArray(pack.assets))
+    throw new Error("Formato pacchetto incompleto");
 
   let imported = 0;
   for (const entry of pack.assets) {

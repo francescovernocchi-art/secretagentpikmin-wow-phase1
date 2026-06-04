@@ -36,7 +36,15 @@ interface Props {
 }
 
 export function BuildPanel({
-  open, onOpenChange, agent, coins, catalog, buildings, selectedSlot, onRequestPlacement, onRefresh,
+  open,
+  onOpenChange,
+  agent,
+  coins,
+  catalog,
+  buildings,
+  selectedSlot,
+  onRequestPlacement,
+  onRefresh,
 }: Props) {
   const [tab, setTab] = useState<"catalog" | "active">("catalog");
   const imageMap = useBuildingImages();
@@ -46,19 +54,30 @@ export function BuildPanel({
 
   // Filtra catalogo per le categorie compatibili con lo slot selezionato
   const filteredCatalog = selectedSlot
-    ? catalog.filter((c) => selectedSlot.allowedCategories.length === 0 || selectedSlot.allowedCategories.includes(c.category ?? "utility"))
+    ? catalog.filter(
+        (c) =>
+          selectedSlot.allowedCategories.length === 0 ||
+          selectedSlot.allowedCategories.includes(c.category ?? "utility"),
+      )
     : catalog;
 
   return (
-    <VillagePanelSheet open={open} onOpenChange={onOpenChange}
-      title="Costruzione" icon={<Hammer className="h-4 w-4 text-amber-400" />}>
+    <VillagePanelSheet
+      open={open}
+      onOpenChange={onOpenChange}
+      title="Costruzione"
+      icon={<Hammer className="h-4 w-4 text-amber-400" />}
+    >
       <div className="grid grid-cols-2 gap-1 mb-3 panel p-1 text-[11px]">
-        {((["catalog", "active"] as const).map((t) => (
-          <button key={t} onClick={() => setTab(t)}
-            className={`py-1.5 rounded-md transition ${tab === t ? "bg-primary/20 text-primary" : "text-muted-foreground"}`}>
+        {(["catalog", "active"] as const).map((t) => (
+          <button
+            key={t}
+            onClick={() => setTab(t)}
+            className={`py-1.5 rounded-md transition ${tab === t ? "bg-primary/20 text-primary" : "text-muted-foreground"}`}
+          >
             {t === "catalog" ? "Catalogo" : `In cantiere (${active.length})`}
           </button>
-        )))}
+        ))}
       </div>
 
       {selectedSlot && (
@@ -82,32 +101,44 @@ export function BuildPanel({
             const isBusy = owned && owned.status !== "idle";
             const canAfford = coins >= cost.coins;
             return (
-              <motion.div key={c.key} layout
-                className="rounded-xl p-3 flex items-center gap-3 border border-primary/25 bg-[oklch(0.22_0.04_250_/_0.95)] shadow-md">
+              <motion.div
+                key={c.key}
+                layout
+                className="rounded-xl p-3 flex items-center gap-3 border border-primary/25 bg-[oklch(0.22_0.04_250_/_0.95)] shadow-md"
+              >
                 <div className="w-14 h-14 rounded-lg bg-[oklch(0.14_0.03_250)] border border-primary/30 flex items-center justify-center overflow-hidden shrink-0">
-                  {img ? <img src={img} alt={c.name} className="w-full h-full object-contain" />
-                       : <span className="text-2xl">{c.emoji}</span>}
+                  {img ? (
+                    <img src={img} alt={c.name} className="w-full h-full object-contain" />
+                  ) : (
+                    <span className="text-2xl">{c.emoji}</span>
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-semibold truncate">{c.name}</p>
                   <p className="text-[10px] text-muted-foreground line-clamp-2">{c.description}</p>
                   <div className="text-[10px] mt-1 flex items-center gap-2 flex-wrap">
                     {owned ? (
-                      <span className="text-primary">Lv {owned.level}/{c.max_level}</span>
+                      <span className="text-primary">
+                        Lv {owned.level}/{c.max_level}
+                      </span>
                     ) : (
                       <span className="text-muted-foreground">Non costruito</span>
                     )}
                     {!isMax && (
                       <>
                         <span>{cost.coins}💰</span>
-                        <span><Clock className="inline h-3 w-3" /> {cost.minutes}m</span>
+                        <span>
+                          <Clock className="inline h-3 w-3" /> {cost.minutes}m
+                        </span>
                       </>
                     )}
                   </div>
                 </div>
                 <div className="shrink-0">
                   {isBusy ? (
-                    <span className="text-[10px] text-amber-400 font-mono">{formatRemaining(owned!.build_end_at)}</span>
+                    <span className="text-[10px] text-amber-400 font-mono">
+                      {formatRemaining(owned!.build_end_at)}
+                    </span>
                   ) : isMax ? (
                     <span className="text-[10px] text-primary">MAX</span>
                   ) : owned ? (
@@ -115,10 +146,16 @@ export function BuildPanel({
                       disabled={!canAfford}
                       onClick={async () => {
                         hapticTap();
-                        try { await startUpgrade(agent, owned, c); sfx.upgrade(); onRefresh(); }
-                        catch (e: any) { alert(e.message); }
+                        try {
+                          await startUpgrade(agent, owned, c);
+                          sfx.upgrade();
+                          onRefresh();
+                        } catch (e: any) {
+                          alert(e.message);
+                        }
                       }}
-                      className="btn-neon px-3 py-1.5 text-[10px] disabled:opacity-40 flex items-center gap-1">
+                      className="btn-neon px-3 py-1.5 text-[10px] disabled:opacity-40 flex items-center gap-1"
+                    >
                       <ArrowUpRight className="h-3 w-3" /> Evolvi
                     </button>
                   ) : (
@@ -129,7 +166,8 @@ export function BuildPanel({
                         onRequestPlacement(c);
                         onOpenChange(false);
                       }}
-                      className="btn-neon px-3 py-1.5 text-[10px] disabled:opacity-40">
+                      className="btn-neon px-3 py-1.5 text-[10px] disabled:opacity-40"
+                    >
                       {canAfford ? "Costruisci" : "💰 manca"}
                     </button>
                   )}
@@ -149,9 +187,10 @@ export function BuildPanel({
           )}
           {active.map((b) => {
             const c = catalog.find((x) => x.key === b.type);
-            const total = b.build_end_at && b.started_at
-              ? Math.max(1, new Date(b.build_end_at).getTime() - new Date(b.started_at).getTime())
-              : 1;
+            const total =
+              b.build_end_at && b.started_at
+                ? Math.max(1, new Date(b.build_end_at).getTime() - new Date(b.started_at).getTime())
+                : 1;
             const elapsed = b.started_at ? Date.now() - new Date(b.started_at).getTime() : 0;
             const pct = Math.min(100, Math.max(0, (elapsed / total) * 100));
             return (
@@ -164,7 +203,10 @@ export function BuildPanel({
                   </span>
                 </div>
                 <div className="mt-2 h-1.5 rounded-full bg-night/60 overflow-hidden">
-                  <div className="h-full bg-amber-400 transition-all" style={{ width: `${pct}%` }} />
+                  <div
+                    className="h-full bg-amber-400 transition-all"
+                    style={{ width: `${pct}%` }}
+                  />
                 </div>
               </div>
             );
@@ -172,8 +214,10 @@ export function BuildPanel({
         </div>
       )}
 
-      <button onClick={() => onRefresh()}
-        className="panel mt-4 w-full py-2 text-[11px] text-muted-foreground">
+      <button
+        onClick={() => onRefresh()}
+        className="panel mt-4 w-full py-2 text-[11px] text-muted-foreground"
+      >
         Aggiorna
       </button>
     </VillagePanelSheet>

@@ -134,7 +134,12 @@ export function EnergyScanner({ open, onClose, onCaught }: Props) {
     if (signal > 35) {
       // spawn occasional glint
       if (Math.random() < (signal / 100) * 0.6) {
-        const g = { id: Date.now() + Math.random(), x: Math.random() * 100, y: Math.random() * 100, s: 0.4 + Math.random() };
+        const g = {
+          id: Date.now() + Math.random(),
+          x: Math.random() * 100,
+          y: Math.random() * 100,
+          s: 0.4 + Math.random(),
+        };
         setGlints((arr) => [...arr.slice(-8), g]);
         setTimeout(() => setGlints((arr) => arr.filter((x) => x.id !== g.id)), 900);
       }
@@ -145,7 +150,10 @@ export function EnergyScanner({ open, onClose, onCaught }: Props) {
     if (audioRef.current.next <= now && signal > 25) {
       try {
         let ctx = audioRef.current.ctx;
-        if (!ctx) ctx = audioRef.current.ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+        if (!ctx)
+          ctx = audioRef.current.ctx = new (
+            window.AudioContext || (window as any).webkitAudioContext
+          )();
         const o = ctx.createOscillator();
         const g = ctx.createGain();
         o.type = "sine";
@@ -239,7 +247,9 @@ export function EnergyScanner({ open, onClose, onCaught }: Props) {
             <p className="text-[9px] uppercase tracking-[0.4em] text-primary/80 flex items-center gap-1">
               <Radio className="h-3 w-3 animate-pulse" /> Energy scan
             </p>
-            <p className="font-display text-2xl text-glow leading-none mt-1">{Math.round(signal)}%</p>
+            <p className="font-display text-2xl text-glow leading-none mt-1">
+              {Math.round(signal)}%
+            </p>
             <div className="mt-1 h-1 w-32 rounded-full bg-primary/15 overflow-hidden">
               <div
                 className="h-full bg-primary transition-all"
@@ -303,9 +313,7 @@ export function EnergyScanner({ open, onClose, onCaught }: Props) {
                       : "Contatto!"}
             </motion.p>
           </AnimatePresence>
-          {error && (
-            <p className="mt-2 text-xs text-destructive">{error}</p>
-          )}
+          {error && <p className="mt-2 text-xs text-destructive">{error}</p>}
         </div>
 
         {/* FLASH */}
@@ -360,8 +368,12 @@ export function EnergyScanner({ open, onClose, onCaught }: Props) {
                 transition={{ delay: 0.3 }}
                 className="mt-6 text-center"
               >
-                <p className="text-[10px] uppercase tracking-[0.4em] text-primary/80">// Creatura rilevata</p>
-                <h2 className="font-display text-3xl text-glow mt-1">Pikmin {discovery.type.toUpperCase()}</h2>
+                <p className="text-[10px] uppercase tracking-[0.4em] text-primary/80">
+                  // Creatura rilevata
+                </p>
+                <h2 className="font-display text-3xl text-glow mt-1">
+                  Pikmin {discovery.type.toUpperCase()}
+                </h2>
               </motion.div>
               <motion.button
                 initial={{ opacity: 0, y: 12 }}

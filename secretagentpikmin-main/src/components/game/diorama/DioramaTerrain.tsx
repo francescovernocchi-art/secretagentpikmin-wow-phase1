@@ -16,7 +16,13 @@ interface DioramaTerrainProps {
 }
 
 /** Natura asimmetrica — posizioni fisse (V1.9), leggermente ridotta ai bordi per non coprire piazza */
-const NATURE_SCATTER: { kind: string; left: number; top: number; size?: "sm" | "md" | "lg"; rotate?: number }[] = [
+const NATURE_SCATTER: {
+  kind: string;
+  left: number;
+  top: number;
+  size?: "sm" | "md" | "lg";
+  rotate?: number;
+}[] = [
   { kind: "🌳", left: 6, top: 38, size: "lg", rotate: -8 },
   { kind: "🌿", left: 14, top: 52, size: "sm" },
   { kind: "🪨", left: 11, top: 68, size: "md" },
@@ -45,24 +51,104 @@ const COLONY_POIS: { key: string; icon: string; left: number; top: number; label
 const COLONY_PATHS = (pathColor: string, accent: string) => (
   <>
     {/* Hangar → piazza — arteria principale */}
-    <path d="M 50 8 L 50 28 Q 50 38 50 46" fill="none" stroke={pathColor} strokeWidth="6" strokeLinecap="round" opacity="0.85" />
-    <path d="M 50 8 L 50 28 Q 50 38 50 46" fill="none" stroke={accent} strokeWidth="2" strokeLinecap="round" opacity="0.35" />
+    <path
+      d="M 50 8 L 50 28 Q 50 38 50 46"
+      fill="none"
+      stroke={pathColor}
+      strokeWidth="6"
+      strokeLinecap="round"
+      opacity="0.85"
+    />
+    <path
+      d="M 50 8 L 50 28 Q 50 38 50 46"
+      fill="none"
+      stroke={accent}
+      strokeWidth="2"
+      strokeLinecap="round"
+      opacity="0.35"
+    />
     {/* Usura centrale */}
-    <path d="M 48 20 Q 50 34 50 46 Q 52 34 52 20" fill="none" stroke={pathColor} strokeWidth="3" strokeLinecap="round" opacity="0.4" />
+    <path
+      d="M 48 20 Q 50 34 50 46 Q 52 34 52 20"
+      fill="none"
+      stroke={pathColor}
+      strokeWidth="3"
+      strokeLinecap="round"
+      opacity="0.4"
+    />
 
     {/* Hub piazza → edifici */}
-    <path d="M 50 46 Q 32 48 22 50" fill="none" stroke={pathColor} strokeWidth="5" strokeLinecap="round" opacity="0.78" />
-    <path d="M 50 46 Q 68 44 78 42" fill="none" stroke={pathColor} strokeWidth="5" strokeLinecap="round" opacity="0.78" />
-    <path d="M 50 46 Q 38 58 28 68" fill="none" stroke={pathColor} strokeWidth="4.5" strokeLinecap="round" opacity="0.68" />
-    <path d="M 50 46 Q 58 58 62 70" fill="none" stroke={pathColor} strokeWidth="4.5" strokeLinecap="round" opacity="0.68" />
-    <path d="M 50 46 Q 50 40 48 36" fill="none" stroke={pathColor} strokeWidth="4" strokeLinecap="round" opacity="0.6" />
+    <path
+      d="M 50 46 Q 32 48 22 50"
+      fill="none"
+      stroke={pathColor}
+      strokeWidth="5"
+      strokeLinecap="round"
+      opacity="0.78"
+    />
+    <path
+      d="M 50 46 Q 68 44 78 42"
+      fill="none"
+      stroke={pathColor}
+      strokeWidth="5"
+      strokeLinecap="round"
+      opacity="0.78"
+    />
+    <path
+      d="M 50 46 Q 38 58 28 68"
+      fill="none"
+      stroke={pathColor}
+      strokeWidth="4.5"
+      strokeLinecap="round"
+      opacity="0.68"
+    />
+    <path
+      d="M 50 46 Q 58 58 62 70"
+      fill="none"
+      stroke={pathColor}
+      strokeWidth="4.5"
+      strokeLinecap="round"
+      opacity="0.68"
+    />
+    <path
+      d="M 50 46 Q 50 40 48 36"
+      fill="none"
+      stroke={pathColor}
+      strokeWidth="4"
+      strokeLinecap="round"
+      opacity="0.6"
+    />
 
     {/* Anello piazza — zona ritrovo */}
-    <ellipse cx="50" cy="46" rx="11" ry="8" fill="none" stroke={pathColor} strokeWidth="2.5" opacity="0.55" strokeDasharray="3 2" />
+    <ellipse
+      cx="50"
+      cy="46"
+      rx="11"
+      ry="8"
+      fill="none"
+      stroke={pathColor}
+      strokeWidth="2.5"
+      opacity="0.55"
+      strokeDasharray="3 2"
+    />
 
     {/* Tracce incrociate usura */}
-    <path d="M 18 52 Q 34 48 50 46 Q 66 48 82 44" fill="none" stroke={pathColor} strokeWidth="2" strokeLinecap="round" opacity="0.32" />
-    <path d="M 30 68 Q 40 58 50 46 Q 60 58 70 68" fill="none" stroke={pathColor} strokeWidth="1.8" strokeLinecap="round" opacity="0.28" />
+    <path
+      d="M 18 52 Q 34 48 50 46 Q 66 48 82 44"
+      fill="none"
+      stroke={pathColor}
+      strokeWidth="2"
+      strokeLinecap="round"
+      opacity="0.32"
+    />
+    <path
+      d="M 30 68 Q 40 58 50 46 Q 60 58 70 68"
+      fill="none"
+      stroke={pathColor}
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      opacity="0.28"
+    />
   </>
 );
 
@@ -130,7 +216,12 @@ export function DioramaTerrain({ theme, compact }: DioramaTerrainProps) {
           <span
             key={`sn-${i}`}
             className={`${styles.natureItem} ${styles[`nature_${n.size ?? "md"}`]}`}
-            style={{ left: `${n.left}%`, top: `${n.top}%`, rotate: `${n.rotate ?? 0}deg`, animationDelay: `${i * 0.35}s` }}
+            style={{
+              left: `${n.left}%`,
+              top: `${n.top}%`,
+              rotate: `${n.rotate ?? 0}deg`,
+              animationDelay: `${i * 0.35}s`,
+            }}
           >
             {n.kind}
           </span>
@@ -147,7 +238,10 @@ export function DioramaTerrain({ theme, compact }: DioramaTerrainProps) {
         >
           {/* Piazza pavimentata sul piatto isometrico */}
           {!compact && (
-            <div className={styles.groundPlazaHub} style={{ boxShadow: `inset 0 0 24px ${theme.accent}22` }}>
+            <div
+              className={styles.groundPlazaHub}
+              style={{ boxShadow: `inset 0 0 24px ${theme.accent}22` }}
+            >
               <div className={styles.groundPlazaInner} style={{ borderColor: `${theme.path}88` }} />
             </div>
           )}
@@ -157,11 +251,18 @@ export function DioramaTerrain({ theme, compact }: DioramaTerrainProps) {
           </svg>
 
           {theme.water && (
-            <div className={styles.waterPond} style={{ background: theme.water, boxShadow: `inset 0 0 20px ${theme.accent}44` }} />
+            <div
+              className={styles.waterPond}
+              style={{ background: theme.water, boxShadow: `inset 0 0 20px ${theme.accent}44` }}
+            />
           )}
 
           {[8, 22, 76, 91].map((left, i) => (
-            <div key={`grass-${i}`} className={styles.tallGrass} style={{ left: `${left}%`, top: `${[84, 90, 88, 85][i]}%` }} />
+            <div
+              key={`grass-${i}`}
+              className={styles.tallGrass}
+              style={{ left: `${left}%`, top: `${[84, 90, 88, 85][i]}%` }}
+            />
           ))}
 
           {NATURE_SCATTER.map((n, i) => (
@@ -178,7 +279,11 @@ export function DioramaTerrain({ theme, compact }: DioramaTerrainProps) {
             <span
               key={`dec-${i}`}
               className={styles.decorItem}
-              style={{ left: `${[8, 88, 5][i]}%`, top: `${[15, 20, 75][i]}%`, animationDelay: `${i * 0.7}s` }}
+              style={{
+                left: `${[8, 88, 5][i]}%`,
+                top: `${[15, 20, 75][i]}%`,
+                animationDelay: `${i * 0.7}s`,
+              }}
             >
               {d}
             </span>
@@ -186,9 +291,28 @@ export function DioramaTerrain({ theme, compact }: DioramaTerrainProps) {
         </div>
       </div>
 
-      <svg className={styles.hangarPathOverlay} viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
-        <path d="M 50 6 L 50 20 Q 50 32 50 40" fill="none" stroke={theme.path} strokeWidth="1.2" strokeLinecap="round" opacity="0.55" />
-        <path d="M 47 18 L 50 40 L 53 18" fill="none" stroke={theme.path} strokeWidth="0.6" strokeLinecap="round" opacity="0.3" />
+      <svg
+        className={styles.hangarPathOverlay}
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        aria-hidden
+      >
+        <path
+          d="M 50 6 L 50 20 Q 50 32 50 40"
+          fill="none"
+          stroke={theme.path}
+          strokeWidth="1.2"
+          strokeLinecap="round"
+          opacity="0.55"
+        />
+        <path
+          d="M 47 18 L 50 40 L 53 18"
+          fill="none"
+          stroke={theme.path}
+          strokeWidth="0.6"
+          strokeLinecap="round"
+          opacity="0.3"
+        />
       </svg>
     </div>
   );

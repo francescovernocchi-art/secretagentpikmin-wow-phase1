@@ -58,7 +58,9 @@ export function MarketPanel({ compact = false }: MarketPanelProps) {
         </header>
       )}
 
-      <section className={`panel-strong p-4 flex items-center justify-between gap-3 transition ${debtFlash ? "market-debt-flash" : ""}`}>
+      <section
+        className={`panel-strong p-4 flex items-center justify-between gap-3 transition ${debtFlash ? "market-debt-flash" : ""}`}
+      >
         <div>
           <p className="text-[10px] uppercase tracking-widest text-primary/80 flex items-center gap-1">
             <Coins className="h-3 w-3" /> Debito planetario
@@ -100,7 +102,12 @@ export function MarketPanel({ compact = false }: MarketPanelProps) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {items.map((m) => {
             const rarity = itemRarityFromPrice(m.sell_price);
-            const kind = m.category === "ingrediente" ? "berry" : m.category === "materiale" ? "crystal" : "berry";
+            const kind =
+              m.category === "ingrediente"
+                ? "berry"
+                : m.category === "materiale"
+                  ? "crystal"
+                  : "berry";
             return (
               <MarketGameCard
                 key={m.id}
@@ -117,7 +124,9 @@ export function MarketPanel({ compact = false }: MarketPanelProps) {
                       disabled={busy || selling === m.item_key || m.quantity < 1}
                       className="btn-neon px-3 py-1 text-[10px] flex items-center gap-1 disabled:opacity-50"
                     >
-                      {(selling === m.item_key || busy) && <Loader2 className="h-3 w-3 animate-spin" />}
+                      {(selling === m.item_key || busy) && (
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                      )}
                       Vendi
                     </button>
                   </div>
@@ -150,7 +159,10 @@ export function MarketPanel({ compact = false }: MarketPanelProps) {
 
       <FamilyTradePanel compact={compact} />
 
-      <button onClick={() => reload()} className="text-[10px] text-primary uppercase tracking-widest">
+      <button
+        onClick={() => reload()}
+        className="text-[10px] text-primary uppercase tracking-widest"
+      >
         Aggiorna market →
       </button>
     </div>

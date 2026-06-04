@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { Radio, Shield, ShoppingBag, Rocket, MapPin } from "lucide-react";
-import { canRemoteControlVillage, fetchActiveVillage, fetchPrimaryVillage } from "@/lib/game/villages";
+import {
+  canRemoteControlVillage,
+  fetchActiveVillage,
+  fetchPrimaryVillage,
+} from "@/lib/game/villages";
 import { fetchPlayerLocation } from "@/lib/game/player-location";
 import { agentKeyFromSession } from "@/lib/game/planet";
 import { getSession } from "@/lib/session";
@@ -20,7 +24,10 @@ export function RemoteControlPanel({ compact = false }: { compact?: boolean }) {
   const [inRange, setInRange] = useState(false);
   const [ccLevel, setCcLevel] = useState(1);
   const [checks, setChecks] = useState({ base: false, expeditions: false, market: false });
-  const [loc, setLoc] = useState<{ lat: number | null; lng: number | null }>({ lat: null, lng: null });
+  const [loc, setLoc] = useState<{ lat: number | null; lng: number | null }>({
+    lat: null,
+    lng: null,
+  });
 
   useEffect(() => {
     (async () => {
@@ -45,7 +52,9 @@ export function RemoteControlPanel({ compact = false }: { compact?: boolean }) {
     <section className="space-y-3">
       {!compact && (
         <header>
-          <p className="text-[10px] uppercase tracking-[0.35em] text-primary/80">// Controllo Remoto</p>
+          <p className="text-[10px] uppercase tracking-[0.35em] text-primary/80">
+            // Controllo Remoto
+          </p>
           <h2 className="font-display text-xl text-glow">Centro di Controllo Lv{ccLevel}</h2>
         </header>
       )}
@@ -72,12 +81,24 @@ export function RemoteControlPanel({ compact = false }: { compact?: boolean }) {
   );
 }
 
-function PermitCard({ icon: Icon, label, allowed, need }: { icon: typeof Shield; label: string; allowed: boolean; need?: string }) {
+function PermitCard({
+  icon: Icon,
+  label,
+  allowed,
+  need,
+}: {
+  icon: typeof Shield;
+  label: string;
+  allowed: boolean;
+  need?: string;
+}) {
   return (
     <div className={`panel p-3 ${allowed ? "border-primary/30 bg-primary/5" : "opacity-60"}`}>
       <Icon className={`h-4 w-4 mb-1 ${allowed ? "text-primary" : "text-muted-foreground"}`} />
       <p className="font-medium">{label}</p>
-      <p className="text-[10px] text-muted-foreground">{allowed ? "✓ Consentito" : need ?? "Bloccato"}</p>
+      <p className="text-[10px] text-muted-foreground">
+        {allowed ? "✓ Consentito" : (need ?? "Bloccato")}
+      </p>
     </div>
   );
 }

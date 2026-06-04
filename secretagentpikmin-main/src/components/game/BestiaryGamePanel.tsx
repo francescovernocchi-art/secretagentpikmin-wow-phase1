@@ -31,11 +31,15 @@ export function BestiaryGamePanel({ compact = false }: BestiaryGamePanelProps) {
 
   return (
     <section className="space-y-3 relative">
-      {!compact && <ParticleEffect variant="energy" density="low" className="opacity-40 rounded-2xl" />}
+      {!compact && (
+        <ParticleEffect variant="energy" density="low" className="opacity-40 rounded-2xl" />
+      )}
 
       {!compact && (
         <header className="relative">
-          <p className="text-[10px] uppercase tracking-[0.35em] text-[var(--ad-danger)]/90">// Bestiario attivo</p>
+          <p className="text-[10px] uppercase tracking-[0.35em] text-[var(--ad-danger)]/90">
+            // Bestiario attivo
+          </p>
           <h2 className="font-display text-xl text-glow">Creature incontrate</h2>
           <p className="text-xs text-muted-foreground mt-1">
             {entries.length} schede · {classified} classificate · debolezze dopo studio approfondito
@@ -45,7 +49,9 @@ export function BestiaryGamePanel({ compact = false }: BestiaryGamePanelProps) {
 
       {loading && <p className="text-xs text-muted-foreground animate-pulse">Carico bestiario…</p>}
 
-      <div className={`grid gap-3 relative ${compact ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2"}`}>
+      <div
+        className={`grid gap-3 relative ${compact ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2"}`}
+      >
         {entries.map((e) => (
           <CreatureCard key={e.id} entry={e} compact={compact} />
         ))}
@@ -64,12 +70,13 @@ function CreatureCard({ entry: e, compact }: { entry: DbBestiaryEntry; compact?:
   const status = e.study_status ?? "avvistato";
 
   return (
-    <article
-      className="creature-card p-3"
-      style={{ ["--card-rarity" as string]: rarity }}
-    >
+    <article className="creature-card p-3" style={{ ["--card-rarity" as string]: rarity }}>
       <div className="flex gap-3">
-        <CreaturePortraitSvg emoji={e.emoji} dangerLevel={e.danger_level ?? 1} size={compact ? 52 : 64} />
+        <CreaturePortraitSvg
+          emoji={e.emoji}
+          dangerLevel={e.danger_level ?? 1}
+          size={compact ? 52 : 64}
+        />
 
         <div className="flex-1 min-w-0 space-y-1">
           <div className="flex items-start justify-between gap-2">
@@ -90,13 +97,17 @@ function CreatureCard({ entry: e, compact }: { entry: DbBestiaryEntry; compact?:
           </div>
 
           <p className="text-[10px] text-muted-foreground">
-            Dati raccolti: {e.data_points ?? e.scan_count ?? 0} · Classificazione {Math.round(((e.data_points ?? 0) / 10) * 100)}%
+            Dati raccolti: {e.data_points ?? e.scan_count ?? 0} · Classificazione{" "}
+            {Math.round(((e.data_points ?? 0) / 10) * 100)}%
           </p>
 
           <div className="progress-mission mt-1 max-w-[140px]">
             <div
               className="progress-mission-fill"
-              style={{ width: `${Math.min(100, ((e.data_points ?? 0) / 10) * 100)}%`, background: `linear-gradient(90deg, ${rarity}, var(--ad-mission))` }}
+              style={{
+                width: `${Math.min(100, ((e.data_points ?? 0) / 10) * 100)}%`,
+                background: `linear-gradient(90deg, ${rarity}, var(--ad-mission))`,
+              }}
             />
           </div>
 

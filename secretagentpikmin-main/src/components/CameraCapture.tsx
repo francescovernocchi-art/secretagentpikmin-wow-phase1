@@ -1,6 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Camera, X, RefreshCcw, Image as ImageIcon, Loader2, Check, Zap, Smartphone, ShieldCheck, Compass } from "lucide-react";
+import {
+  Camera,
+  X,
+  RefreshCcw,
+  Image as ImageIcon,
+  Loader2,
+  Check,
+  Zap,
+  Smartphone,
+  ShieldCheck,
+  Compass,
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { ArPikminOverlay } from "@/components/ArPikminOverlay";
 
@@ -151,7 +162,10 @@ export function CameraCapture({
       const url = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/captures/${path}`;
       const xhr = new XMLHttpRequest();
       xhr.open("POST", url, true);
-      xhr.setRequestHeader("Authorization", `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`);
+      xhr.setRequestHeader(
+        "Authorization",
+        `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+      );
       xhr.setRequestHeader("apikey", import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY);
       xhr.setRequestHeader("x-upsert", "false");
       xhr.setRequestHeader("Content-Type", blob.type || "image/jpeg");
@@ -215,7 +229,10 @@ export function CameraCapture({
             <p className="text-[10px] uppercase tracking-[0.4em] text-primary/80">
               {overlayLabel ?? "// Cattura"}
             </p>
-            <button onClick={handleClose} className="rounded-full p-2 bg-night/60 border border-border">
+            <button
+              onClick={handleClose}
+              className="rounded-full p-2 bg-night/60 border border-border"
+            >
               <X className="h-4 w-4" />
             </button>
           </div>
@@ -247,8 +264,8 @@ export function CameraCapture({
                       Prima di iniziare
                     </h2>
                     <p className="text-xs text-muted-foreground max-w-xs mx-auto">
-                      Per agganciare i Pikmin servono due permessi del telefono.
-                      Tocca <b className="text-primary">Attiva AR</b> e accetta entrambi.
+                      Per agganciare i Pikmin servono due permessi del telefono. Tocca{" "}
+                      <b className="text-primary">Attiva AR</b> e accetta entrambi.
                     </p>
                   </div>
 
@@ -260,8 +277,8 @@ export function CameraCapture({
                       <div className="text-xs">
                         <p className="text-foreground font-semibold">1. Fotocamera</p>
                         <p className="text-muted-foreground">
-                          Apparirà il pop-up del browser. Tocca <b>"Consenti"</b> per
-                          inquadrare la zona di caccia.
+                          Apparirà il pop-up del browser. Tocca <b>"Consenti"</b> per inquadrare la
+                          zona di caccia.
                         </p>
                       </div>
                     </li>
@@ -274,8 +291,8 @@ export function CameraCapture({
                           2. Movimento e orientamento <span className="text-primary">(iOS)</span>
                         </p>
                         <p className="text-muted-foreground">
-                          iPhone chiederà l'accesso a <b>"Movimento e orientamento"</b>.
-                          Tocca <b>"Consenti"</b>, serve per puntare la bussola sul Pikmin.
+                          iPhone chiederà l'accesso a <b>"Movimento e orientamento"</b>. Tocca{" "}
+                          <b>"Consenti"</b>, serve per puntare la bussola sul Pikmin.
                         </p>
                       </div>
                     </li>
@@ -286,8 +303,8 @@ export function CameraCapture({
                       <div className="text-xs">
                         <p className="text-foreground font-semibold">3. Punta e scatta</p>
                         <p className="text-muted-foreground">
-                          Quando il mirino diventa verde fisso, premi il pulsante grande
-                          per catturare il Pikmin.
+                          Quando il mirino diventa verde fisso, premi il pulsante grande per
+                          catturare il Pikmin.
                         </p>
                       </div>
                     </li>
@@ -295,7 +312,10 @@ export function CameraCapture({
 
                   <div className="panel-strong p-3 text-[10px] text-primary/80 uppercase tracking-widest max-w-sm w-full">
                     Suggerimento iOS: se hai negato per sbaglio, vai in
-                    <span className="normal-case tracking-normal text-primary"> Impostazioni → Safari → Movimento e orientamento </span>
+                    <span className="normal-case tracking-normal text-primary">
+                      {" "}
+                      Impostazioni → Safari → Movimento e orientamento{" "}
+                    </span>
                     e riapri la pagina.
                   </div>
 
@@ -350,7 +370,11 @@ export function CameraCapture({
                 )}
               </>
             ) : (
-              <img src={preview} alt="preview" className="absolute inset-0 w-full h-full object-contain" />
+              <img
+                src={preview}
+                alt="preview"
+                className="absolute inset-0 w-full h-full object-contain"
+              />
             )}
           </div>
 
@@ -404,7 +428,11 @@ export function CameraCapture({
                     disabled={busy}
                     className="btn-neon flex-1 py-3 text-sm flex items-center justify-center gap-2 disabled:opacity-60"
                   >
-                    {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
+                    {busy ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Check className="h-4 w-4" />
+                    )}
                     {busy ? `Caricamento… ${progress}%` : "Conferma"}
                   </button>
                 </div>

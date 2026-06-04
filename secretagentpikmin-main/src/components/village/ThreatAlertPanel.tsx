@@ -79,7 +79,12 @@ export function ThreatAlertPanel({ threats }: Props) {
 /** Helper per costruire la lista dalle spawn della mappa. */
 export function computeNearbyThreats(
   basePos: { lat: number; lng: number } | null,
-  spawns: Array<{ id: string; lat: number; lng: number; enemy: { name: string; emoji: string; danger_level: number } | null }>,
+  spawns: Array<{
+    id: string;
+    lat: number;
+    lng: number;
+    enemy: { name: string; emoji: string; danger_level: number } | null;
+  }>,
 ): NearbyThreat[] {
   if (!basePos) return [];
   return spawns

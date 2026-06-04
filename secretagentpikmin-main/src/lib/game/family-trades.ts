@@ -55,14 +55,19 @@ async function loadOfferItems(offerId: string): Promise<DbFamilyTradeItem[]> {
 async function saveOffer(offer: DbFamilyTradeOffer, items: DbFamilyTradeItem[]): Promise<void> {
   try {
     if (isSupabaseConfigured()) {
-      const { data: existing } = await gameTable("family_trade_offers").select("id").eq("id", offer.id).maybeSingle();
+      const { data: existing } = await gameTable("family_trade_offers")
+        .select("id")
+        .eq("id", offer.id)
+        .maybeSingle();
       if (existing) {
-        await gameTable("family_trade_offers").update({
-          status: offer.status,
-          message: offer.message,
-          updated_at: offer.updated_at,
-          resolved_at: offer.resolved_at,
-        }).eq("id", offer.id);
+        await gameTable("family_trade_offers")
+          .update({
+            status: offer.status,
+            message: offer.message,
+            updated_at: offer.updated_at,
+            resolved_at: offer.resolved_at,
+          })
+          .eq("id", offer.id);
       } else {
         await gameTable("family_trade_offers").insert({
           id: offer.id,
@@ -99,7 +104,11 @@ async function validateInventory(agentKey: string, items: DbFamilyTradeItem[]): 
   return true;
 }
 
-async function transferItems(fromAgent: string, toAgent: string, items: DbFamilyTradeItem[]): Promise<void> {
+async function transferItems(
+  fromAgent: string,
+  toAgent: string,
+  items: DbFamilyTradeItem[],
+): Promise<void> {
   for (const item of items) {
     const ok = await removeInventoryQuantity(fromAgent, item.item_key, item.quantity);
     if (!ok) throw new Error(`Inventario insufficiente: ${item.item_name}`);
@@ -119,11 +128,26 @@ export async function createFamilyTradeOffer(opts: {
   fromAgent: string;
   toAgent?: string;
   message?: string;
-  offerItems: Array<{ item_key: string; item_name: string; emoji: string; category: string; quantity: number; sell_price: number }>;
-  requestItems?: Array<{ item_key: string; item_name: string; emoji: string; category: string; quantity: number; sell_price: number }>;
+  offerItems: Array<{
+    item_key: string;
+    item_name: string;
+    emoji: string;
+    category: string;
+    quantity: number;
+    sell_price: number;
+  }>;
+  requestItems?: Array<{
+    item_key: string;
+    item_name: string;
+    emoji: string;
+    category: string;
+    quantity: number;
+    sell_price: number;
+  }>;
 }): Promise<{ success: boolean; offer?: FamilyTradeOfferFull; message: string }> {
   const toAgent = opts.toAgent ?? OTHER_AGENT[opts.fromAgent] ?? "lorenzo";
-  if (opts.offerItems.length === 0) return { success: false, message: "Aggiungi almeno un oggetto da offrire" };
+  if (opts.offerItems.length === 0)
+    return { success: false, message: "Aggiungi almeno un oggetto da offrire" };
 
   const offerSide: DbFamilyTradeItem[] = opts.offerItems.map((i) => ({
     id: crypto.randomUUID(),
@@ -179,10 +203,14 @@ export async function createFamilyTradeOffer(opts: {
   return { success: true, offer: { ...offer, items }, message: "Scambio inviato" };
 }
 
-export async function acceptFamilyTrade(offerId: string, acceptingAgent: string): Promise<{ success: boolean; message: string }> {
+export async function acceptFamilyTrade(
+  offerId: string,
+  acceptingAgent: string,
+): Promise<{ success: boolean; message: string }> {
   const offer = localStore.getTradeOffer(offerId) ?? (await fetchTradeOfferById(offerId));
   if (!offer) return { success: false, message: "Scambio non trovato" };
-  if (offer.to_agent !== acceptingAgent) return { success: false, message: "Non sei il destinatario" };
+  if (offer.to_agent !== acceptingAgent)
+    return { success: false, message: "Non sei il destinatario" };
   if (offer.status !== "pending") return { success: false, message: "Scambio non più valido" };
 
   const items = offer.items.length ? offer.items : await loadOfferItems(offerId);
@@ -252,13 +280,22 @@ export async function acceptFamilyTrade(offerId: string, acceptingAgent: string)
   return { success: true, message: "Scambio completato!" };
 }
 
-export async function rejectFamilyTrade(offerId: string, agentKey: string): Promise<{ success: boolean; message: string }> {
+export async function rejectFamilyTrade(
+  offerId: string,
+  agentKey: string,
+): Promise<{ success: boolean; message: string }> {
   const offer = localStore.getTradeOffer(offerId) ?? (await fetchTradeOfferById(offerId));
   if (!offer) return { success: false, message: "Scambio non trovato" };
-  if (offer.to_agent !== agentKey && offer.from_agent !== agentKey) return { success: false, message: "Non autorizzato" };
+  if (offer.to_agent !== agentKey && offer.from_agent !== agentKey)
+    return { success: false, message: "Non autorizzato" };
 
   const status: FamilyTradeStatus = agentKey === offer.to_agent ? "rejected" : "cancelled";
-  const updated = { ...offer, status, updated_at: new Date().toISOString(), resolved_at: new Date().toISOString() };
+  const updated = {
+    ...offer,
+    status,
+    updated_at: new Date().toISOString(),
+    resolved_at: new Date().toISOString(),
+  };
   await saveOffer(updated, offer.items);
   await recordHistory(updated, status, {});
 
@@ -279,13 +316,19 @@ export async function rejectFamilyTrade(offerId: string, agentKey: string): Prom
     });
   }
 
-  return { success: true, message: status === "rejected" ? "Scambio rifiutato" : "Scambio annullato" };
+  return {
+    success: true,
+    message: status === "rejected" ? "Scambio rifiutato" : "Scambio annullato",
+  };
 }
 
 async function fetchTradeOfferById(id: string): Promise<FamilyTradeOfferFull | null> {
   try {
     if (isSupabaseConfigured()) {
-      const { data: offer } = await gameTable("family_trade_offers").select("*").eq("id", id).maybeSingle();
+      const { data: offer } = await gameTable("family_trade_offers")
+        .select("*")
+        .eq("id", id)
+        .maybeSingle();
       if (!offer) return null;
       const items = await loadOfferItems(id);
       return { ...(offer as DbFamilyTradeOffer), items };
@@ -316,7 +359,9 @@ export async function fetchFamilyTrades(agentKey: string): Promise<{
 
   if (!offers.length) offers = localStore.getAllTradeOffers(agentKey);
 
-  const incoming = offers.filter((o) => o.to_agent === agentKey && (o.status === "pending" || o.status === "draft"));
+  const incoming = offers.filter(
+    (o) => o.to_agent === agentKey && (o.status === "pending" || o.status === "draft"),
+  );
   const outgoing = offers.filter((o) => o.from_agent === agentKey && o.status === "pending");
   const history = localStore.getTradeHistory(agentKey);
 

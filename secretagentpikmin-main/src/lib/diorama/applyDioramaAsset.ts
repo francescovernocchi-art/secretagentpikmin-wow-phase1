@@ -14,7 +14,11 @@ export function normalizeBuildingKey(key: BuildingKey | "serra"): BuildingKey {
   return key === "serra" ? "mercato" : key;
 }
 
-export const BUILDING_SLOT_OPTIONS: { value: DioramaBuildingVisualState; label: string; slot: keyof DioramaBuildingAssetSlots }[] = [
+export const BUILDING_SLOT_OPTIONS: {
+  value: DioramaBuildingVisualState;
+  label: string;
+  slot: keyof DioramaBuildingAssetSlots;
+}[] = [
   { value: "locked", label: "Locked", slot: "locked" },
   { value: "buildable", label: "Buildable", slot: "buildable" },
   { value: "under_construction", label: "Construction", slot: "construction" },
@@ -43,7 +47,9 @@ export const UPLOAD_BUILDING_KEYS: (BuildingKey | "serra")[] = [
   "serra",
 ];
 
-export function slotFromVisualState(state: DioramaBuildingVisualState): keyof DioramaBuildingAssetSlots {
+export function slotFromVisualState(
+  state: DioramaBuildingVisualState,
+): keyof DioramaBuildingAssetSlots {
   return BUILDING_SLOT_OPTIONS.find((o) => o.value === state)?.slot ?? "lv1";
 }
 
@@ -103,13 +109,17 @@ export function applyAssetToLayout(layout: DioramaLayout, input: ApplyAssetInput
 
     case "decoration": {
       if (input.layerId) {
-        next.layers = next.layers.map((l) =>
-          l.id === input.layerId ? { ...l, image: ref } : l,
-        );
+        next.layers = next.layers.map((l) => (l.id === input.layerId ? { ...l, image: ref } : l));
       } else {
         next.layers = [
           ...next.layers,
-          { id: `layer-${input.assetId.slice(-6)}`, type: "overlay", image: ref, z: 20, opacity: 1 },
+          {
+            id: `layer-${input.assetId.slice(-6)}`,
+            type: "overlay",
+            image: ref,
+            z: 20,
+            opacity: 1,
+          },
         ];
       }
       break;
@@ -145,7 +155,8 @@ export function collectAssetRefsFromLayout(layout: DioramaLayout): string[] {
 
 export function describeAssetBinding(meta: DioramaAssetMeta): string {
   if (meta.type === "background") return "Sfondo diorama";
-  if (meta.type === "decoration") return meta.layerId ? `Decorazione · ${meta.layerId}` : "Decorazione";
+  if (meta.type === "decoration")
+    return meta.layerId ? `Decorazione · ${meta.layerId}` : "Decorazione";
   if (meta.type === "hotspot") return meta.hotspotId ? `Hotspot · ${meta.hotspotId}` : "Hotspot";
   const bKey = meta.buildingKey === "serra" ? "Serra (mercato)" : meta.buildingKey;
   const slot = meta.slot ?? "—";

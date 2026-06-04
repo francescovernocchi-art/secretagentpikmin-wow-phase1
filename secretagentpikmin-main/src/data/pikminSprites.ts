@@ -35,14 +35,7 @@ export const STRIDE_X = FRAME_W + GAP_X; // 136
 export const STRIDE_Y = FRAME_H + GAP_Y; // 136
 
 export type PikminType = "red" | "blue" | "yellow" | "purple" | "white";
-export type PikminAnimation =
-  | "idle"
-  | "walk"
-  | "run"
-  | "carry"
-  | "work"
-  | "sleep"
-  | "celebrate";
+export type PikminAnimation = "idle" | "walk" | "run" | "carry" | "work" | "sleep" | "celebrate";
 
 interface AnimDef {
   /** Colonna iniziale (0-based). */
@@ -55,17 +48,21 @@ interface AnimDef {
 }
 
 export const ANIMATIONS: Record<PikminAnimation, AnimDef> = {
-  idle:      { startCol: 0,  frames: 3, durationMs: 900,  loop: true },
-  walk:      { startCol: 3,  frames: 4, durationMs: 600,  loop: true },
-  run:       { startCol: 7,  frames: 3, durationMs: 360,  loop: true },
-  carry:     { startCol: 10, frames: 2, durationMs: 600,  loop: true },
-  work:      { startCol: 12, frames: 2, durationMs: 480,  loop: true },
-  sleep:     { startCol: 14, frames: 1, durationMs: 2400, loop: true },
-  celebrate: { startCol: 15, frames: 1, durationMs: 500,  loop: true },
+  idle: { startCol: 0, frames: 3, durationMs: 900, loop: true },
+  walk: { startCol: 3, frames: 4, durationMs: 600, loop: true },
+  run: { startCol: 7, frames: 3, durationMs: 360, loop: true },
+  carry: { startCol: 10, frames: 2, durationMs: 600, loop: true },
+  work: { startCol: 12, frames: 2, durationMs: 480, loop: true },
+  sleep: { startCol: 14, frames: 1, durationMs: 2400, loop: true },
+  celebrate: { startCol: 15, frames: 1, durationMs: 500, loop: true },
 };
 
 export const PIKMIN_ROW: Record<PikminType, number> = {
-  red: 0, blue: 1, yellow: 2, purple: 3, white: 4,
+  red: 0,
+  blue: 1,
+  yellow: 2,
+  purple: 3,
+  white: 4,
 };
 
 export const PIKMIN_LABEL: Record<PikminType, string> = {
@@ -95,7 +92,11 @@ export const ANIMATION_LABEL: Record<PikminAnimation, string> = {
 };
 
 /** Coordinate (px) del primo frame di un'azione nello sheet sorgente. */
-export function frameOffset(type: PikminType, anim: PikminAnimation, frameIdx = 0): { x: number; y: number } {
+export function frameOffset(
+  type: PikminType,
+  anim: PikminAnimation,
+  frameIdx = 0,
+): { x: number; y: number } {
   const row = PIKMIN_ROW[type];
   const def = ANIMATIONS[anim];
   const col = def.startCol + Math.max(0, Math.min(def.frames - 1, frameIdx));
@@ -106,17 +107,17 @@ export function frameOffset(type: PikminType, anim: PikminAnimation, frameIdx = 
 }
 
 export const MISSION_HINTS: Record<PikminType, string[]> = {
-  red:    ["Difesa perimetro", "Cacciatore frutti", "Pattuglia"],
-  blue:   ["Esplora pozze", "Trasporto risorse", "Pulizia base"],
+  red: ["Difesa perimetro", "Cacciatore frutti", "Pattuglia"],
+  blue: ["Esplora pozze", "Trasporto risorse", "Pulizia base"],
   yellow: ["Cablaggio Reattore", "Vedetta alta", "Trasporto pietre"],
   purple: ["Carico pesante", "Demolizione", "Guardia notturna"],
-  white:  ["Scouting veloce", "Esplorazione", "Ronda silenziosa"],
+  white: ["Scouting veloce", "Esplorazione", "Ronda silenziosa"],
 };
 
 export const TYPE_NAMES: Record<PikminType, string[]> = {
-  red:    ["Brace", "Cinabro", "Vampa", "Tito", "Rubino"],
-  blue:   ["Onda", "Lago", "Nilo", "Lapis", "Sirio"],
+  red: ["Brace", "Cinabro", "Vampa", "Tito", "Rubino"],
+  blue: ["Onda", "Lago", "Nilo", "Lapis", "Sirio"],
   yellow: ["Sole", "Ambra", "Ciro", "Luce", "Mirto"],
   purple: ["Iris", "Ombra", "Murex", "Plum", "Viola"],
-  white:  ["Neve", "Polvere", "Eco", "Lillo", "Bianca"],
+  white: ["Neve", "Polvere", "Eco", "Lillo", "Bianca"],
 };

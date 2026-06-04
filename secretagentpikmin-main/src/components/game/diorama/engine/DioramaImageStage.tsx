@@ -5,7 +5,11 @@ import { DioramaTechCrew } from "@/components/game/diorama/DioramaTechCrew";
 import { DioramaPikminActor } from "@/components/game/diorama/DioramaPikminActor";
 import { DioramaBuildingOverlay } from "./DioramaBuildingOverlay";
 import { DioramaEffectsLayer } from "./DioramaEffectsLayer";
-import { PikminTrafficLayer, PikminTrafficDebugOverlay, generateTrafficAgents } from "./PikminTrafficLayer";
+import {
+  PikminTrafficLayer,
+  PikminTrafficDebugOverlay,
+  generateTrafficAgents,
+} from "./PikminTrafficLayer";
 import { DioramaHotspotLayer } from "./DioramaHotspotLayer";
 import { DioramaHangarOverlay } from "./DioramaHangarOverlay";
 import { DioramaRoadPreview } from "./DioramaRoadPreview";
@@ -53,15 +57,16 @@ export function DioramaImageStage({
 
   const showRoads = editorMode;
   const debugAgents = useMemo(
-    () => (trafficDebug || (editorMode && editorSection === "traffic") ? generateTrafficAgents(layout, trafficAgentCount) : []),
+    () =>
+      trafficDebug || (editorMode && editorSection === "traffic")
+        ? generateTrafficAgents(layout, trafficAgentCount)
+        : [],
     [trafficDebug, editorMode, editorSection, layout, trafficAgentCount],
   );
 
   return (
     <div className={styles.engineStage} onClick={handleStageClick}>
-      {bgSrc && (
-        <img src={bgSrc} alt="" className={styles.engineBackground} draggable={false} />
-      )}
+      {bgSrc && <img src={bgSrc} alt="" className={styles.engineBackground} draggable={false} />}
 
       {layout.layers.map((layer) =>
         layer.image ? (
@@ -120,12 +125,16 @@ export function DioramaImageStage({
           left: `${hangarLayout?.x ?? hangarDef.x}%`,
           top: `${hangarLayout?.y ?? hangarDef.y}%`,
           zIndex: hangarLayout?.z ?? hangarDef.z,
-          transform: hangarLayout?.scale ? `translate(-50%, -52%) scale(${hangarLayout.scale})` : undefined,
+          transform: hangarLayout?.scale
+            ? `translate(-50%, -52%) scale(${hangarLayout.scale})`
+            : undefined,
         }}
       >
         {editorMode && editorSection === "buildings" ? (
           <DioramaBuildingOverlay
-            layoutBuilding={hangarLayout ?? { key: "hangar", x: hangarDef.x, y: hangarDef.y, z: hangarDef.z }}
+            layoutBuilding={
+              hangarLayout ?? { key: "hangar", x: hangarDef.x, y: hangarDef.y, z: hangarDef.z }
+            }
             def={hangarDef}
             level={1}
             editorMode
@@ -144,13 +153,19 @@ export function DioramaImageStage({
         )}
       </div>
 
-      {( !editorMode || (editorMode && editorSection === "traffic")) && (
+      {(!editorMode || (editorMode && editorSection === "traffic")) && (
         <>
           {!editorMode && (
             <>
               <DioramaTechCrew compact={compact && !isHero} hideRoles={isHero} />
               {visiblePikmin.map((p, i) => (
-                <DioramaPikminActor key={p.id} pikmin={p} index={i} compact={compact} hideBadges={fullscreenMode || isHero} />
+                <DioramaPikminActor
+                  key={p.id}
+                  pikmin={p}
+                  index={i}
+                  compact={compact}
+                  hideBadges={fullscreenMode || isHero}
+                />
               ))}
             </>
           )}
@@ -161,9 +176,10 @@ export function DioramaImageStage({
             debug={trafficDebug || (editorMode && editorSection === "traffic")}
             agentCount={trafficAgentCount}
           />
-          {(trafficDebug || (editorMode && editorSection === "traffic")) && debugAgents.length > 0 && (
-            <PikminTrafficDebugOverlay layout={layout} agents={debugAgents} />
-          )}
+          {(trafficDebug || (editorMode && editorSection === "traffic")) &&
+            debugAgents.length > 0 && (
+              <PikminTrafficDebugOverlay layout={layout} agents={debugAgents} />
+            )}
         </>
       )}
 

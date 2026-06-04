@@ -13,7 +13,10 @@ export const Route = createFileRoute("/villaggio/")({
   head: () => ({
     meta: [
       { title: "Villaggio Pikmin · Diorama" },
-      { name: "description", content: "Il tuo villaggio isometrico vivo — edifici, Pikmin e navicella." },
+      {
+        name: "description",
+        content: "Il tuo villaggio isometrico vivo — edifici, Pikmin e navicella.",
+      },
     ],
   }),
 });
@@ -25,13 +28,26 @@ function VillaggioDioramaPage() {
 
   return (
     <div className={styles.villageFullscreenPage}>
-      <header className={styles.villageTopChrome} style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}>
+      <header
+        className={styles.villageTopChrome}
+        style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
+      >
         <div className={styles.villageTitleRow}>
-          <Link to="/base" onClick={hapticTap} className={`panel ${styles.villageIconBtn}`} aria-label="Torna al centro comando">
+          <Link
+            to="/base"
+            onClick={hapticTap}
+            className={`panel ${styles.villageIconBtn}`}
+            aria-label="Torna al centro comando"
+          >
             <Home className="h-3.5 w-3.5" />
           </Link>
           <h1 className={styles.villageTitle}>{loading ? "…" : villageName || "Villaggio"}</h1>
-          <Link to="/mappa" onClick={hapticTap} className={`panel ${styles.villageIconBtn}`} aria-label="Apri mappa biomi">
+          <Link
+            to="/mappa"
+            onClick={hapticTap}
+            className={`panel ${styles.villageIconBtn}`}
+            aria-label="Apri mappa biomi"
+          >
             <Map className="h-3.5 w-3.5" />
           </Link>
         </div>
@@ -46,7 +62,12 @@ function VillaggioDioramaPage() {
         <QuickIcon to="/villaggio/edifici" emoji="🏗️" label="Edifici" />
         <QuickIcon to="/villaggio/scambi" emoji="🤝" label="Scambi" />
         <QuickIcon to="/navicella" emoji="🚀" label="Navicella" />
-        <QuickIcon to="/villaggio/phaser" emoji="🎮" label="Phaser" icon={<Gamepad2 className="h-3.5 w-3.5 text-primary" />} />
+        <QuickIcon
+          to="/villaggio/phaser"
+          emoji="🎮"
+          label="Phaser"
+          icon={<Gamepad2 className="h-3.5 w-3.5 text-primary" />}
+        />
       </nav>
     </div>
   );
@@ -64,7 +85,13 @@ function QuickIcon({
   icon?: React.ReactNode;
 }) {
   return (
-    <Link to={to} onClick={hapticTap} className={styles.villageQuickIcon} aria-label={label} title={label}>
+    <Link
+      to={to}
+      onClick={hapticTap}
+      className={styles.villageQuickIcon}
+      aria-label={label}
+      title={label}
+    >
       <span className="text-base leading-none">{emoji}</span>
       {icon}
     </Link>

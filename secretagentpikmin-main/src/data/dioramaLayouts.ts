@@ -245,16 +245,134 @@ export const VALIDATION_DEMO_ROUTES: DioramaPikminRoute[] = [
 
 /** Rotte traffico default — Hangar → Piazza → Edifici */
 const DEFAULT_TRAFFIC: DioramaPikminRoute[] = [
-  { id: "tr-1", type: "yellow", anim: "carry", waypoints: [{ x: 50, y: 26 }, { x: 50, y: 38 }, { x: 50, y: 42 }, { x: 22, y: 48 }, { x: 50, y: 42 }], duration: 14, enabled: true },
-  { id: "tr-2", type: "red", anim: "walk", waypoints: [{ x: 50, y: 42 }, { x: 78, y: 38 }, { x: 50, y: 42 }], duration: 10, enabled: true },
-  { id: "tr-3", type: "blue", anim: "carry", waypoints: [{ x: 50, y: 28 }, { x: 50, y: 40 }, { x: 28, y: 70 }, { x: 50, y: 40 }], duration: 16, enabled: true },
-  { id: "tr-4", type: "white", anim: "work", waypoints: [{ x: 48, y: 40 }, { x: 52, y: 42 }, { x: 50, y: 44 }, { x: 48, y: 40 }], duration: 8, enabled: true },
-  { id: "tr-5", type: "yellow", anim: "walk", waypoints: [{ x: 50, y: 42 }, { x: 62, y: 74 }, { x: 50, y: 42 }], duration: 13, enabled: true },
-  { id: "tr-6", type: "red", anim: "carry", waypoints: [{ x: 50, y: 30 }, { x: 50, y: 40 }, { x: 48, y: 36 }, { x: 50, y: 40 }], duration: 11, enabled: true },
-  { id: "tr-7", type: "blue", anim: "walk", waypoints: [{ x: 22, y: 48 }, { x: 50, y: 42 }, { x: 78, y: 36 }, { x: 50, y: 42 }], duration: 15, enabled: true },
-  { id: "tr-8", type: "purple", anim: "carry", waypoints: [{ x: 56, y: 43 }, { x: 50, y: 40 }, { x: 50, y: 28 }], duration: 12, enabled: true },
-  { id: "tr-9", type: "rock", anim: "work", waypoints: [{ x: 58, y: 38 }, { x: 52, y: 40 }, { x: 44, y: 37 }, { x: 52, y: 40 }], duration: 9, enabled: true },
-  { id: "tr-10", type: "white", anim: "carry", waypoints: [{ x: 50, y: 40 }, { x: 30, y: 68 }, { x: 50, y: 40 }, { x: 50, y: 26 }], duration: 18, enabled: true },
+  {
+    id: "tr-1",
+    type: "yellow",
+    anim: "carry",
+    waypoints: [
+      { x: 50, y: 26 },
+      { x: 50, y: 38 },
+      { x: 50, y: 42 },
+      { x: 22, y: 48 },
+      { x: 50, y: 42 },
+    ],
+    duration: 14,
+    enabled: true,
+  },
+  {
+    id: "tr-2",
+    type: "red",
+    anim: "walk",
+    waypoints: [
+      { x: 50, y: 42 },
+      { x: 78, y: 38 },
+      { x: 50, y: 42 },
+    ],
+    duration: 10,
+    enabled: true,
+  },
+  {
+    id: "tr-3",
+    type: "blue",
+    anim: "carry",
+    waypoints: [
+      { x: 50, y: 28 },
+      { x: 50, y: 40 },
+      { x: 28, y: 70 },
+      { x: 50, y: 40 },
+    ],
+    duration: 16,
+    enabled: true,
+  },
+  {
+    id: "tr-4",
+    type: "white",
+    anim: "work",
+    waypoints: [
+      { x: 48, y: 40 },
+      { x: 52, y: 42 },
+      { x: 50, y: 44 },
+      { x: 48, y: 40 },
+    ],
+    duration: 8,
+    enabled: true,
+  },
+  {
+    id: "tr-5",
+    type: "yellow",
+    anim: "walk",
+    waypoints: [
+      { x: 50, y: 42 },
+      { x: 62, y: 74 },
+      { x: 50, y: 42 },
+    ],
+    duration: 13,
+    enabled: true,
+  },
+  {
+    id: "tr-6",
+    type: "red",
+    anim: "carry",
+    waypoints: [
+      { x: 50, y: 30 },
+      { x: 50, y: 40 },
+      { x: 48, y: 36 },
+      { x: 50, y: 40 },
+    ],
+    duration: 11,
+    enabled: true,
+  },
+  {
+    id: "tr-7",
+    type: "blue",
+    anim: "walk",
+    waypoints: [
+      { x: 22, y: 48 },
+      { x: 50, y: 42 },
+      { x: 78, y: 36 },
+      { x: 50, y: 42 },
+    ],
+    duration: 15,
+    enabled: true,
+  },
+  {
+    id: "tr-8",
+    type: "purple",
+    anim: "carry",
+    waypoints: [
+      { x: 56, y: 43 },
+      { x: 50, y: 40 },
+      { x: 50, y: 28 },
+    ],
+    duration: 12,
+    enabled: true,
+  },
+  {
+    id: "tr-9",
+    type: "rock",
+    anim: "work",
+    waypoints: [
+      { x: 58, y: 38 },
+      { x: 52, y: 40 },
+      { x: 44, y: 37 },
+      { x: 52, y: 40 },
+    ],
+    duration: 9,
+    enabled: true,
+  },
+  {
+    id: "tr-10",
+    type: "white",
+    anim: "carry",
+    waypoints: [
+      { x: 50, y: 40 },
+      { x: 30, y: 68 },
+      { x: 50, y: 40 },
+      { x: 50, y: 26 },
+    ],
+    duration: 18,
+    enabled: true,
+  },
 ];
 
 /** Sfondo demo validazione V2.1 */
@@ -279,7 +397,12 @@ function buildingsFromData(): DioramaLayoutBuilding[] {
   }));
 }
 
-function createLayout(biome: BiomeKey, id: string, label: string, backgroundImage?: string): DioramaLayout {
+function createLayout(
+  biome: BiomeKey,
+  id: string,
+  label: string,
+  backgroundImage?: string,
+): DioramaLayout {
   return {
     id,
     label,
@@ -317,7 +440,11 @@ export const DIORAMA_LAYOUTS: Record<BiomeKey, DioramaLayout> = {
   grotta: validationLayout("grotta", "test-layout-grotta", "Test Layout Grotta"),
   campo: validationLayout("campo", "test-layout-campo", "Test Layout Campo"),
   citta: validationLayout("citta", "test-layout-citta", "Test Layout Città"),
-  industriale: validationLayout("industriale", "test-layout-industriale", "Test Layout Industriale"),
+  industriale: validationLayout(
+    "industriale",
+    "test-layout-industriale",
+    "Test Layout Industriale",
+  ),
 };
 
 export function getDefaultLayout(biome: BiomeKey): DioramaLayout {

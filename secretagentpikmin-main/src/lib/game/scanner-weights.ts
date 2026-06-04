@@ -93,15 +93,29 @@ export function generateWeightedDiscovery(ctx: ScannerContext): ScanDiscovery {
 
   switch (targetType) {
     case "pikmin_selvatico": {
-      const pk = biome.frequentPikmin[Math.floor(Math.random() * biome.frequentPikmin.length)] ?? "rosso";
-      return { targetType, label: `Pikmin ${pk} selvatico`, emoji: "🌱", payload: { type_key: pk, rarity: biome.rarity } };
+      const pk =
+        biome.frequentPikmin[Math.floor(Math.random() * biome.frequentPikmin.length)] ?? "rosso";
+      return {
+        targetType,
+        label: `Pikmin ${pk} selvatico`,
+        emoji: "🌱",
+        payload: { type_key: pk, rarity: biome.rarity },
+      };
     }
     case "mostro": {
-      const name = biome.frequentMonsters[Math.floor(Math.random() * biome.frequentMonsters.length)] ?? "Creatura";
+      const name =
+        biome.frequentMonsters[Math.floor(Math.random() * biome.frequentMonsters.length)] ??
+        "Creatura";
       const key = name.toLowerCase().replace(/\s+/g, "_");
-      const rarity = biome.rarity === "raro" ? "raro" : biome.rarity === "epico" ? "epico" : "comune";
+      const rarity =
+        biome.rarity === "raro" ? "raro" : biome.rarity === "epico" ? "epico" : "comune";
       const squadLevel = avgLevel(ctx.squad ?? []);
-      return { targetType, label: name, emoji: "👾", payload: { creature_key: key, rarity, danger: Math.min(5, 1 + Math.floor(squadLevel / 3)) } };
+      return {
+        targetType,
+        label: name,
+        emoji: "👾",
+        payload: { creature_key: key, rarity, danger: Math.min(5, 1 + Math.floor(squadLevel / 3)) },
+      };
     }
     case "pezzo_navicella": {
       const localParts = localStore.getShipParts();
@@ -112,14 +126,27 @@ export function generateWeightedDiscovery(ctx: ScannerContext): ScanDiscovery {
       return { targetType, label: part.name, emoji: part.emoji, payload: { part_key: part.key } };
     }
     case "anomalia":
-      return { targetType, label: `Anomalia ${biome.label}`, emoji: "⚡", payload: { biome: ctx.biomeKey } };
+      return {
+        targetType,
+        label: `Anomalia ${biome.label}`,
+        emoji: "⚡",
+        payload: { biome: ctx.biomeKey },
+      };
     case "materiale": {
       const mat = biome.resources[Math.floor(Math.random() * biome.resources.length)] ?? "rottame";
       return {
         targetType,
         label: mat,
-        emoji: mat.toLowerCase().includes("cristall") ? "💎" : mat.toLowerCase().includes("batter") ? "🔋" : "📦",
-        payload: { item_key: mat.replace(/\s+/g, "_").toLowerCase(), category: "materiale", sell_price: 40 },
+        emoji: mat.toLowerCase().includes("cristall")
+          ? "💎"
+          : mat.toLowerCase().includes("batter")
+            ? "🔋"
+            : "📦",
+        payload: {
+          item_key: mat.replace(/\s+/g, "_").toLowerCase(),
+          category: "materiale",
+          sell_price: 40,
+        },
       };
     }
     case "oggetto_raro":
@@ -127,15 +154,24 @@ export function generateWeightedDiscovery(ctx: ScannerContext): ScanDiscovery {
         targetType,
         label: `Reliquia ${biome.label}`,
         emoji: "✨",
-        payload: { item_key: `reliquia_${ctx.biomeKey}`, category: "oggetto", sell_price: 80 + Math.floor(avgLevel(ctx.squad ?? []) * 5) },
+        payload: {
+          item_key: `reliquia_${ctx.biomeKey}`,
+          category: "oggetto",
+          sell_price: 80 + Math.floor(avgLevel(ctx.squad ?? []) * 5),
+        },
       };
     default: {
-      const ing = biome.ingredients[Math.floor(Math.random() * biome.ingredients.length)] ?? "frutto";
+      const ing =
+        biome.ingredients[Math.floor(Math.random() * biome.ingredients.length)] ?? "frutto";
       return {
         targetType: "ingrediente",
         label: ing,
         emoji: "🍯",
-        payload: { item_key: ing.replace(/\s+/g, "_").toLowerCase(), category: "ingrediente", sell_price: 25 },
+        payload: {
+          item_key: ing.replace(/\s+/g, "_").toLowerCase(),
+          category: "ingrediente",
+          sell_price: 25,
+        },
       };
     }
   }

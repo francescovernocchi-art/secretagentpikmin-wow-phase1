@@ -92,7 +92,9 @@ export function VillageCustomizer({ agent, initial, onClose, onSaved }: Props) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Palette className="h-4 w-4 text-primary" />
-            <h3 className="font-display text-sm uppercase tracking-widest text-primary">Estetica villaggio</h3>
+            <h3 className="font-display text-sm uppercase tracking-widest text-primary">
+              Estetica villaggio
+            </h3>
           </div>
           <button onClick={onClose} className="panel p-1.5">
             <X className="h-3 w-3" />
@@ -104,7 +106,10 @@ export function VillageCustomizer({ agent, initial, onClose, onSaved }: Props) {
           className="relative h-32 rounded-xl overflow-hidden border border-primary/30"
           style={{ background: `linear-gradient(180deg, ${c.skyTop}, ${c.skyBottom})` }}
         >
-          <div className="absolute inset-x-0 bottom-0 h-1/2" style={{ background: c.groundColor }} />
+          <div
+            className="absolute inset-x-0 bottom-0 h-1/2"
+            style={{ background: c.groundColor }}
+          />
           <div
             className="absolute inset-x-0 bottom-0 h-1/2 opacity-70"
             style={{ background: patternBackground(c.pattern, c.accentColor) }}
@@ -156,15 +161,33 @@ export function VillageCustomizer({ agent, initial, onClose, onSaved }: Props) {
         {/* Colori */}
         <div className="grid grid-cols-2 gap-2">
           <ColorRow label="Cielo alto" value={c.skyTop} onChange={(v) => update("skyTop", v)} />
-          <ColorRow label="Cielo basso" value={c.skyBottom} onChange={(v) => update("skyBottom", v)} />
-          <ColorRow label="Terreno" value={c.groundColor} onChange={(v) => update("groundColor", v)} />
-          <ColorRow label="Accento" value={c.accentColor} onChange={(v) => update("accentColor", v)} />
-          <ColorRow label="Corpo Pikmin" value={c.pikminBody} onChange={(v) => update("pikminBody", v)} />
+          <ColorRow
+            label="Cielo basso"
+            value={c.skyBottom}
+            onChange={(v) => update("skyBottom", v)}
+          />
+          <ColorRow
+            label="Terreno"
+            value={c.groundColor}
+            onChange={(v) => update("groundColor", v)}
+          />
+          <ColorRow
+            label="Accento"
+            value={c.accentColor}
+            onChange={(v) => update("accentColor", v)}
+          />
+          <ColorRow
+            label="Corpo Pikmin"
+            value={c.pikminBody}
+            onChange={(v) => update("pikminBody", v)}
+          />
         </div>
 
         {/* Pattern terreno */}
         <div>
-          <p className="text-[10px] uppercase tracking-widest text-primary mb-1.5">Pattern terreno</p>
+          <p className="text-[10px] uppercase tracking-widest text-primary mb-1.5">
+            Pattern terreno
+          </p>
           <div className="grid grid-cols-3 gap-1.5">
             {PATTERNS.map((p) => (
               <button
@@ -180,7 +203,9 @@ export function VillageCustomizer({ agent, initial, onClose, onSaved }: Props) {
 
         {/* Accessorio */}
         <div>
-          <p className="text-[10px] uppercase tracking-widest text-primary mb-1.5">Accessorio Pikmin</p>
+          <p className="text-[10px] uppercase tracking-widest text-primary mb-1.5">
+            Accessorio Pikmin
+          </p>
           <div className="grid grid-cols-4 gap-1.5">
             {ACCESSORIES.map((a) => (
               <button
@@ -226,7 +251,15 @@ export function VillageCustomizer({ agent, initial, onClose, onSaved }: Props) {
   );
 }
 
-function ColorRow({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
+function ColorRow({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+}) {
   return (
     <label className="panel p-2 flex items-center gap-2 cursor-pointer">
       <input

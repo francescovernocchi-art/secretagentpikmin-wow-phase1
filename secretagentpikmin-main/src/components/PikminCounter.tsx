@@ -45,13 +45,9 @@ export function PikminCounter({ compact = false }: { compact?: boolean }) {
       title="Pikmin della squadra"
     >
       <span className="text-base leading-none">🌱</span>
-      <span className="font-display tabular-nums text-glow">
-        {count ?? "…"}
-      </span>
+      <span className="font-display tabular-nums text-glow">{count ?? "…"}</span>
       {!compact && (
-        <span className="text-[9px] uppercase tracking-widest text-muted-foreground">
-          Pikmin
-        </span>
+        <span className="text-[9px] uppercase tracking-widest text-muted-foreground">Pikmin</span>
       )}
     </motion.div>
   );

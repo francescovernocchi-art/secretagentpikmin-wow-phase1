@@ -2,10 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { BiomeKey } from "@/types/secretPikmin";
 import type { DioramaLayout } from "@/data/dioramaLayouts";
 import { saveDioramaLayout } from "@/hooks/useDioramaLayout";
-import {
-  applyAssetToLayout,
-  type ApplyAssetInput,
-} from "@/lib/diorama/applyDioramaAsset";
+import { applyAssetToLayout, type ApplyAssetInput } from "@/lib/diorama/applyDioramaAsset";
 import { revokeDioramaAssetUrl } from "@/lib/diorama/dioramaAssetResolver";
 import { downloadBiomeAssetPack, importBiomeAssetPack } from "@/lib/diorama/dioramaBiomePack";
 import {
@@ -17,7 +14,11 @@ import {
   type DioramaAssetRecord,
 } from "@/lib/diorama/dioramaAssetStore";
 
-export function useDioramaAssets(biome: BiomeKey, layout: DioramaLayout, onLayoutChange: (l: DioramaLayout) => void) {
+export function useDioramaAssets(
+  biome: BiomeKey,
+  layout: DioramaLayout,
+  onLayoutChange: (l: DioramaLayout) => void,
+) {
   const [assets, setAssets] = useState<DioramaAssetMeta[]>([]);
   const [loading, setLoading] = useState(true);
 

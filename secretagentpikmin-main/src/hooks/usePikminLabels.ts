@@ -21,16 +21,22 @@ export interface PikminLabel {
 const EMPTY_SPRITES: PikminSprites = { idle: null, walk: null, sleep: null, attack: null };
 
 export function usePikminLabels() {
-  const [labels, setLabels] = useState<Record<PikminType, PikminLabel>>(() =>
-    Object.fromEntries(
-      KEYS.map((k) => [k, { name: PIKMIN_LABEL[k], image_url: null, icon_url: null, sprites: EMPTY_SPRITES }]),
-    ) as Record<PikminType, PikminLabel>,
+  const [labels, setLabels] = useState<Record<PikminType, PikminLabel>>(
+    () =>
+      Object.fromEntries(
+        KEYS.map((k) => [
+          k,
+          { name: PIKMIN_LABEL[k], image_url: null, icon_url: null, sprites: EMPTY_SPRITES },
+        ]),
+      ) as Record<PikminType, PikminLabel>,
   );
 
   const refresh = useCallback(async () => {
     const { data } = await supabase
       .from("pikmin_species")
-      .select("key, name, image_url, icon_url, sprite_idle_url, sprite_walk_url, sprite_sleep_url, sprite_attack_url")
+      .select(
+        "key, name, image_url, icon_url, sprite_idle_url, sprite_walk_url, sprite_sleep_url, sprite_attack_url",
+      )
       .in("key", KEYS);
     if (!data) return;
     setLabels((prev) => {
@@ -54,7 +60,9 @@ export function usePikminLabels() {
     });
   }, []);
 
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => {
+    void refresh();
+  }, [refresh]);
 
   return { labels, refresh };
 }

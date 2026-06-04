@@ -71,22 +71,75 @@ export interface ExpeditionEvent {
   delta?: Record<string, number | string>;
 }
 
-export const BIOME_META: Record<Biome, { label: string; emoji: string; color: string; types: string[] }> = {
-  foresta: { label: "Foresta", emoji: "🌳", color: "from-emerald-700/40 to-emerald-500/10", types: ["red", "purple"] },
+export const BIOME_META: Record<
+  Biome,
+  { label: string; emoji: string; color: string; types: string[] }
+> = {
+  foresta: {
+    label: "Foresta",
+    emoji: "🌳",
+    color: "from-emerald-700/40 to-emerald-500/10",
+    types: ["red", "purple"],
+  },
   lago: { label: "Lago", emoji: "🌊", color: "from-sky-600/40 to-sky-400/10", types: ["blue"] },
-  urbana: { label: "Zona Urbana", emoji: "🏙️", color: "from-yellow-600/40 to-yellow-400/10", types: ["yellow"] },
-  industriale: { label: "Area Industriale", emoji: "⚙️", color: "from-orange-700/40 to-orange-500/10", types: ["yellow", "rock"] },
-  caverna: { label: "Caverna", emoji: "🪨", color: "from-stone-700/50 to-stone-500/10", types: ["rock", "purple"] },
-  rovine: { label: "Rovine", emoji: "🏛️", color: "from-amber-700/40 to-amber-500/10", types: ["white", "purple"] },
-  serra: { label: "Serra Tropicale", emoji: "🌺", color: "from-pink-600/40 to-pink-400/10", types: ["wing", "red"] },
+  urbana: {
+    label: "Zona Urbana",
+    emoji: "🏙️",
+    color: "from-yellow-600/40 to-yellow-400/10",
+    types: ["yellow"],
+  },
+  industriale: {
+    label: "Area Industriale",
+    emoji: "⚙️",
+    color: "from-orange-700/40 to-orange-500/10",
+    types: ["yellow", "rock"],
+  },
+  caverna: {
+    label: "Caverna",
+    emoji: "🪨",
+    color: "from-stone-700/50 to-stone-500/10",
+    types: ["rock", "purple"],
+  },
+  rovine: {
+    label: "Rovine",
+    emoji: "🏛️",
+    color: "from-amber-700/40 to-amber-500/10",
+    types: ["white", "purple"],
+  },
+  serra: {
+    label: "Serra Tropicale",
+    emoji: "🌺",
+    color: "from-pink-600/40 to-pink-400/10",
+    types: ["wing", "red"],
+  },
 };
 
 export const DIFFICULTY_META: Record<Difficulty, { label: string; color: string; mult: number }> = {
-  facile: { label: "Facile", color: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40", mult: 1.0 },
-  normale: { label: "Normale", color: "bg-yellow-500/20 text-yellow-200 border-yellow-500/40", mult: 1.25 },
-  difficile: { label: "Difficile", color: "bg-orange-500/20 text-orange-200 border-orange-500/40", mult: 1.6 },
-  pericolosa: { label: "Pericolosa", color: "bg-rose-500/20 text-rose-200 border-rose-500/40", mult: 2.0 },
-  leggendaria: { label: "Leggendaria", color: "bg-fuchsia-500/20 text-fuchsia-200 border-fuchsia-500/40", mult: 2.6 },
+  facile: {
+    label: "Facile",
+    color: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
+    mult: 1.0,
+  },
+  normale: {
+    label: "Normale",
+    color: "bg-yellow-500/20 text-yellow-200 border-yellow-500/40",
+    mult: 1.25,
+  },
+  difficile: {
+    label: "Difficile",
+    color: "bg-orange-500/20 text-orange-200 border-orange-500/40",
+    mult: 1.6,
+  },
+  pericolosa: {
+    label: "Pericolosa",
+    color: "bg-rose-500/20 text-rose-200 border-rose-500/40",
+    mult: 2.0,
+  },
+  leggendaria: {
+    label: "Leggendaria",
+    color: "bg-fuchsia-500/20 text-fuchsia-200 border-fuchsia-500/40",
+    mult: 2.6,
+  },
 };
 
 export const RISK_META: Record<Risk, { label: string; color: string }> = {
@@ -123,7 +176,12 @@ export interface PreviewOutput {
   recommendedMatchPct: number;
 }
 
-export function previewExpedition({ template, totalPikmin, breakdown, coopBonus }: PreviewInput): PreviewOutput {
+export function previewExpedition({
+  template,
+  totalPikmin,
+  breakdown,
+  coopBonus,
+}: PreviewInput): PreviewOutput {
   const min = template.pikmin_min;
   const rec = template.pikmin_recommended;
   const max = template.pikmin_max;
@@ -173,7 +231,11 @@ export function previewExpedition({ template, totalPikmin, breakdown, coopBonus 
   return { power, successChance: chance, risk, speed, recommendedMatchPct: matchPct };
 }
 
-export function effectiveDurationMinutes(template: MissionTemplate, totalPikmin: number, coopBonus: boolean) {
+export function effectiveDurationMinutes(
+  template: MissionTemplate,
+  totalPikmin: number,
+  coopBonus: boolean,
+) {
   const rec = template.pikmin_recommended;
   let factor = 1;
   if (totalPikmin < rec) factor = 1.25;
@@ -185,10 +247,7 @@ export function effectiveDurationMinutes(template: MissionTemplate, totalPikmin:
 // ----- API client -----
 
 export async function fetchTemplates(): Promise<MissionTemplate[]> {
-  const { data, error } = await supabase
-    .from("mission_templates")
-    .select("*")
-    .order("sort_order");
+  const { data, error } = await supabase.from("mission_templates").select("*").order("sort_order");
   if (error) throw error;
   return (data ?? []) as unknown as MissionTemplate[];
 }
@@ -202,13 +261,18 @@ export async function fetchExpeditions(): Promise<Expedition[]> {
   return (data ?? []) as unknown as Expedition[];
 }
 
-export async function fetchExpedition(id: string): Promise<{ exp: Expedition; squads: ExpeditionSquad[] } | null> {
+export async function fetchExpedition(
+  id: string,
+): Promise<{ exp: Expedition; squads: ExpeditionSquad[] } | null> {
   const [{ data: exp }, { data: squads }] = await Promise.all([
     supabase.from("expeditions").select("*").eq("id", id).maybeSingle(),
     supabase.from("expedition_squads").select("*").eq("expedition_id", id),
   ]);
   if (!exp) return null;
-  return { exp: exp as unknown as Expedition, squads: (squads ?? []) as unknown as ExpeditionSquad[] };
+  return {
+    exp: exp as unknown as Expedition,
+    squads: (squads ?? []) as unknown as ExpeditionSquad[],
+  };
 }
 
 export interface CreateExpeditionInput {
@@ -289,10 +353,7 @@ export async function inviteToExpedition(expeditionId: string, fromAgent: string
   if (!exp) throw new Error("Spedizione non trovata.");
   if (exp.created_by !== fromAgent) throw new Error("Solo il creatore può invitare.");
   if (exp.status !== "active") throw new Error("Puoi invitare solo durante una spedizione attiva.");
-  await supabase
-    .from("expeditions")
-    .update({ is_coop: true, partner })
-    .eq("id", expeditionId);
+  await supabase.from("expeditions").update({ is_coop: true, partner }).eq("id", expeditionId);
   await supabase.from("mission_notifications").insert({
     agent: partner,
     kind: "coop_invite",
@@ -324,7 +385,8 @@ export async function joinExpedition(params: {
   const totals = detail.squads.reduce((acc, s) => acc + s.pikmin_total, 0);
   const merged: Record<string, number> = {};
   for (const s of detail.squads) {
-    for (const [k, v] of Object.entries(s.breakdown ?? {})) merged[k] = (merged[k] ?? 0) + (v as number);
+    for (const [k, v] of Object.entries(s.breakdown ?? {}))
+      merged[k] = (merged[k] ?? 0) + (v as number);
   }
   // recupero template
   const { data: tpl } = await supabase
@@ -333,7 +395,12 @@ export async function joinExpedition(params: {
     .eq("key", detail.exp.template_key)
     .single();
   const template = tpl as unknown as MissionTemplate;
-  const preview = previewExpedition({ template, totalPikmin: totals, breakdown: merged, coopBonus: true });
+  const preview = previewExpedition({
+    template,
+    totalPikmin: totals,
+    breakdown: merged,
+    coopBonus: true,
+  });
   const newDuration = effectiveDurationMinutes(template, totals, true);
   const now = new Date();
 
@@ -387,7 +454,9 @@ export async function cancelExpedition(expeditionId: string) {
   // restituisci pikmin
   for (const s of detail.squads) {
     if (s.pikmin_total > 0) {
-      await addPikmin(s.pikmin_total, "expedition_cancel", s.agent, { expedition_id: expeditionId });
+      await addPikmin(s.pikmin_total, "expedition_cancel", s.agent, {
+        expedition_id: expeditionId,
+      });
     }
   }
   await supabase
@@ -432,7 +501,8 @@ export async function resolveExpedition(id: string) {
   else result = "fallito";
 
   const events: ExpeditionEvent[] = [];
-  const eventsCount = result === "successo" ? rand(2, 4) : result === "parziale" ? rand(2, 3) : rand(1, 2);
+  const eventsCount =
+    result === "successo" ? rand(2, 4) : result === "parziale" ? rand(2, 3) : rand(1, 2);
   const picks = pickN(template.events_pool ?? [], eventsCount);
   for (const k of picks) {
     const meta = EVENT_LIBRARY[k] ?? { label: k, emoji: "✨" };
@@ -454,10 +524,7 @@ export async function resolveExpedition(id: string) {
       rewards.ingredients = pickN(pool.ingredients, n);
     }
     if (pool.ship_parts && result === "successo" && Math.random() < 0.4) {
-      const { data: parts } = await supabase
-        .from("ship_parts")
-        .select("key")
-        .order("sort_order");
+      const { data: parts } = await supabase.from("ship_parts").select("key").order("sort_order");
       const collected = await supabase.from("ship_parts_collected").select("part_key");
       const taken = new Set((collected.data ?? []).map((c) => c.part_key));
       const available = (parts ?? []).map((p) => p.key).filter((k) => !taken.has(k));
@@ -483,7 +550,9 @@ export async function resolveExpedition(id: string) {
   const agents = Array.from(new Set(squads.map((s) => s.agent)));
   for (const ag of agents) {
     if (rewards.coins > 0) {
-      await addCoins(ag, Math.ceil(rewards.coins / agents.length), "expedition_reward", { expedition_id: id });
+      await addCoins(ag, Math.ceil(rewards.coins / agents.length), "expedition_reward", {
+        expedition_id: id,
+      });
     }
     if (rewards.ingredients.length) {
       const slice = rewards.ingredients.filter((_, i) => i % agents.length === agents.indexOf(ag));
@@ -545,5 +614,8 @@ export async function fetchNotifications(agent: string) {
 }
 
 export async function markNotificationRead(id: string) {
-  await supabase.from("mission_notifications").update({ read_at: new Date().toISOString() }).eq("id", id);
+  await supabase
+    .from("mission_notifications")
+    .update({ read_at: new Date().toISOString() })
+    .eq("id", id);
 }

@@ -32,7 +32,10 @@ export function DioramaPanel({ open, onOpenChange, biome, onChanged }: Props) {
     }
     const { data: userData } = await supabase.auth.getUser();
     const uid = userData.user?.id;
-    if (!uid) { toast.error("Devi essere autenticato"); return; }
+    if (!uid) {
+      toast.error("Devi essere autenticato");
+      return;
+    }
 
     setUploading(true);
     try {
@@ -111,12 +114,18 @@ export function DioramaPanel({ open, onOpenChange, biome, onChanged }: Props) {
   };
 
   const remove = async (d: DioramaRow) => {
-    if (d.is_system) { toast.error("Non puoi eliminare un diorama di sistema"); return; }
+    if (d.is_system) {
+      toast.error("Non puoi eliminare un diorama di sistema");
+      return;
+    }
     if (!confirm(`Eliminare "${d.name}"?`)) return;
     setBusyId(d.id);
     const { error } = await supabase.from("village_dioramas").delete().eq("id", d.id);
     setBusyId(null);
-    if (error) { toast.error(error.message); return; }
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success("Diorama eliminato");
     await reload();
     onChanged?.();
@@ -152,9 +161,13 @@ export function DioramaPanel({ open, onOpenChange, biome, onChanged }: Props) {
             className="btn-neon w-full py-2.5 text-xs inline-flex items-center justify-center gap-2 disabled:opacity-60"
           >
             {uploading ? (
-              <><Loader2 className="h-4 w-4 animate-spin" /> Caricamento…</>
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" /> Caricamento…
+              </>
             ) : (
-              <><Upload className="h-4 w-4" /> Carica nuovo diorama</>
+              <>
+                <Upload className="h-4 w-4" /> Carica nuovo diorama
+              </>
             )}
           </button>
         </div>
@@ -163,7 +176,9 @@ export function DioramaPanel({ open, onOpenChange, biome, onChanged }: Props) {
           <p className="text-[10px] uppercase tracking-widest text-primary">Libreria</p>
           {loading && <p className="text-[11px] text-muted-foreground">Caricamento…</p>}
           {!loading && items.length === 0 && (
-            <p className="text-[11px] text-muted-foreground italic">Nessun diorama per questo bioma.</p>
+            <p className="text-[11px] text-muted-foreground italic">
+              Nessun diorama per questo bioma.
+            </p>
           )}
           <div className="grid grid-cols-2 gap-2">
             {items.map((d) => (
@@ -198,7 +213,11 @@ export function DioramaPanel({ open, onOpenChange, biome, onChanged }: Props) {
                         onClick={() => activate(d)}
                         className="flex-1 px-1.5 py-1 rounded bg-primary/20 hover:bg-primary/30 text-[10px] inline-flex items-center justify-center gap-1"
                       >
-                        {busyId === d.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3 w-3" />}
+                        {busyId === d.id ? (
+                          <Loader2 className="h-3 w-3 animate-spin" />
+                        ) : (
+                          <Check className="h-3 w-3" />
+                        )}
                         Attiva
                       </button>
                     )}

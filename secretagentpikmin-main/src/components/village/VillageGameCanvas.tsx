@@ -125,7 +125,6 @@ export function VillageGameCanvas({
         gameRef.current = null;
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // keep latest callbacks
@@ -169,7 +168,9 @@ export function VillageGameCanvas({
     return map;
   }, [catalog]);
 
-  const visualFromAsset = (asset: ReturnType<typeof pickStructureAsset>): StructureVisualConfig | null =>
+  const visualFromAsset = (
+    asset: ReturnType<typeof pickStructureAsset>,
+  ): StructureVisualConfig | null =>
     asset
       ? {
           assetUrl: asset.asset_url,

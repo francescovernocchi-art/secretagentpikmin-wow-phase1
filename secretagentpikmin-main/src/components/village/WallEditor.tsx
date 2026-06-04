@@ -76,7 +76,9 @@ export function WallEditor({ agent, walls, coins, onClose, onChange }: Props) {
       >
         <div className="flex items-center justify-between">
           <h3 className="font-display text-base">🧱 Editor mura</h3>
-          <button onClick={onClose} className="panel p-1.5"><X className="h-3 w-3" /></button>
+          <button onClick={onClose} className="panel p-1.5">
+            <X className="h-3 w-3" />
+          </button>
         </div>
 
         <div>
@@ -85,12 +87,17 @@ export function WallEditor({ agent, walls, coins, onClose, onChange }: Props) {
             {Object.entries(WALL_MATERIALS).map(([k, m]) => (
               <button
                 key={k}
-                onClick={() => { hapticTap(); setMaterial(k); }}
+                onClick={() => {
+                  hapticTap();
+                  setMaterial(k);
+                }}
                 className={`panel p-1.5 text-[10px] text-center ${material === k ? "ring-2 ring-primary" : ""}`}
               >
                 <div className="h-1.5 rounded mb-1" style={{ background: m.color }} />
                 <p className="font-semibold">{m.label}</p>
-                <p className="text-[9px] text-muted-foreground">+{m.defense} · {m.cost}💰</p>
+                <p className="text-[9px] text-muted-foreground">
+                  +{m.defense} · {m.cost}💰
+                </p>
               </button>
             ))}
           </div>
@@ -112,20 +119,33 @@ export function WallEditor({ agent, walls, coins, onClose, onChange }: Props) {
             }}
           />
           {/* muri esistenti */}
-          <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
+          <svg
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+            className="absolute inset-0 h-full w-full"
+          >
             {walls.map((w) => {
               const m = WALL_MATERIALS[w.material] ?? WALL_MATERIALS.wood;
               return (
-                <g key={w.id} style={{ cursor: "pointer" }} onClick={async (e) => {
-                  e.stopPropagation();
-                  if (confirm(`Eliminare segmento ${m.label}?`)) {
-                    await deleteWall(w.id);
-                    onChange();
-                  }
-                }}>
+                <g
+                  key={w.id}
+                  style={{ cursor: "pointer" }}
+                  onClick={async (e) => {
+                    e.stopPropagation();
+                    if (confirm(`Eliminare segmento ${m.label}?`)) {
+                      await deleteWall(w.id);
+                      onChange();
+                    }
+                  }}
+                >
                   <line
-                    x1={w.from_x} y1={100 - w.from_y} x2={w.to_x} y2={100 - w.to_y}
-                    stroke={m.color} strokeWidth={1 + w.level * 0.4} strokeLinecap="round"
+                    x1={w.from_x}
+                    y1={100 - w.from_y}
+                    x2={w.to_x}
+                    y2={100 - w.to_y}
+                    stroke={m.color}
+                    strokeWidth={1 + w.level * 0.4}
+                    strokeLinecap="round"
                   />
                   <circle cx={w.from_x} cy={100 - w.from_y} r={1} fill={m.color} />
                   <circle cx={w.to_x} cy={100 - w.to_y} r={1} fill={m.color} />
@@ -133,19 +153,31 @@ export function WallEditor({ agent, walls, coins, onClose, onChange }: Props) {
               );
             })}
             {pending && (
-              <circle cx={pending.x} cy={100 - pending.y} r={1.5} fill={mat.color} className="animate-pulse" />
+              <circle
+                cx={pending.x}
+                cy={100 - pending.y}
+                r={1.5}
+                fill={mat.color}
+                className="animate-pulse"
+              />
             )}
           </svg>
           {/* hint */}
           <div className="absolute bottom-1 left-1 right-1 text-center text-[10px] text-foreground/60 bg-night/50 rounded py-0.5">
-            {pending ? "Tocca il secondo punto" : "Tocca per iniziare un segmento · Tocca un muro per eliminarlo"}
+            {pending
+              ? "Tocca il secondo punto"
+              : "Tocca per iniziare un segmento · Tocca un muro per eliminarlo"}
           </div>
         </div>
 
         {err && <p className="text-[11px] text-red-400">{err}</p>}
         <div className="flex items-center justify-between text-[10px] text-muted-foreground">
-          <span>{walls.length} segmenti · 💰 {coins}</span>
-          <button onClick={onClose} className="panel px-3 py-1 text-[11px]">Fatto</button>
+          <span>
+            {walls.length} segmenti · 💰 {coins}
+          </span>
+          <button onClick={onClose} className="panel px-3 py-1 text-[11px]">
+            Fatto
+          </button>
         </div>
       </motion.div>
     </motion.div>

@@ -74,8 +74,12 @@ export function SpaceshipAssemblyPanel({ compact = false }: SpaceshipAssemblyPan
             <div className="panel p-3 flex items-start gap-2">
               <Sparkles className="h-4 w-4 text-primary shrink-0 mt-0.5" />
               <div>
-                <p className="text-[10px] uppercase tracking-widest text-primary/80">Ultimo pezzo</p>
-                <p className="font-medium">{lastPart.emoji} {lastPart.name}</p>
+                <p className="text-[10px] uppercase tracking-widest text-primary/80">
+                  Ultimo pezzo
+                </p>
+                <p className="font-medium">
+                  {lastPart.emoji} {lastPart.name}
+                </p>
                 <p className="text-[10px] text-muted-foreground">
                   da {displayAgentName(lastPart.collected_by ?? "papa")}
                 </p>
@@ -86,14 +90,18 @@ export function SpaceshipAssemblyPanel({ compact = false }: SpaceshipAssemblyPan
             <div className="panel p-3 flex items-start gap-2">
               <MapPin className="h-4 w-4 text-amber-400 shrink-0 mt-0.5" />
               <div>
-                <p className="text-[10px] uppercase tracking-widest text-primary/80">Prossimo indizio</p>
+                <p className="text-[10px] uppercase tracking-widest text-primary/80">
+                  Prossimo indizio
+                </p>
                 <p className="font-medium">{nextHint.partName}</p>
                 <p className="text-[10px] text-muted-foreground">{nextHint.hint}</p>
               </div>
             </div>
           )}
           {missing.length === 0 && (
-            <p className="col-span-2 text-center text-primary text-sm font-display">Navicella completa! Pronta al decollo.</p>
+            <p className="col-span-2 text-center text-primary text-sm font-display">
+              Navicella completa! Pronta al decollo.
+            </p>
           )}
         </div>
       )}

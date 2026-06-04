@@ -22,13 +22,17 @@ export function usePikminSpecies() {
     setLoading(true);
     const { data } = await supabase
       .from("pikmin_species")
-      .select("key,name,color,image_url,icon_url,sprite_idle_url,sprite_walk_url,sprite_sleep_url,sprite_attack_url")
+      .select(
+        "key,name,color,image_url,icon_url,sprite_idle_url,sprite_walk_url,sprite_sleep_url,sprite_attack_url",
+      )
       .order("sort_order", { ascending: true });
     setSpecies((data as PikminSpeciesRow[]) ?? []);
     setLoading(false);
   }, []);
 
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => {
+    void refresh();
+  }, [refresh]);
 
   return { species, loading, refresh };
 }

@@ -23,12 +23,72 @@ export interface DioramaBuildingDef {
 }
 
 export const DIORAMA_BUILDINGS: DioramaBuildingDef[] = [
-  { key: "centro_controllo", name: "Centro Controllo", emoji: "🎛️", role: "Comando remoto", x: 48, y: 34, z: 40, route: "/base", color: "#4ade80" },
-  { key: "hangar", name: "Hangar Navicella", emoji: "🚀", role: "Costruzione", x: 50, y: 12, z: 90, action: "ship", color: "#38bdf8" },
-  { key: "accademia", name: "Accademia Pikmin", emoji: "🎓", role: "Specializzazioni", x: 20, y: 44, z: 30, route: "/archivio", color: "#fbbf24" },
-  { key: "magazzino", name: "Magazzino", emoji: "📦", role: "Risorse", x: 28, y: 68, z: 25, route: "/inventario", color: "#a78bfa" },
-  { key: "laboratorio", name: "Laboratorio", emoji: "🔬", role: "Trasformazioni", x: 58, y: 72, z: 28, route: "/lab", color: "#f472b6" },
-  { key: "mercato", name: "Mercato", emoji: "🏪", role: "Scambi", x: 80, y: 34, z: 32, route: "/villaggio/scambi", color: "#fb923c" },
+  {
+    key: "centro_controllo",
+    name: "Centro Controllo",
+    emoji: "🎛️",
+    role: "Comando remoto",
+    x: 48,
+    y: 34,
+    z: 40,
+    route: "/base",
+    color: "#4ade80",
+  },
+  {
+    key: "hangar",
+    name: "Hangar Navicella",
+    emoji: "🚀",
+    role: "Costruzione",
+    x: 50,
+    y: 12,
+    z: 90,
+    action: "ship",
+    color: "#38bdf8",
+  },
+  {
+    key: "accademia",
+    name: "Accademia Pikmin",
+    emoji: "🎓",
+    role: "Specializzazioni",
+    x: 20,
+    y: 44,
+    z: 30,
+    route: "/archivio",
+    color: "#fbbf24",
+  },
+  {
+    key: "magazzino",
+    name: "Magazzino",
+    emoji: "📦",
+    role: "Risorse",
+    x: 28,
+    y: 68,
+    z: 25,
+    route: "/inventario",
+    color: "#a78bfa",
+  },
+  {
+    key: "laboratorio",
+    name: "Laboratorio",
+    emoji: "🔬",
+    role: "Trasformazioni",
+    x: 58,
+    y: 72,
+    z: 28,
+    route: "/lab",
+    color: "#f472b6",
+  },
+  {
+    key: "mercato",
+    name: "Mercato",
+    emoji: "🏪",
+    role: "Scambi",
+    x: 80,
+    y: 34,
+    z: 32,
+    route: "/villaggio/scambi",
+    color: "#fb923c",
+  },
 ];
 
 export interface BiomeTheme {
@@ -131,7 +191,10 @@ export const PIKMIN_TYPE_TO_SPRITE: Record<string, string> = {
   luminoso: "white",
 };
 
-export function statusToAnimation(status: string, spec?: string): "walk" | "run" | "carry" | "work" | "idle" | "sleep" {
+export function statusToAnimation(
+  status: string,
+  spec?: string,
+): "walk" | "run" | "carry" | "work" | "idle" | "sleep" {
   if (status === "in_spedizione") return "run";
   if (status === "in_missione") return "run";
   if (status === "addestramento") return "work";
@@ -165,9 +228,54 @@ export const PIKMIN_PATROL_POINTS = [
 
 /** Crew tecnica decorativa vicino all'hangar (V1.8) */
 export const HANGAR_TECH_CREW = [
-  { id: "tech-1", x: 34, y: 28, z: 86, type: "yellow" as const, anim: "carry" as const, role: "Trasporto", prop: "📦" },
-  { id: "tech-2", x: 66, y: 26, z: 87, type: "blue" as const, anim: "work" as const, role: "Motori", prop: "🔧" },
-  { id: "tech-3", x: 38, y: 34, z: 84, type: "white" as const, anim: "work" as const, role: "Impalcature", prop: "🪜" },
-  { id: "tech-4", x: 62, y: 32, z: 84, type: "rock" as const, anim: "carry" as const, role: "Materiali", prop: "🔩" },
-  { id: "tech-5", x: 50, y: 38, z: 83, type: "red" as const, anim: "work" as const, role: "Energia", prop: "⚡" },
+  {
+    id: "tech-1",
+    x: 34,
+    y: 28,
+    z: 86,
+    type: "yellow" as const,
+    anim: "carry" as const,
+    role: "Trasporto",
+    prop: "📦",
+  },
+  {
+    id: "tech-2",
+    x: 66,
+    y: 26,
+    z: 87,
+    type: "blue" as const,
+    anim: "work" as const,
+    role: "Motori",
+    prop: "🔧",
+  },
+  {
+    id: "tech-3",
+    x: 38,
+    y: 34,
+    z: 84,
+    type: "white" as const,
+    anim: "work" as const,
+    role: "Impalcature",
+    prop: "🪜",
+  },
+  {
+    id: "tech-4",
+    x: 62,
+    y: 32,
+    z: 84,
+    type: "rock" as const,
+    anim: "carry" as const,
+    role: "Materiali",
+    prop: "🔩",
+  },
+  {
+    id: "tech-5",
+    x: 50,
+    y: 38,
+    z: 83,
+    type: "red" as const,
+    anim: "work" as const,
+    role: "Energia",
+    prop: "⚡",
+  },
 ];

@@ -99,13 +99,19 @@ export function TacticalBackground() {
       {/* canvas particelle */}
       <canvas ref={canvasRef} className="absolute inset-0" />
       {/* scan line lenta */}
-      <div className="absolute inset-x-0 h-24 opacity-30 animate-tactical-scan" style={{
-        background: "linear-gradient(to bottom, transparent, oklch(0.86 0.24 145 / 0.18), transparent)",
-      }} />
+      <div
+        className="absolute inset-x-0 h-24 opacity-30 animate-tactical-scan"
+        style={{
+          background:
+            "linear-gradient(to bottom, transparent, oklch(0.86 0.24 145 / 0.18), transparent)",
+        }}
+      />
       {/* vignette */}
       <div
         className="absolute inset-0"
-        style={{ background: "radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.55) 100%)" }}
+        style={{
+          background: "radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.55) 100%)",
+        }}
       />
       {/* HUD coordinate angolari */}
       <div className="absolute top-2 left-3 text-[9px] font-mono text-primary/40 tracking-widest uppercase">

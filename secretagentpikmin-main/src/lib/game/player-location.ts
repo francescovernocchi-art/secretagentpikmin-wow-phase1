@@ -51,12 +51,14 @@ export async function updatePlayerLocation(
 
   try {
     if (isSupabaseConfigured()) {
-      await gameTable("player_profiles").update({
-        lat,
-        lng,
-        current_biome: biome,
-        updated_at: state.updated_at,
-      }).eq("agent_key", agentKey);
+      await gameTable("player_profiles")
+        .update({
+          lat,
+          lng,
+          current_biome: biome,
+          updated_at: state.updated_at,
+        })
+        .eq("agent_key", agentKey);
     }
   } catch {}
 
@@ -65,7 +67,10 @@ export async function updatePlayerLocation(
   return state;
 }
 
-export async function setManualBiome(agentKey: string, biome: BiomeKey): Promise<PlayerLocationState> {
+export async function setManualBiome(
+  agentKey: string,
+  biome: BiomeKey,
+): Promise<PlayerLocationState> {
   const prev = await fetchPlayerLocation(agentKey);
   const state: PlayerLocationState = {
     ...prev,
@@ -76,10 +81,12 @@ export async function setManualBiome(agentKey: string, biome: BiomeKey): Promise
 
   try {
     if (isSupabaseConfigured()) {
-      await gameTable("player_profiles").update({
-        current_biome: biome,
-        updated_at: state.updated_at,
-      }).eq("agent_key", agentKey);
+      await gameTable("player_profiles")
+        .update({
+          current_biome: biome,
+          updated_at: state.updated_at,
+        })
+        .eq("agent_key", agentKey);
     }
   } catch {}
 
@@ -88,7 +95,10 @@ export async function setManualBiome(agentKey: string, biome: BiomeKey): Promise
   return state;
 }
 
-export function distanceMeters(a: { lat: number; lng: number }, b: { lat: number; lng: number }): number {
+export function distanceMeters(
+  a: { lat: number; lng: number },
+  b: { lat: number; lng: number },
+): number {
   const R = 6371000;
   const toRad = (d: number) => (d * Math.PI) / 180;
   const dLat = toRad(b.lat - a.lat);
@@ -106,8 +116,12 @@ export function isWithinVillageRadius(
   villageLng: number | null,
   radiusM = VILLAGE_RULES.actionRadiusMeters,
 ): boolean {
-  if (playerLat == null || playerLng == null || villageLat == null || villageLng == null) return false;
-  return distanceMeters({ lat: playerLat, lng: playerLng }, { lat: villageLat, lng: villageLng }) <= radiusM;
+  if (playerLat == null || playerLng == null || villageLat == null || villageLng == null)
+    return false;
+  return (
+    distanceMeters({ lat: playerLat, lng: playerLng }, { lat: villageLat, lng: villageLng }) <=
+    radiusM
+  );
 }
 
 /** Browser geolocation wrapper */

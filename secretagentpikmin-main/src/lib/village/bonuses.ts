@@ -45,17 +45,31 @@ export function computeVillageStatus(
     const lvl = Math.max(1, b.level);
     const bonus = c.bonus_per_level ?? {};
     const push = (key: BonusKey, amount: number) => {
-      if (amount) sources.push({ bonus: key, amount, buildingKey: c.key, buildingName: c.name, level: lvl });
+      if (amount)
+        sources.push({ bonus: key, amount, buildingKey: c.key, buildingName: c.name, level: lvl });
     };
-    if (bonus.energy_max) { energyMax += bonus.energy_max * lvl; push("energy_max", bonus.energy_max * lvl); }
-    if (bonus.defense)    { defenseRating += bonus.defense * lvl; push("defense", bonus.defense * lvl); }
+    if (bonus.energy_max) {
+      energyMax += bonus.energy_max * lvl;
+      push("energy_max", bonus.energy_max * lvl);
+    }
+    if (bonus.defense) {
+      defenseRating += bonus.defense * lvl;
+      push("defense", bonus.defense * lvl);
+    }
     if (bonus.pikmin_per_hour) {
       const mult = cfg?.bonuses.pikminGrowthMult ?? 1;
       const amt = bonus.pikmin_per_hour * lvl * mult;
-      pikminPerHour += amt; push("pikmin_per_hour", amt);
+      pikminPerHour += amt;
+      push("pikmin_per_hour", amt);
     }
-    if (bonus.scan_range) { scanRange += bonus.scan_range * lvl; push("scan_range", bonus.scan_range * lvl); }
-    if (bonus.storage)    { storageBonus += bonus.storage * lvl; push("storage", bonus.storage * lvl); }
+    if (bonus.scan_range) {
+      scanRange += bonus.scan_range * lvl;
+      push("scan_range", bonus.scan_range * lvl);
+    }
+    if (bonus.storage) {
+      storageBonus += bonus.storage * lvl;
+      push("storage", bonus.storage * lvl);
+    }
   }
 
   const buildingsLevelSum = buildings.reduce((a, b) => a + b.level, 0);

@@ -4,7 +4,11 @@ import { DioramaTerrain } from "@/components/game/diorama/DioramaTerrain";
 import { DioramaTechCrew } from "@/components/game/diorama/DioramaTechCrew";
 import { DioramaPikminActor } from "@/components/game/diorama/DioramaPikminActor";
 import { DioramaEffectsLayer } from "./DioramaEffectsLayer";
-import { PikminTrafficLayer, PikminTrafficDebugOverlay, generateTrafficAgents } from "./PikminTrafficLayer";
+import {
+  PikminTrafficLayer,
+  PikminTrafficDebugOverlay,
+  generateTrafficAgents,
+} from "./PikminTrafficLayer";
 import { DioramaBuildingOverlay } from "./DioramaBuildingOverlay";
 import { DioramaHotspotLayer } from "./DioramaHotspotLayer";
 import { DioramaHangarOverlay } from "./DioramaHangarOverlay";
@@ -43,7 +47,10 @@ export function DioramaCssFallback({
 }: DioramaEngineSceneProps) {
   const hangarLayout = layout.buildings.find((b) => b.key === "hangar");
   const debugAgents = useMemo(
-    () => (trafficDebug || (editorMode && editorSection === "traffic") ? generateTrafficAgents(layout, trafficAgentCount) : []),
+    () =>
+      trafficDebug || (editorMode && editorSection === "traffic")
+        ? generateTrafficAgents(layout, trafficAgentCount)
+        : [],
     [trafficDebug, editorMode, editorSection, layout, trafficAgentCount],
   );
 
@@ -78,7 +85,12 @@ export function DioramaCssFallback({
       />
 
       {sceneBuildings.map(({ def, level, status, visualState }) => {
-        const lb = layout.buildings.find((b) => b.key === def.key) ?? { key: def.key, x: def.x, y: def.y, z: def.z };
+        const lb = layout.buildings.find((b) => b.key === def.key) ?? {
+          key: def.key,
+          x: def.x,
+          y: def.y,
+          z: def.z,
+        };
         return (
           <DioramaBuildingOverlay
             key={def.key}
@@ -104,12 +116,16 @@ export function DioramaCssFallback({
           left: `${hangarLayout?.x ?? hangarDef.x}%`,
           top: `${hangarLayout?.y ?? hangarDef.y}%`,
           zIndex: hangarLayout?.z ?? hangarDef.z,
-          transform: hangarLayout?.scale ? `translate(-50%, -52%) scale(${hangarLayout.scale})` : undefined,
+          transform: hangarLayout?.scale
+            ? `translate(-50%, -52%) scale(${hangarLayout.scale})`
+            : undefined,
         }}
       >
         {editorMode && editorSection === "buildings" ? (
           <DioramaBuildingOverlay
-            layoutBuilding={hangarLayout ?? { key: "hangar", x: hangarDef.x, y: hangarDef.y, z: hangarDef.z }}
+            layoutBuilding={
+              hangarLayout ?? { key: "hangar", x: hangarDef.x, y: hangarDef.y, z: hangarDef.z }
+            }
             def={hangarDef}
             level={1}
             editorMode
@@ -134,7 +150,13 @@ export function DioramaCssFallback({
             <>
               <DioramaTechCrew compact={compact && !isHero} hideRoles={isHero} />
               {visiblePikmin.map((p, i) => (
-                <DioramaPikminActor key={p.id} pikmin={p} index={i} compact={compact} hideBadges={fullscreenMode || isHero} />
+                <DioramaPikminActor
+                  key={p.id}
+                  pikmin={p}
+                  index={i}
+                  compact={compact}
+                  hideBadges={fullscreenMode || isHero}
+                />
               ))}
             </>
           )}
@@ -145,14 +167,19 @@ export function DioramaCssFallback({
             debug={trafficDebug || (editorMode && editorSection === "traffic")}
             agentCount={trafficAgentCount}
           />
-          {(trafficDebug || (editorMode && editorSection === "traffic")) && debugAgents.length > 0 && (
-            <PikminTrafficDebugOverlay layout={layout} agents={debugAgents} />
-          )}
+          {(trafficDebug || (editorMode && editorSection === "traffic")) &&
+            debugAgents.length > 0 && (
+              <PikminTrafficDebugOverlay layout={layout} agents={debugAgents} />
+            )}
         </>
       )}
 
       {editorMode && clickMarker && (
-        <div className={styles.engineClickMarker} style={{ left: `${clickMarker.x}%`, top: `${clickMarker.y}%` }} aria-hidden />
+        <div
+          className={styles.engineClickMarker}
+          style={{ left: `${clickMarker.x}%`, top: `${clickMarker.y}%` }}
+          aria-hidden
+        />
       )}
     </div>
   );

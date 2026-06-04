@@ -72,7 +72,7 @@ function pickTarget(
   // restano nel frame (la finestra visibile è ±22°) e l'utente li trova subito.
   const offset = opts.centered ? 0 : Math.random() * 36 - 18;
   const base = {
-    alpha: ((baselineAlpha + offset) % 360 + 360) % 360,
+    alpha: (((baselineAlpha + offset) % 360) + 360) % 360,
     beta: opts.centered ? 0 : Math.random() * 12 - 6,
   };
   if (kind === "pikmin") {
@@ -104,7 +104,9 @@ const TARGET_MIN_LIFETIME_MS = 8000;
 // Tempo extra durante il quale il target resta bloccato dopo essere stato visto
 const TARGET_HOLD_AFTER_SEEN_MS = 5000;
 
-export function ArPikminOverlay({ permissionPreGranted = false }: { permissionPreGranted?: boolean } = {}) {
+export function ArPikminOverlay({
+  permissionPreGranted = false,
+}: { permissionPreGranted?: boolean } = {}) {
   const [target, setTarget] = useState<Target | null>(null);
   const [pos, setPos] = useState<{ x: number; y: number; visible: boolean; lock: number }>({
     x: 50,
@@ -181,10 +183,8 @@ export function ArPikminOverlay({ permissionPreGranted = false }: { permissionPr
       if (pendingSoftRecalibrateRef.current && lastValidAlphaRef.current != null) {
         const drift = deltaDeg(alpha, lastValidAlphaRef.current); // alpha - last
         if (Math.abs(drift) > 0.5) {
-          baselineRef.current = ((baselineRef.current + drift) % 360 + 360) % 360;
-          setTarget((t) =>
-            t ? { ...t, alpha: ((t.alpha + drift) % 360 + 360) % 360 } : t,
-          );
+          baselineRef.current = (((baselineRef.current + drift) % 360) + 360) % 360;
+          setTarget((t) => (t ? { ...t, alpha: (((t.alpha + drift) % 360) + 360) % 360 } : t));
         }
         pendingSoftRecalibrateRef.current = false;
       }
@@ -206,8 +206,7 @@ export function ArPikminOverlay({ permissionPreGranted = false }: { permissionPr
 
         const aged = now - targetBornAtRef.current > TARGET_MIN_LIFETIME_MS;
         const cooledDown =
-          lastSeenAtRef.current === 0 ||
-          now - lastSeenAtRef.current > TARGET_HOLD_AFTER_SEEN_MS;
+          lastSeenAtRef.current === 0 || now - lastSeenAtRef.current > TARGET_HOLD_AFTER_SEEN_MS;
         const lookingAway = lock < 0.15 && Math.abs(dA) > 60;
 
         if (aged && cooledDown && lookingAway) {
@@ -251,7 +250,12 @@ export function ArPikminOverlay({ permissionPreGranted = false }: { permissionPr
             const p = AR_POOL[Math.floor(Math.random() * AR_POOL.length)];
             setTarget({ kind: "pikmin", src: p.src, name: p.name, alpha: 0, beta: 0 });
           }
-          setPos({ x: 30 + Math.random() * 40, y: 30 + Math.random() * 30, visible: true, lock: 1 });
+          setPos({
+            x: 30 + Math.random() * 40,
+            y: 30 + Math.random() * 30,
+            visible: true,
+            lock: 1,
+          });
         }
       }
     }, 1200);
@@ -341,7 +345,7 @@ export function ArPikminOverlay({ permissionPreGranted = false }: { permissionPr
   };
 
   useEffect(() => {
-    const anyEvt = (DeviceOrientationEvent as any);
+    const anyEvt = DeviceOrientationEvent as any;
     if (!permissionPreGranted && typeof anyEvt?.requestPermission === "function") {
       setNeedsPermission(true);
       // Anche in attesa del permesso iOS, se l'utente non tocca "Attiva AR"
@@ -376,7 +380,6 @@ export function ArPikminOverlay({ permissionPreGranted = false }: { permissionPr
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
 
   const enable = async () => {
     try {
@@ -417,7 +420,6 @@ export function ArPikminOverlay({ permissionPreGranted = false }: { permissionPr
     attach();
   };
 
-
   // Indicatore direzionale (freccia che punta verso il pikmin quando fuori frame)
   const arrow = useMemo(() => {
     if (!target || pos.visible || noSensor) return null;
@@ -432,10 +434,7 @@ export function ArPikminOverlay({ permissionPreGranted = false }: { permissionPr
     <>
       {needsPermission && (
         <div className="absolute inset-0 flex items-center justify-center z-20">
-          <button
-            onClick={enable}
-            className="btn-neon px-5 py-3 text-sm uppercase tracking-widest"
-          >
+          <button onClick={enable} className="btn-neon px-5 py-3 text-sm uppercase tracking-widest">
             Attiva AR
           </button>
         </div>
@@ -530,7 +529,11 @@ export function ArPikminOverlay({ permissionPreGranted = false }: { permissionPr
                     boxShadow: `0 0 8px ${ringColor}`,
                   }}
                   animate={{ top: ["12%", "88%", "12%"] }}
-                  transition={{ duration: locking ? 0.9 : 1.8, repeat: Infinity, ease: "easeInOut" }}
+                  transition={{
+                    duration: locking ? 0.9 : 1.8,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
                 />
                 {/* crosshair centrale */}
                 <span
@@ -559,7 +562,6 @@ export function ArPikminOverlay({ permissionPreGranted = false }: { permissionPr
         </div>
       )}
 
-
       {/* Bersaglio AR — visibile solo quando inquadri la posizione esatta */}
       <AnimatePresence>
         {target && pos.visible && (
@@ -586,7 +588,10 @@ export function ArPikminOverlay({ permissionPreGranted = false }: { permissionPr
             ) : (
               <motion.div
                 className="pointer-events-none -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-28 h-28 rounded-full bg-background/40 border border-primary/60 backdrop-blur-sm"
-                style={{ boxShadow: "0 0 28px var(--color-primary), inset 0 0 18px oklch(0.86 0.24 145 / 0.4)" }}
+                style={{
+                  boxShadow:
+                    "0 0 28px var(--color-primary), inset 0 0 18px oklch(0.86 0.24 145 / 0.4)",
+                }}
                 animate={{ y: [-4, 4, -4], rotate: [-3, 3, -3] }}
                 transition={{
                   y: { duration: 2.2, repeat: Infinity, ease: "easeInOut" },

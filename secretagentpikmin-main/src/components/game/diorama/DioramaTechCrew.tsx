@@ -23,7 +23,12 @@ export function DioramaTechCrew({ compact, hideRoles }: DioramaTechCrewProps) {
             y: [0, -2, 0],
             x: spot.anim === "carry" ? [0, 2, 0] : [0, -1, 0],
           }}
-          transition={{ repeat: Infinity, duration: 2.8 + i * 0.35, ease: "easeInOut", delay: i * 0.2 }}
+          transition={{
+            repeat: Infinity,
+            duration: 2.8 + i * 0.35,
+            ease: "easeInOut",
+            delay: i * 0.2,
+          }}
           aria-hidden
         >
           <div className={styles.techPikminShadow} />

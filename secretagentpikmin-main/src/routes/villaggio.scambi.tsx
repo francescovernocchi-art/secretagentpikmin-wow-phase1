@@ -39,8 +39,7 @@ function ScambiPage() {
             Mercato del Villaggio
           </p>
           <p className="text-xs text-muted-foreground">
-            Sistema unificato Phase 4 — scambi reali con inventario, notifiche
-            e fallback locale.
+            Sistema unificato Phase 4 — scambi reali con inventario, notifiche e fallback locale.
           </p>
         </div>
       </div>

@@ -25,9 +25,15 @@ export function AudioToggle({ compact = false }: { compact?: boolean }) {
       aria-label={on ? "Disattiva suoni" : "Attiva suoni"}
       aria-pressed={on}
     >
-      {on ? <Volume2 className="h-4 w-4 text-primary" /> : <VolumeX className="h-4 w-4 text-muted-foreground" />}
+      {on ? (
+        <Volume2 className="h-4 w-4 text-primary" />
+      ) : (
+        <VolumeX className="h-4 w-4 text-muted-foreground" />
+      )}
       {!compact && (
-        <span className="text-[10px] uppercase tracking-widest">{on ? "Audio ON" : "Audio OFF"}</span>
+        <span className="text-[10px] uppercase tracking-widest">
+          {on ? "Audio ON" : "Audio OFF"}
+        </span>
       )}
     </button>
   );

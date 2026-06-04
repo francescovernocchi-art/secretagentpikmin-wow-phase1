@@ -48,7 +48,10 @@ export const PERIOD_EMOJI: Record<ActivityPeriod, string> = {
 };
 
 /** È il momento "attivo" della creatura? Quando false la creatura dorme. */
-export function isActiveNow(period: ActivityPeriod | null | undefined, phase: DayPhase = getDayPhase()): boolean {
+export function isActiveNow(
+  period: ActivityPeriod | null | undefined,
+  phase: DayPhase = getDayPhase(),
+): boolean {
   const p = (period ?? "sempre") as ActivityPeriod;
   if (p === "sempre") return true;
   if (p === "diurno") return phase === "giorno" || phase === "alba";
@@ -61,13 +64,28 @@ export function isActiveNow(period: ActivityPeriod | null | undefined, phase: Da
 export function phaseOverlay(phase: DayPhase): { background: string; opacity: number } {
   switch (phase) {
     case "notte":
-      return { background: "radial-gradient(circle at 50% 0%, rgba(15,23,42,0.0) 0%, rgba(8,12,30,0.55) 60%, rgba(2,6,23,0.7) 100%)", opacity: 1 };
+      return {
+        background:
+          "radial-gradient(circle at 50% 0%, rgba(15,23,42,0.0) 0%, rgba(8,12,30,0.55) 60%, rgba(2,6,23,0.7) 100%)",
+        opacity: 1,
+      };
     case "tramonto":
-      return { background: "linear-gradient(180deg, rgba(251,146,60,0.18) 0%, rgba(244,63,94,0.18) 60%, rgba(30,16,40,0.35) 100%)", opacity: 1 };
+      return {
+        background:
+          "linear-gradient(180deg, rgba(251,146,60,0.18) 0%, rgba(244,63,94,0.18) 60%, rgba(30,16,40,0.35) 100%)",
+        opacity: 1,
+      };
     case "alba":
-      return { background: "linear-gradient(180deg, rgba(254,215,170,0.18) 0%, rgba(245,158,11,0.12) 60%, rgba(15,23,42,0.15) 100%)", opacity: 1 };
+      return {
+        background:
+          "linear-gradient(180deg, rgba(254,215,170,0.18) 0%, rgba(245,158,11,0.12) 60%, rgba(15,23,42,0.15) 100%)",
+        opacity: 1,
+      };
     case "giorno":
     default:
-      return { background: "linear-gradient(180deg, rgba(250,204,21,0.04) 0%, rgba(96,165,250,0.02) 100%)", opacity: 1 };
+      return {
+        background: "linear-gradient(180deg, rgba(250,204,21,0.04) 0%, rgba(96,165,250,0.02) 100%)",
+        opacity: 1,
+      };
   }
 }

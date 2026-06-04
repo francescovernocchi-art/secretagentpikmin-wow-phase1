@@ -46,7 +46,12 @@ function Decoded({ text }: { text: string }) {
     }, 18);
     return () => clearInterval(id);
   }, [text]);
-  return <span>{shown}<span className="text-primary animate-flicker">▋</span></span>;
+  return (
+    <span>
+      {shown}
+      <span className="text-primary animate-flicker">▋</span>
+    </span>
+  );
 }
 
 function appendUnique(prev: Msg[], row: Msg): Msg[] {
@@ -104,7 +109,11 @@ function ChatPage() {
 
     const chFamily = supabase
       .channel("family-chat-rt")
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "family_chat_messages" }, onFamily)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "family_chat_messages" },
+        onFamily,
+      )
       .subscribe();
 
     const chLegacy = supabase
@@ -122,10 +131,7 @@ function ChatPage() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages.length, channel]);
 
-  const visible = useMemo(
-    () => messages.filter((m) => m.channel === channel),
-    [messages, channel],
-  );
+  const visible = useMemo(() => messages.filter((m) => m.channel === channel), [messages, channel]);
 
   const send = async (content: string, type: string = "text", ch: ChatChannelKey = channel) => {
     if (!content.trim() || !session) return;
@@ -189,7 +195,9 @@ function ChatPage() {
                     {m.type === "sticker" ? (
                       <span className="text-3xl">{m.content}</span>
                     ) : m.type === "voice" ? (
-                      <span className="flex items-center gap-2 text-primary"><Mic className="h-4 w-4" /> Vocale registrato</span>
+                      <span className="flex items-center gap-2 text-primary">
+                        <Mic className="h-4 w-4" /> Vocale registrato
+                      </span>
                     ) : mine ? (
                       m.content
                     ) : (
@@ -251,7 +259,8 @@ function ChatPage() {
             </button>
           </form>
           <p className="text-[10px] text-muted-foreground/70 flex items-center gap-1 justify-center">
-            <Sparkles className="h-3 w-3 text-primary" /> Decodifica automatica attiva · canale {channel}
+            <Sparkles className="h-3 w-3 text-primary" /> Decodifica automatica attiva · canale{" "}
+            {channel}
           </p>
         </div>
       </div>

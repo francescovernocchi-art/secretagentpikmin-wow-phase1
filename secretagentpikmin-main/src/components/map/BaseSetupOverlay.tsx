@@ -69,8 +69,8 @@ export function BaseSetupOverlay({ visible, pendingPos, agent, onCancel, onCreat
               <MapPin className="h-4 w-4 text-primary" /> Scegli il tuo Campo Base
             </p>
             <p className="text-xs text-muted-foreground mt-1">
-              Tocca un punto sulla mappa per posizionare il tuo Campo Base. Da lì
-              cresceranno il tuo villaggio e le tue difese.
+              Tocca un punto sulla mappa per posizionare il tuo Campo Base. Da lì cresceranno il tuo
+              villaggio e le tue difese.
             </p>
           </div>
         ) : (
@@ -118,7 +118,11 @@ export function BaseSetupOverlay({ visible, pendingPos, agent, onCancel, onCreat
               disabled={saving || !name.trim()}
               className="btn-neon w-full py-2.5 text-sm flex items-center justify-center gap-2 disabled:opacity-60"
             >
-              {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <MapPin className="h-4 w-4" />}
+              {saving ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <MapPin className="h-4 w-4" />
+              )}
               Fonda qui il Campo Base
             </button>
           </motion.div>

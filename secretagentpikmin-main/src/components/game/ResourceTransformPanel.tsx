@@ -3,7 +3,11 @@ import { toast } from "sonner";
 import { Loader2, ArrowRight, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useMarket, useMissionProgress } from "@/hooks/useGameData";
-import { transformInventory, TRANSFORM_LABELS, getTransformableCounts } from "@/lib/game/transformations";
+import {
+  transformInventory,
+  TRANSFORM_LABELS,
+  getTransformableCounts,
+} from "@/lib/game/transformations";
 import { fetchInventory } from "@/lib/game/inventory";
 import { agentKeyFromSession } from "@/lib/game/planet";
 import { getSession } from "@/lib/session";
@@ -107,14 +111,18 @@ export function ResourceTransformPanel({ compact = false }: ResourceTransformPan
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium">{meta.label}</p>
-                  {!compact && <p className="text-[10px] text-muted-foreground line-clamp-2">{meta.desc}</p>}
+                  {!compact && (
+                    <p className="text-[10px] text-muted-foreground line-clamp-2">{meta.desc}</p>
+                  )}
                   <p className="text-[10px] text-primary mt-1">{count} oggetti compatibili</p>
                 </div>
               </div>
               <div className="flex items-center justify-center gap-2 mt-3 pt-2 border-t border-border/30 text-[10px] uppercase tracking-wider">
                 <span>Inventario</span>
                 <ArrowRight className="h-3 w-3 text-primary" />
-                <span>{preview.emoji} {preview.label}</span>
+                <span>
+                  {preview.emoji} {preview.label}
+                </span>
                 {busy === t && <Loader2 className="h-3 w-3 animate-spin text-primary ml-auto" />}
               </div>
             </button>

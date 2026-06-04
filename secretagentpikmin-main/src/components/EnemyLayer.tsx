@@ -26,7 +26,14 @@ import {
   type PikminType,
 } from "@/lib/enemies";
 import { Skull, Swords, X, Eye, EyeOff, Footprints, Radar as RadarIcon } from "lucide-react";
-import { getDayPhase, isActiveNow, PHASE_EMOJI, PHASE_LABEL, PHASE_COLOR, type DayPhase } from "@/lib/daycycle";
+import {
+  getDayPhase,
+  isActiveNow,
+  PHASE_EMOJI,
+  PHASE_LABEL,
+  PHASE_COLOR,
+  type DayPhase,
+} from "@/lib/daycycle";
 
 type Spawn = {
   id: string;
@@ -95,7 +102,11 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
   const [enemies, setEnemies] = useState<EnemyRow[]>([]);
   const [spawns, setSpawns] = useState<Spawn[]>([]);
   const [active, setActive] = useState<{ spawn: Spawn; enemy: EnemyRow } | null>(null);
-  const [proximity, setProximity] = useState<{ spawn: Spawn; enemy: EnemyRow; dist: number } | null>(null);
+  const [proximity, setProximity] = useState<{
+    spawn: Spawn;
+    enemy: EnemyRow;
+    dist: number;
+  } | null>(null);
   const [card, setCard] = useState<{ spawn: Spawn; enemy: EnemyRow } | null>(null);
   const [scanned, setScanned] = useState<Set<string>>(new Set());
   const [breakdown, setBreakdown] = useState<BattleSquad>({});
@@ -126,7 +137,6 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
   // load enemies catalog
   useEffect(() => {
     (async () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data } = await (supabase as any).from("enemies").select("*");
       setEnemies((data ?? []) as EnemyRow[]);
     })();
@@ -136,20 +146,23 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
   useEffect(() => {
     let mounted = true;
     const load = async () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data } = await (supabase as any)
         .from("map_enemy_spawns")
         .select("*")
         .eq("active", true);
       if (!mounted) return;
       const now = Date.now();
-      const live = (data ?? []).filter((s: Spawn) => !s.expires_at || new Date(s.expires_at).getTime() > now);
+      const live = (data ?? []).filter(
+        (s: Spawn) => !s.expires_at || new Date(s.expires_at).getTime() > now,
+      );
       setSpawns(live as Spawn[]);
     };
     load();
     const ch = supabase
       .channel("enemy-spawns-rt")
-      .on("postgres_changes", { event: "*", schema: "public", table: "map_enemy_spawns" }, () => load())
+      .on("postgres_changes", { event: "*", schema: "public", table: "map_enemy_spawns" }, () =>
+        load(),
+      )
       .subscribe();
     return () => {
       mounted = false;
@@ -160,12 +173,12 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
   // Admin place mode: handle map clicks to spawn the selected enemy
   useEffect(() => {
     if (!ready || !placeEnemyMode) return;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const map = mapRef.current as any;
     if (!map) return;
     const onClick = async (e: { latlng: { lat: number; lng: number } }) => {
       const enemy = placeEnemyMode;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       const { error } = await (supabase as any).from("map_enemy_spawns").insert({
         enemy_id: enemy.id,
         lat: e.latlng.lat,
@@ -178,12 +191,16 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
         toast.error("Spawn fallito: " + error.message);
       } else {
         toast.success(`${enemy.emoji} ${enemy.name} piazzato sulla mappa`);
-        try { navigator.vibrate?.(50); } catch { /* ignore */ }
+        try {
+          navigator.vibrate?.(50);
+        } catch {
+          /* ignore */
+        }
       }
       setPlaceEnemyMode(null);
     };
     map.on("click", onClick);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const container = (map as any).getContainer?.();
     if (container) container.style.cursor = "crosshair";
     return () => {
@@ -191,8 +208,6 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
       if (container) container.style.cursor = "";
     };
   }, [placeEnemyMode, ready, mapRef]);
-
-
 
   // init live positions when spawns arrive
   useEffect(() => {
@@ -233,7 +248,7 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
       const dLng = (distM * Math.sin(bearing)) / (111320 * Math.cos((me.lat * Math.PI) / 180));
       const lat = me.lat + dLat;
       const lng = me.lng + dLng;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       const { data: created } = await (supabase as any)
         .from("map_enemy_spawns")
         .insert({
@@ -248,12 +263,19 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
         .single();
       if (created) {
         toast.warning(`⚠️ Un ${enemy.name} si aggira nella zona.`, { duration: 4500 });
-        try { navigator.vibrate?.(120); } catch { /* ignore */ }
+        try {
+          navigator.vibrate?.(120);
+        } catch {
+          /* ignore */
+        }
       }
     };
     const first = setTimeout(tryspawn, 15_000);
     const id = setInterval(tryspawn, SPAWN_INTERVAL_MS);
-    return () => { clearTimeout(first); clearInterval(id); };
+    return () => {
+      clearTimeout(first);
+      clearInterval(id);
+    };
   }, [me, enemies, spawns.length, phase]);
 
   // movement + detection tick
@@ -299,13 +321,17 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
         let nextLng = pos.lng + dLng;
 
         // clamp to patrol area around home
-        const fromHome = distMeters({ lat: nextLat, lng: nextLng }, { lat: pos.homeLat, lng: pos.homeLng });
+        const fromHome = distMeters(
+          { lat: nextLat, lng: nextLng },
+          { lat: pos.homeLat, lng: pos.homeLng },
+        );
         const maxRadius = pos.behavior === "guardiano" ? 25 : PATROL_RADIUS_M;
         if (fromHome > maxRadius) {
           // turn back toward home
           heading = Math.atan2(pos.homeLng - pos.lng, pos.homeLat - pos.lat);
           const back = (stepM * Math.cos(heading)) / 111320;
-          const back2 = (stepM * Math.sin(heading)) / (111320 * Math.cos((pos.lat * Math.PI) / 180));
+          const back2 =
+            (stepM * Math.sin(heading)) / (111320 * Math.cos((pos.lat * Math.PI) / 180));
           nextLat = pos.lat + back;
           nextLng = pos.lng + back2;
         }
@@ -328,8 +354,14 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
           if (d <= pos.detectionM && Date.now() > dismissed) {
             if (!detectedRef.current.has(s.id)) {
               detectedRef.current.add(s.id);
-              try { navigator.vibrate?.([60, 40, 100]); } catch { /* ignore */ }
-              toast.error(`⚠️ NEMICO VICINO · ${enemy.name} (${Math.round(d)}m)`, { duration: 4000 });
+              try {
+                navigator.vibrate?.([60, 40, 100]);
+              } catch {
+                /* ignore */
+              }
+              toast.error(`⚠️ NEMICO VICINO · ${enemy.name} (${Math.round(d)}m)`, {
+                duration: 4000,
+              });
             }
             setProximity({ spawn: s, enemy, dist: d });
             break;
@@ -383,7 +415,7 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
       .map(([t, n]) => `${n} ${PIKMIN_TYPE_LABEL[t as PikminType]}`)
       .join(", ");
     const summary = `${enemy.name} ha attaccato di sorpresa e mangiato ${lostText || "alcuni Pikmin"}.`;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     await (supabase as any).from("battle_logs").insert({
       enemy_id: enemy.id,
       enemy_name: enemy.name,
@@ -394,7 +426,7 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
       rewards: {},
       summary,
     });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     await (supabase as any)
       .from("map_enemy_spawns")
       .update({ active: false, defeated_by: enemy.name, defeated_at: new Date().toISOString() })
@@ -407,7 +439,7 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
     if (!ready) return;
     (async () => {
       const L = await import("leaflet");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       const map = mapRef.current as any;
       if (!map) return;
       const seen = new Set<string>();
@@ -417,16 +449,17 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
         if (!enemy) continue;
         const pos = livePosRef.current.get(s.id) ?? { lat: s.lat, lng: s.lng };
         const sleeping = !isActiveNow(enemy.activity_period, phase);
-        const nearby = me ? distMeters(pos, me) <= (livePosRef.current.get(s.id)?.detectionM ?? DETECTION_RADIUS_M) : false;
+        const nearby = me
+          ? distMeters(pos, me) <= (livePosRef.current.get(s.id)?.detectionM ?? DETECTION_RADIUS_M)
+          : false;
         const color = sleeping ? "#8ab4ff" : nearby ? "#ff3030" : "#ff7a7a";
         const opacityVal = sleeping ? 0.55 : 1;
         const badgeText = sleeping ? `💤 ${enemy.name}` : `⚠️ ${enemy.name}`;
 
         const existing = markersRef.current.get(s.id);
         if (existing) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (existing as any).setLatLng([pos.lat, pos.lng]);
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
           const el = (existing as any).getElement?.();
           if (el) {
             el.style.opacity = String(opacityVal);
@@ -438,7 +471,9 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
               (badge as HTMLElement).textContent = badgeText;
             }
             const ico = el.querySelector("[data-enemy-ico]");
-            if (ico) (ico as HTMLElement).style.filter = `drop-shadow(0 0 8px ${color})${sleeping ? " grayscale(0.4)" : ""}`;
+            if (ico)
+              (ico as HTMLElement).style.filter =
+                `drop-shadow(0 0 8px ${color})${sleeping ? " grayscale(0.4)" : ""}`;
           }
         } else {
           const safeEmoji = escapeHtml(enemy.emoji);
@@ -451,7 +486,12 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
             <div data-enemy-badge style="background:#0a0a0a;color:${color};font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px;white-space:nowrap;border:1px solid ${color};box-shadow:0 0 8px ${color}">${safeBadge}</div>
             <div data-enemy-ico>${iconHtml}</div>
           </div>`;
-          const icon = L.divIcon({ className: "", html, iconSize: [120, 56], iconAnchor: [60, 32] });
+          const icon = L.divIcon({
+            className: "",
+            html,
+            iconSize: [120, 56],
+            iconAnchor: [60, 32],
+          });
           const marker = L.marker([pos.lat, pos.lng], { icon, zIndexOffset: 950 }).addTo(map);
           marker.on("click", () => {
             setCard({ spawn: s, enemy });
@@ -473,9 +513,8 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
         // move detection circle
         const circle = detectionCirclesRef.current.get(s.id);
         if (circle) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (circle as any).setLatLng([pos.lat, pos.lng]);
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
           (circle as any).setStyle({
             opacity: sleeping ? 0 : nearby ? 0.7 : 0.35,
             color: sleeping ? "#8ab4ff" : nearby ? "#ff2020" : "#ff7a7a",
@@ -484,12 +523,10 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
       }
       for (const [id, m] of markersRef.current.entries()) {
         if (!seen.has(id)) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           map.removeLayer(m as any);
           markersRef.current.delete(id);
           const c = detectionCirclesRef.current.get(id);
           if (c) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             map.removeLayer(c as any);
             detectionCirclesRef.current.delete(id);
           }
@@ -514,7 +551,11 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
     if (!proximity) return;
     proximityDismissedRef.current.set(proximity.spawn.id, Date.now() + FLEE_COOLDOWN_MS);
     toast.message(`Sei scappato da ${proximity.enemy.name}.`);
-    try { navigator.vibrate?.(20); } catch { /* ignore */ }
+    try {
+      navigator.vibrate?.(20);
+    } catch {
+      /* ignore */
+    }
     setProximity(null);
   };
 
@@ -538,9 +579,13 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
     const res = simulateBattle(enemy, squad);
     await applyPikminLosses(res.pikminLost, agent);
     if (res.outcome === "vittoria" && res.rewards.coins > 0) {
-      try { await addCoins(agent, res.rewards.coins, "battle_reward", { enemy: enemy.name }); } catch { /* ignore */ }
+      try {
+        await addCoins(agent, res.rewards.coins, "battle_reward", { enemy: enemy.name });
+      } catch {
+        /* ignore */
+      }
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     await (supabase as any).from("battle_logs").insert({
       enemy_id: enemy.id,
       enemy_name: enemy.name,
@@ -552,7 +597,6 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
       summary: res.summary,
     });
     if (res.outcome === "vittoria") {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await (supabase as any)
         .from("map_enemy_spawns")
         .update({ active: false, defeated_by: agent, defeated_at: new Date().toISOString() })
@@ -601,7 +645,12 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
           {placeEnemyMode && (
             <div className="fixed top-44 right-3 z-[1100] panel px-3 py-1.5 text-[10px] uppercase tracking-widest text-destructive border-destructive/40">
               Tocca la mappa · {placeEnemyMode.emoji} {placeEnemyMode.name}
-              <button onClick={() => setPlaceEnemyMode(null)} className="ml-2 text-muted-foreground">✕</button>
+              <button
+                onClick={() => setPlaceEnemyMode(null)}
+                className="ml-2 text-muted-foreground"
+              >
+                ✕
+              </button>
             </div>
           )}
         </>
@@ -614,106 +663,160 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
             <DialogTitle className="font-display text-glow flex items-center gap-2">
               <Skull className="h-5 w-5 text-destructive" /> Scegli il nemico
             </DialogTitle>
-            <DialogDescription>Poi tocca la mappa nel punto in cui vuoi farlo apparire.</DialogDescription>
+            <DialogDescription>
+              Poi tocca la mappa nel punto in cui vuoi farlo apparire.
+            </DialogDescription>
           </DialogHeader>
           <div className="grid grid-cols-2 gap-2 mt-2">
             {enemies.map((e) => (
               <button
                 key={e.id}
-                onClick={() => { setPlaceEnemyMode(e); setPlaceEnemyOpen(false); }}
+                onClick={() => {
+                  setPlaceEnemyMode(e);
+                  setPlaceEnemyOpen(false);
+                }}
                 className="panel p-2 text-left flex items-center gap-2 active:scale-[0.98]"
               >
                 <span className="text-2xl">{e.emoji}</span>
                 <div className="min-w-0">
                   <p className="text-xs font-display text-glow truncate">{e.name}</p>
-                  <p className="text-[10px] text-muted-foreground">Pericolosità {e.danger_level}/5</p>
+                  <p className="text-[10px] text-muted-foreground">
+                    Pericolosità {e.danger_level}/5
+                  </p>
                 </div>
               </button>
             ))}
             {enemies.length === 0 && (
-              <p className="col-span-2 text-xs text-muted-foreground text-center py-4">Nessun nemico nel bestiario.</p>
+              <p className="col-span-2 text-xs text-muted-foreground text-center py-4">
+                Nessun nemico nel bestiario.
+              </p>
             )}
           </div>
         </DialogContent>
       </Dialog>
 
-
-
       {/* Enemy card (click marker) */}
       <Dialog open={!!card} onOpenChange={(o) => !o && setCard(null)}>
         <DialogContent className="max-w-sm">
-          {card && (() => {
-            const isScanned = scanned.has(card.spawn.id);
-            const live = livePosRef.current.get(card.spawn.id);
-            const dist = me ? Math.round(distMeters({ lat: live?.lat ?? card.spawn.lat, lng: live?.lng ?? card.spawn.lng }, me)) : null;
-            return (
-              <>
-                <DialogHeader>
-                  <DialogTitle className="font-display text-lg text-glow flex items-center gap-2">
-                    <span className="text-2xl">{card.enemy.emoji}</span> {card.enemy.name}
-                  </DialogTitle>
-                  <DialogDescription>
-                    {card.enemy.habitat ?? "Avvistato sulla mappa"}{dist !== null ? ` · ${dist}m da te` : ""}
-                  </DialogDescription>
-                </DialogHeader>
-                <WikiImage src={card.enemy.image_url} alt={card.enemy.name} fallback={card.enemy.emoji} className="w-full h-32 p-2" />
-                {card.enemy.description && (
-                  <p className="text-xs text-muted-foreground leading-relaxed">{card.enemy.description}</p>
-                )}
-                {isScanned ? (
-                  <div className="panel p-2 space-y-1 text-[11px]">
-                    <p className="flex items-center gap-1 text-primary"><RadarIcon className="h-3 w-3" /> SCAN COMPLETATO</p>
-                    <p>Pericolosità: <b className="text-destructive">{card.enemy.danger_level}/5</b> · HP {card.enemy.hp} · Danno {card.enemy.damage}</p>
-                    <p>Comportamento: {live?.behavior ?? card.enemy.behavior ?? "?"}</p>
-                    <p>Pikmin consigliati: {(card.enemy.recommended_pikmin ?? []).length === 0 ? "—" : (card.enemy.recommended_pikmin ?? []).map((t) => (
-                      <span key={t} className="mr-1">{PIKMIN_TYPE_EMOJI[t as PikminType]} {PIKMIN_TYPE_LABEL[t as PikminType]}</span>
-                    ))}</p>
+          {card &&
+            (() => {
+              const isScanned = scanned.has(card.spawn.id);
+              const live = livePosRef.current.get(card.spawn.id);
+              const dist = me
+                ? Math.round(
+                    distMeters(
+                      { lat: live?.lat ?? card.spawn.lat, lng: live?.lng ?? card.spawn.lng },
+                      me,
+                    ),
+                  )
+                : null;
+              return (
+                <>
+                  <DialogHeader>
+                    <DialogTitle className="font-display text-lg text-glow flex items-center gap-2">
+                      <span className="text-2xl">{card.enemy.emoji}</span> {card.enemy.name}
+                    </DialogTitle>
+                    <DialogDescription>
+                      {card.enemy.habitat ?? "Avvistato sulla mappa"}
+                      {dist !== null ? ` · ${dist}m da te` : ""}
+                    </DialogDescription>
+                  </DialogHeader>
+                  <WikiImage
+                    src={card.enemy.image_url}
+                    alt={card.enemy.name}
+                    fallback={card.enemy.emoji}
+                    className="w-full h-32 p-2"
+                  />
+                  {card.enemy.description && (
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      {card.enemy.description}
+                    </p>
+                  )}
+                  {isScanned ? (
+                    <div className="panel p-2 space-y-1 text-[11px]">
+                      <p className="flex items-center gap-1 text-primary">
+                        <RadarIcon className="h-3 w-3" /> SCAN COMPLETATO
+                      </p>
+                      <p>
+                        Pericolosità:{" "}
+                        <b className="text-destructive">{card.enemy.danger_level}/5</b> · HP{" "}
+                        {card.enemy.hp} · Danno {card.enemy.damage}
+                      </p>
+                      <p>Comportamento: {live?.behavior ?? card.enemy.behavior ?? "?"}</p>
+                      <p>
+                        Pikmin consigliati:{" "}
+                        {(card.enemy.recommended_pikmin ?? []).length === 0
+                          ? "—"
+                          : (card.enemy.recommended_pikmin ?? []).map((t) => (
+                              <span key={t} className="mr-1">
+                                {PIKMIN_TYPE_EMOJI[t as PikminType]}{" "}
+                                {PIKMIN_TYPE_LABEL[t as PikminType]}
+                              </span>
+                            ))}
+                      </p>
+                    </div>
+                  ) : (
+                    <p className="text-[11px] text-muted-foreground italic">
+                      Dati sconosciuti. Esegui uno scan per rivelare pericolosità e Pikmin
+                      consigliati.
+                    </p>
+                  )}
+                  <div className="grid grid-cols-3 gap-2 mt-3">
+                    <button
+                      onClick={() => {
+                        setScanned((s) => new Set(s).add(card.spawn.id));
+                        try {
+                          navigator.vibrate?.(40);
+                        } catch {
+                          /* ignore */
+                        }
+                        toast.success(
+                          `Scan: ${card.enemy.name} pericolosità ${card.enemy.danger_level}/5`,
+                        );
+                      }}
+                      className="panel py-2 text-xs flex items-center justify-center gap-1"
+                    >
+                      <RadarIcon className="h-3 w-3" /> Scan
+                    </button>
+                    <button
+                      onClick={async () => {
+                        const bk = await getPikminBreakdown();
+                        setBreakdown(bk);
+                        setSquad({});
+                        setActive({ spawn: card.spawn, enemy: card.enemy });
+                        setCard(null);
+                      }}
+                      className="btn-neon py-2 text-xs flex items-center justify-center gap-1"
+                    >
+                      <Swords className="h-3 w-3" /> Battaglia
+                    </button>
+                    <button
+                      onClick={() => {
+                        setHiddenUntil(Date.now() + HIDE_DURATION_MS);
+                        proximityDismissedRef.current.set(
+                          card.spawn.id,
+                          Date.now() + HIDE_DURATION_MS,
+                        );
+                        try {
+                          navigator.vibrate?.(20);
+                        } catch {
+                          /* ignore */
+                        }
+                        toast.message(
+                          `Sei nascosto per ${HIDE_DURATION_MS / 1000}s. ${card.enemy.name} non ti vede.`,
+                        );
+                        setCard(null);
+                      }}
+                      className="panel py-2 text-xs flex items-center justify-center gap-1"
+                    >
+                      <EyeOff className="h-3 w-3" /> Nasconditi
+                    </button>
                   </div>
-                ) : (
-                  <p className="text-[11px] text-muted-foreground italic">Dati sconosciuti. Esegui uno scan per rivelare pericolosità e Pikmin consigliati.</p>
-                )}
-                <div className="grid grid-cols-3 gap-2 mt-3">
-                  <button
-                    onClick={() => {
-                      setScanned((s) => new Set(s).add(card.spawn.id));
-                      try { navigator.vibrate?.(40); } catch { /* ignore */ }
-                      toast.success(`Scan: ${card.enemy.name} pericolosità ${card.enemy.danger_level}/5`);
-                    }}
-                    className="panel py-2 text-xs flex items-center justify-center gap-1"
-                  >
-                    <RadarIcon className="h-3 w-3" /> Scan
-                  </button>
-                  <button
-                    onClick={async () => {
-                      const bk = await getPikminBreakdown();
-                      setBreakdown(bk);
-                      setSquad({});
-                      setActive({ spawn: card.spawn, enemy: card.enemy });
-                      setCard(null);
-                    }}
-                    className="btn-neon py-2 text-xs flex items-center justify-center gap-1"
-                  >
-                    <Swords className="h-3 w-3" /> Battaglia
-                  </button>
-                  <button
-                    onClick={() => {
-                      setHiddenUntil(Date.now() + HIDE_DURATION_MS);
-                      proximityDismissedRef.current.set(card.spawn.id, Date.now() + HIDE_DURATION_MS);
-                      try { navigator.vibrate?.(20); } catch { /* ignore */ }
-                      toast.message(`Sei nascosto per ${HIDE_DURATION_MS / 1000}s. ${card.enemy.name} non ti vede.`);
-                      setCard(null);
-                    }}
-                    className="panel py-2 text-xs flex items-center justify-center gap-1"
-                  >
-                    <EyeOff className="h-3 w-3" /> Nasconditi
-                  </button>
-                </div>
-              </>
-            );
-          })()}
+                </>
+              );
+            })()}
         </DialogContent>
       </Dialog>
-
 
       <Dialog open={!!proximity} onOpenChange={(o) => !o && setProximity(null)}>
         <DialogContent className="max-w-sm">
@@ -724,23 +827,37 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
                   <RadarIcon className="h-5 w-5 animate-pulse" /> NEMICO VICINO
                 </DialogTitle>
                 <DialogDescription>
-                  {proximity.enemy.emoji} <b>{proximity.enemy.name}</b> · {Math.round(proximity.dist)}m · pericolosità {proximity.enemy.danger_level}/5
+                  {proximity.enemy.emoji} <b>{proximity.enemy.name}</b> ·{" "}
+                  {Math.round(proximity.dist)}m · pericolosità {proximity.enemy.danger_level}/5
                 </DialogDescription>
               </DialogHeader>
               <div className="text-[11px] text-muted-foreground -mt-1">
-                HP {proximity.enemy.hp} · Danno {proximity.enemy.damage} · Comp.: {livePosRef.current.get(proximity.spawn.id)?.behavior ?? "?"}
+                HP {proximity.enemy.hp} · Danno {proximity.enemy.damage} · Comp.:{" "}
+                {livePosRef.current.get(proximity.spawn.id)?.behavior ?? "?"}
               </div>
               <div className="grid grid-cols-2 gap-2 mt-3">
-                <button onClick={openBattleFromProximity} className="btn-neon py-2 text-xs flex items-center justify-center gap-1">
+                <button
+                  onClick={openBattleFromProximity}
+                  className="btn-neon py-2 text-xs flex items-center justify-center gap-1"
+                >
                   <Swords className="h-3 w-3" /> Ingaggia
                 </button>
-                <button onClick={hide} className="panel py-2 text-xs flex items-center justify-center gap-1">
+                <button
+                  onClick={hide}
+                  className="panel py-2 text-xs flex items-center justify-center gap-1"
+                >
                   <EyeOff className="h-3 w-3" /> Nasconditi
                 </button>
-                <button onClick={flee} className="panel py-2 text-xs flex items-center justify-center gap-1">
+                <button
+                  onClick={flee}
+                  className="panel py-2 text-xs flex items-center justify-center gap-1"
+                >
                   <Footprints className="h-3 w-3" /> Fuggi
                 </button>
-                <button onClick={observe} className="panel py-2 text-xs flex items-center justify-center gap-1">
+                <button
+                  onClick={observe}
+                  className="panel py-2 text-xs flex items-center justify-center gap-1"
+                >
                   <Eye className="h-3 w-3" /> Osserva
                 </button>
               </div>
@@ -758,11 +875,17 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
                   <Swords className="h-5 w-5 text-destructive" /> Battaglia: {active.enemy.name}
                 </DialogTitle>
                 <DialogDescription>
-                  Pericolosità {active.enemy.danger_level}/5 · HP {active.enemy.hp} · Danno {active.enemy.damage}
+                  Pericolosità {active.enemy.danger_level}/5 · HP {active.enemy.hp} · Danno{" "}
+                  {active.enemy.damage}
                 </DialogDescription>
               </DialogHeader>
 
-              <WikiImage src={active.enemy.image_url} alt={active.enemy.name} fallback={active.enemy.emoji} className="w-full h-36 p-3" />
+              <WikiImage
+                src={active.enemy.image_url}
+                alt={active.enemy.name}
+                fallback={active.enemy.emoji}
+                className="w-full h-36 p-3"
+              />
 
               <div className="text-xs text-muted-foreground">
                 Pikmin consigliati:{" "}
@@ -774,7 +897,9 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
               </div>
 
               <div className="space-y-2 mt-3">
-                <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Scegli la squadra</p>
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                  Scegli la squadra
+                </p>
                 <div className="grid grid-cols-3 gap-2">
                   {PIKMIN_TYPES.map((t) => {
                     const max = breakdown[t] ?? 0;
@@ -793,7 +918,10 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
                           max={max}
                           value={v}
                           onChange={(e) =>
-                            setSquad({ ...squad, [t]: Math.max(0, Math.min(max, Number(e.target.value))) })
+                            setSquad({
+                              ...squad,
+                              [t]: Math.max(0, Math.min(max, Number(e.target.value))),
+                            })
                           }
                           className="mt-1 w-full rounded bg-night/60 border border-border px-2 py-1 text-xs outline-none focus:border-primary"
                         />
@@ -809,7 +937,10 @@ export function EnemyLayer({ mapRef, ready, me }: Props) {
               </div>
 
               <div className="flex gap-2 pt-3">
-                <button onClick={closeBattle} className="flex-1 panel py-2 text-xs flex items-center justify-center gap-1">
+                <button
+                  onClick={closeBattle}
+                  className="flex-1 panel py-2 text-xs flex items-center justify-center gap-1"
+                >
                   <X className="h-3 w-3" /> Ritirata
                 </button>
                 <button

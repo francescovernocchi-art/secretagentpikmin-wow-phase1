@@ -54,9 +54,7 @@ interface Recipe {
 const MAX_SLOTS = 6;
 const sortedKey = (keys: string[]) => [...keys].sort().join("|");
 const recipeInputs = (r: Recipe): string[] =>
-  r.inputs && r.inputs.length
-    ? r.inputs
-    : ([r.input_a, r.input_b].filter(Boolean) as string[]);
+  r.inputs && r.inputs.length ? r.inputs : ([r.input_a, r.input_b].filter(Boolean) as string[]);
 interface Discovery {
   id: string;
   result_name: string;
@@ -113,11 +111,7 @@ function LabPage() {
     load();
     const ch = supabase
       .channel("lab-rt")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "inventory" },
-        () => load(),
-      )
+      .on("postgres_changes", { event: "*", schema: "public", table: "inventory" }, () => load())
       .subscribe();
     return () => {
       supabase.removeChannel(ch);
@@ -126,17 +120,13 @@ function LabPage() {
   }, []);
 
   const inventoryWithMeta = useMemo(
-    () =>
-      inventory
-        .map((r) => ({ ...r, meta: catalog[r.ingredient_key] }))
-        .filter((r) => r.meta),
+    () => inventory.map((r) => ({ ...r, meta: catalog[r.ingredient_key] })).filter((r) => r.meta),
     [inventory, catalog],
   );
 
   // Conta quante volte una chiave è già nel banco
   const slotCount = (key: string) => slots.filter((k) => k === key).length;
-  const ownedOf = (key: string) =>
-    inventory.find((i) => i.ingredient_key === key)?.qty ?? 0;
+  const ownedOf = (key: string) => inventory.find((i) => i.ingredient_key === key)?.qty ?? 0;
 
   // Tap su inventario = +1 nel banco. Mostra feedback se non si può aggiungere.
   const addToSlot = (key: string) => {
@@ -172,8 +162,7 @@ function LabPage() {
       return next;
     });
 
-  const removeSlotAt = (idx: number) =>
-    setSlots((prev) => prev.filter((_, i) => i !== idx));
+  const removeSlotAt = (idx: number) => setSlots((prev) => prev.filter((_, i) => i !== idx));
 
   const findRecipe = (keys: string[]) => {
     const target = sortedKey(keys);
@@ -266,7 +255,10 @@ function LabPage() {
         try {
           const types = ["red", "yellow", "blue", "purple", "white", "rock", "wing", "ice", "glow"];
           const type = types[Math.floor(Math.random() * types.length)];
-          await addPikmin(result.is_ai ? 3 : 1, "lab", agent, { discovery_id: (saved as any).id, type });
+          await addPikmin(result.is_ai ? 3 : 1, "lab", agent, {
+            discovery_id: (saved as any).id,
+            type,
+          });
         } catch {}
       }
       setSlots([]);
@@ -341,8 +333,8 @@ function LabPage() {
         <div className="flex flex-wrap items-center justify-center gap-2 min-h-[7rem]">
           {slots.length === 0 ? (
             <p className="text-xs text-muted-foreground italic text-center px-4">
-              Tocca un ingrediente per aggiungerlo. Min 2 · max {MAX_SLOTS}.
-              Tocca più volte per duplicare.
+              Tocca un ingrediente per aggiungerlo. Min 2 · max {MAX_SLOTS}. Tocca più volte per
+              duplicare.
             </p>
           ) : (
             (() => {
@@ -456,9 +448,7 @@ function LabPage() {
                         <span>{meta?.name ?? key}</span>
                       </span>
                       <span
-                        className={`text-xs font-mono ${
-                          ok ? "text-emerald-400" : "text-rose-400"
-                        }`}
+                        className={`text-xs font-mono ${ok ? "text-emerald-400" : "text-rose-400"}`}
                       >
                         ×{qty} / {have}
                       </span>
@@ -491,7 +481,8 @@ function LabPage() {
         </p>
         {inventoryWithMeta.length === 0 ? (
           <div className="panel p-6 text-center text-xs text-muted-foreground">
-            Inventario vuoto. Completa missioni o scansiona bersagli col radar per raccogliere ingredienti.
+            Inventario vuoto. Completa missioni o scansiona bersagli col radar per raccogliere
+            ingredienti.
           </div>
         ) : (
           <div className="grid grid-cols-4 gap-2">
@@ -512,7 +503,9 @@ function LabPage() {
                   }`}
                 >
                   <span className="text-2xl leading-none">{m.emoji}</span>
-                  <span className="text-[10px] text-center leading-tight line-clamp-2">{m.name}</span>
+                  <span className="text-[10px] text-center leading-tight line-clamp-2">
+                    {m.name}
+                  </span>
                   {/* badge disponibili */}
                   <span
                     className={`absolute -top-1 -right-1 text-[10px] px-1.5 rounded-full font-bold ${
@@ -560,7 +553,9 @@ function LabPage() {
                 <div className="flex-1 min-w-0">
                   <p className="font-display text-sm text-glow truncate">{d.result_name}</p>
                   {d.description && (
-                    <p className="text-[11px] text-muted-foreground line-clamp-2">{d.description}</p>
+                    <p className="text-[11px] text-muted-foreground line-clamp-2">
+                      {d.description}
+                    </p>
                   )}
                 </div>
                 <div className="text-right">
@@ -598,7 +593,13 @@ function LabPage() {
               <p className="text-[10px] uppercase tracking-[0.4em] text-primary/80">
                 {flash.is_ai ? "// Esperimento" : "// Ricetta scoperta!"}
               </p>
-              <div className="mt-3 flex justify-center"><ResultIcon value={flash.result_emoji} className="text-7xl" alt={flash.result_name} /></div>
+              <div className="mt-3 flex justify-center">
+                <ResultIcon
+                  value={flash.result_emoji}
+                  className="text-7xl"
+                  alt={flash.result_name}
+                />
+              </div>
               <p className="font-display text-xl text-glow mt-2">{flash.result_name}</p>
               {flash.description && (
                 <p className="text-xs text-muted-foreground mt-2">{flash.description}</p>
@@ -665,9 +666,7 @@ function RecipeForm({ catalog, existing, onClose, onCreated }: RecipeFormProps) 
   const addInput = () =>
     setRecipeInputsState((prev) => (prev.length < MAX_SLOTS ? [...prev, ""] : prev));
   const removeAt = (idx: number) =>
-    setRecipeInputsState((prev) =>
-      prev.length > 2 ? prev.filter((_, i) => i !== idx) : prev,
-    );
+    setRecipeInputsState((prev) => (prev.length > 2 ? prev.filter((_, i) => i !== idx) : prev));
 
   const onPickFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -706,14 +705,12 @@ function RecipeForm({ catalog, existing, onClose, onCreated }: RecipeFormProps) 
     const trimmedEmoji = emoji.trim();
     const trimmedDesc = description.trim();
 
-    if (filledInputs.length < 2)
-      return setError("Servono almeno 2 ingredienti.");
+    if (filledInputs.length < 2) return setError("Servono almeno 2 ingredienti.");
     if (!trimmedName || trimmedName.length > 80)
       return setError("Nome risultato richiesto (max 80).");
     if (!trimmedEmoji) return setError("Icona richiesta (emoji o immagine).");
     if (trimmedEmoji.length > 500) return setError("Icona troppo lunga.");
-    if (trimmedDesc.length > 240)
-      return setError("Descrizione troppo lunga (max 240).");
+    if (trimmedDesc.length > 240) return setError("Descrizione troppo lunga (max 240).");
     const xpInt = Math.round(Number(xp));
     if (!Number.isFinite(xpInt) || xpInt < 0 || xpInt > 999)
       return setError("XP fuori range (0-999).");
@@ -753,9 +750,7 @@ function RecipeForm({ catalog, existing, onClose, onCreated }: RecipeFormProps) 
         className="panel-strong w-full max-w-md p-5 space-y-3 max-h-[88vh] overflow-y-auto"
       >
         <div className="flex items-center justify-between">
-          <p className="text-[10px] uppercase tracking-[0.4em] text-primary/80">
-            // Nuova ricetta
-          </p>
+          <p className="text-[10px] uppercase tracking-[0.4em] text-primary/80">// Nuova ricetta</p>
           <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
             <X className="h-4 w-4" />
           </button>
@@ -878,18 +873,12 @@ function RecipeForm({ catalog, existing, onClose, onCreated }: RecipeFormProps) 
         </Field>
 
         {duplicate && (
-          <p className="text-[11px] text-amber-300">
-            Una ricetta con questa coppia esiste già.
-          </p>
+          <p className="text-[11px] text-amber-300">Una ricetta con questa coppia esiste già.</p>
         )}
         {error && <p className="text-[11px] text-destructive">{error}</p>}
 
         <div className="flex gap-2 pt-1">
-          <button
-            onClick={onClose}
-            className="panel flex-1 py-2 text-xs"
-            disabled={saving}
-          >
+          <button onClick={onClose} className="panel flex-1 py-2 text-xs" disabled={saving}>
             Annulla
           </button>
           <button
@@ -908,9 +897,7 @@ function RecipeForm({ catalog, existing, onClose, onCreated }: RecipeFormProps) 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
-        {label}
-      </span>
+      <span className="text-[10px] uppercase tracking-widest text-muted-foreground">{label}</span>
       <div className="mt-1">{children}</div>
     </label>
   );

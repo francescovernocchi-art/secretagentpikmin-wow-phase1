@@ -35,7 +35,9 @@ export function DemoModeBanner() {
           aria-label="Espandi banner demo"
         >
           <Sparkles className="h-3 w-3" />
-          <span>Demo · {agent.emoji} {agent.name}</span>
+          <span>
+            Demo · {agent.emoji} {agent.name}
+          </span>
           <ChevronUp className="h-3 w-3 opacity-70" />
         </button>
       </div>
@@ -46,14 +48,20 @@ export function DemoModeBanner() {
     <div
       className={`fixed left-3 right-3 z-40 max-w-lg mx-auto pointer-events-none ${onVillaggio ? "bottom-[4.75rem]" : "bottom-[5.5rem]"}`}
     >
-      <div className={`market-card pointer-events-auto border-primary/40 shadow-lg ${onVillaggio ? "p-2" : "p-3"}`}>
+      <div
+        className={`market-card pointer-events-auto border-primary/40 shadow-lg ${onVillaggio ? "p-2" : "p-3"}`}
+      >
         <div className="flex items-start gap-2">
           <Sparkles className="h-4 w-4 text-primary shrink-0 mt-0.5" />
           <div className="flex-1 min-w-0">
             <p className="text-[10px] uppercase tracking-widest text-primary/80">Modalità demo</p>
             {!onVillaggio && (
               <p className="text-xs text-foreground/90 mt-0.5">
-                Sei <strong>{agent.emoji} {agent.name}</strong>. Prova radar, market, villaggio, missioni e chat — tutto in locale.
+                Sei{" "}
+                <strong>
+                  {agent.emoji} {agent.name}
+                </strong>
+                . Prova radar, market, villaggio, missioni e chat — tutto in locale.
               </p>
             )}
             {onVillaggio && (
@@ -62,11 +70,33 @@ export function DemoModeBanner() {
               </p>
             )}
             <div className={`flex flex-wrap gap-1.5 ${onVillaggio ? "mt-1" : "mt-2"}`}>
-              <Link to="/radar" className="btn-neon px-2 py-0.5 text-[8px] uppercase tracking-wider">Scanner</Link>
-              <Link to="/mercato" className="btn-neon px-2 py-0.5 text-[8px] uppercase tracking-wider">Market</Link>
-              <Link to="/villaggio" className="btn-neon px-2 py-0.5 text-[8px] uppercase tracking-wider">Villaggio</Link>
-              <Link to="/missioni" className="btn-neon px-2 py-0.5 text-[8px] uppercase tracking-wider">Missioni</Link>
-              <Link to="/chat" className="btn-neon px-2 py-0.5 text-[8px] uppercase tracking-wider">Chat</Link>
+              <Link
+                to="/radar"
+                className="btn-neon px-2 py-0.5 text-[8px] uppercase tracking-wider"
+              >
+                Scanner
+              </Link>
+              <Link
+                to="/mercato"
+                className="btn-neon px-2 py-0.5 text-[8px] uppercase tracking-wider"
+              >
+                Market
+              </Link>
+              <Link
+                to="/villaggio"
+                className="btn-neon px-2 py-0.5 text-[8px] uppercase tracking-wider"
+              >
+                Villaggio
+              </Link>
+              <Link
+                to="/missioni"
+                className="btn-neon px-2 py-0.5 text-[8px] uppercase tracking-wider"
+              >
+                Missioni
+              </Link>
+              <Link to="/chat" className="btn-neon px-2 py-0.5 text-[8px] uppercase tracking-wider">
+                Chat
+              </Link>
             </div>
           </div>
           <div className="flex flex-col gap-1 shrink-0">

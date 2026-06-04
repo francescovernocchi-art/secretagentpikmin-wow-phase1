@@ -448,13 +448,25 @@ export class VillageScene extends Phaser.Scene {
   private visualSignature(b: BaseBuilding) {
     const v = this.visualForBuilding(b);
     return v
-      ? [v.assetUrl, v.shadowUrl, v.glowUrl, v.slotFitScale, v.anchorX, v.anchorY, v.offsetX, v.offsetY, v.idleAnim].join("|")
+      ? [
+          v.assetUrl,
+          v.shadowUrl,
+          v.glowUrl,
+          v.slotFitScale,
+          v.anchorX,
+          v.anchorY,
+          v.offsetX,
+          v.offsetY,
+          v.idleAnim,
+        ].join("|")
       : "fallback";
   }
 
   private textureKeyForBuilding(b: BaseBuilding) {
     const visual = this.visualForBuilding(b);
-    return visual?.assetUrl ? urlKey(BUILD_TEX_PREFIX, b.id, visual.assetUrl) : BUILD_TEX_PREFIX + b.type;
+    return visual?.assetUrl
+      ? urlKey(BUILD_TEX_PREFIX, b.id, visual.assetUrl)
+      : BUILD_TEX_PREFIX + b.type;
   }
 
   private slotForBuilding(b: BaseBuilding): DioramaSlot | null {
@@ -505,9 +517,7 @@ export class VillageScene extends Phaser.Scene {
 
   private worldPosForBuilding(b: BaseBuilding) {
     const visual = this.visualForBuilding(b);
-    const slot = b.slot_key
-      ? this.state?.slots.find((s) => s.slot_key === b.slot_key)
-      : null;
+    const slot = b.slot_key ? this.state?.slots.find((s) => s.slot_key === b.slot_key) : null;
     if (visual && slot) {
       const sw = slot.width ?? (slot.size === "large" ? 128 : slot.size === "small" ? 76 : 96);
       const sh = slot.height ?? (slot.size === "large" ? 128 : slot.size === "small" ? 76 : 96);
@@ -524,10 +534,16 @@ export class VillageScene extends Phaser.Scene {
     const pos = this.worldPosForBuilding(b);
     const visual = this.visualForBuilding(b);
     const slot = this.slotForBuilding(b);
-    const shadowKey = visual?.shadowUrl ? urlKey(BUILD_SHADOW_TEX_PREFIX, b.id, visual.shadowUrl) : "";
-    const shadow = shadowKey && this.textures.exists(shadowKey)
-      ? this.add.image(0, 0, shadowKey).setOrigin(visual?.anchorX ?? 0.5, visual?.anchorY ?? 0.85).setAlpha(0.68)
-      : this.add.ellipse(0, 30, 80, 22, 0x000000, 0.35);
+    const shadowKey = visual?.shadowUrl
+      ? urlKey(BUILD_SHADOW_TEX_PREFIX, b.id, visual.shadowUrl)
+      : "";
+    const shadow =
+      shadowKey && this.textures.exists(shadowKey)
+        ? this.add
+            .image(0, 0, shadowKey)
+            .setOrigin(visual?.anchorX ?? 0.5, visual?.anchorY ?? 0.85)
+            .setAlpha(0.68)
+        : this.add.ellipse(0, 30, 80, 22, 0x000000, 0.35);
     const key = this.textureKeyForBuilding(b);
     const hasTexture = this.textures.exists(key);
     const art: Phaser.GameObjects.Image | Phaser.GameObjects.Text = hasTexture
@@ -537,9 +553,14 @@ export class VillageScene extends Phaser.Scene {
           .setOrigin(0.5, 0.85);
     this.applyBuildingFit(art, shadow, visual, slot);
     const glowKey = visual?.glowUrl ? urlKey(BUILD_GLOW_TEX_PREFIX, b.id, visual.glowUrl) : "";
-    const glow = glowKey && this.textures.exists(glowKey)
-      ? this.add.image(0, 0, glowKey).setOrigin(visual?.anchorX ?? 0.5, visual?.anchorY ?? 0.85).setAlpha(0.82).setBlendMode(Phaser.BlendModes.SCREEN)
-      : undefined;
+    const glow =
+      glowKey && this.textures.exists(glowKey)
+        ? this.add
+            .image(0, 0, glowKey)
+            .setOrigin(visual?.anchorX ?? 0.5, visual?.anchorY ?? 0.85)
+            .setAlpha(0.82)
+            .setBlendMode(Phaser.BlendModes.SCREEN)
+        : undefined;
     if (glow) this.applyBuildingFit(glow, null, visual, slot);
     const children = glow ? [shadow, art, glow] : [shadow, art];
     const container = this.add.container(pos.x, pos.y, children);
@@ -559,12 +580,35 @@ export class VillageScene extends Phaser.Scene {
 
     // bobbing leggero
     if (!visual || visual.idleAnim === "bob") {
-      this.tweens.add({ targets: art, y: { from: 0, to: -4 }, duration: 1800 + Math.random() * 600, yoyo: true, repeat: -1, ease: "Sine.InOut" });
+      this.tweens.add({
+        targets: art,
+        y: { from: 0, to: -4 },
+        duration: 1800 + Math.random() * 600,
+        yoyo: true,
+        repeat: -1,
+        ease: "Sine.InOut",
+      });
     } else if (visual.idleAnim === "sway") {
-      this.tweens.add({ targets: art, angle: { from: -1.2, to: 1.2 }, duration: 2200 + Math.random() * 500, yoyo: true, repeat: -1, ease: "Sine.InOut" });
+      this.tweens.add({
+        targets: art,
+        angle: { from: -1.2, to: 1.2 },
+        duration: 2200 + Math.random() * 500,
+        yoyo: true,
+        repeat: -1,
+        ease: "Sine.InOut",
+      });
     }
 
-    const sp: BuildingSprite = { container, shadow, art, glow, data: b, hasTexture, textureKey: key, visualSignature: this.visualSignature(b) };
+    const sp: BuildingSprite = {
+      container,
+      shadow,
+      art,
+      glow,
+      data: b,
+      hasTexture,
+      textureKey: key,
+      visualSignature: this.visualSignature(b),
+    };
     this.buildingSprites.set(b.id, sp);
     this.syncConstructionOverlay(sp);
   }
@@ -580,7 +624,12 @@ export class VillageScene extends Phaser.Scene {
     sp.container.y = pos.y;
     sp.container.setDepth(pos.y);
     // Se è cambiato il livello (o è apparsa una texture), rigenera lo sprite per cambiare immagine
-    if (levelChanged || visualChanged || sp.textureKey !== nextKey || (!sp.hasTexture && nowHasTexture)) {
+    if (
+      levelChanged ||
+      visualChanged ||
+      sp.textureKey !== nextKey ||
+      (!sp.hasTexture && nowHasTexture)
+    ) {
       this.refreshBuildingSprite(sp);
       return;
     }
@@ -667,14 +716,25 @@ export class VillageScene extends Phaser.Scene {
     const p = this.state.placement;
     const visual = p.visual ?? null;
     const scope = `placement:${p.key}`;
-    const key = visual?.assetUrl ? urlKey(BUILD_TEX_PREFIX, scope, visual.assetUrl) : BUILD_TEX_PREFIX + p.key;
+    const key = visual?.assetUrl
+      ? urlKey(BUILD_TEX_PREFIX, scope, visual.assetUrl)
+      : BUILD_TEX_PREFIX + p.key;
     const art = this.textures.exists(key)
-      ? this.add.image(0, 0, key).setOrigin(visual?.anchorX ?? 0.5, visual?.anchorY ?? 0.85).setAlpha(0.7)
+      ? this.add
+          .image(0, 0, key)
+          .setOrigin(visual?.anchorX ?? 0.5, visual?.anchorY ?? 0.85)
+          .setAlpha(0.7)
       : this.add.text(0, 0, p.emoji, { fontSize: "72px" }).setOrigin(0.5, 0.85).setAlpha(0.7);
-    const shadowKey = visual?.shadowUrl ? urlKey(BUILD_SHADOW_TEX_PREFIX, scope, visual.shadowUrl) : "";
-    const shadow = shadowKey && this.textures.exists(shadowKey)
-      ? this.add.image(0, 0, shadowKey).setOrigin(visual?.anchorX ?? 0.5, visual?.anchorY ?? 0.85).setAlpha(0.45)
-      : null;
+    const shadowKey = visual?.shadowUrl
+      ? urlKey(BUILD_SHADOW_TEX_PREFIX, scope, visual.shadowUrl)
+      : "";
+    const shadow =
+      shadowKey && this.textures.exists(shadowKey)
+        ? this.add
+            .image(0, 0, shadowKey)
+            .setOrigin(visual?.anchorX ?? 0.5, visual?.anchorY ?? 0.85)
+            .setAlpha(0.45)
+        : null;
     this.applyBuildingFit(art, shadow, visual, null);
     const c = this.add.container(-9999, -9999, shadow ? [shadow, art] : [art]);
     this.layerPlacement.add(c);

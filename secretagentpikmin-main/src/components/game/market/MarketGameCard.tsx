@@ -38,14 +38,19 @@ export function MarketGameCard({
       <div className="flex items-center gap-3">
         <div className="market-card-icon">
           <ResourceIconSvg kind={iconKind} size={32} />
-          <span className="market-card-emoji" aria-hidden>{emoji}</span>
+          <span className="market-card-emoji" aria-hidden>
+            {emoji}
+          </span>
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <p className="text-sm font-medium truncate">{name}</p>
             {badge}
           </div>
-          <p className="text-[10px] uppercase tracking-widest" style={{ color: rarityColor(rarity.level) }}>
+          <p
+            className="text-[10px] uppercase tracking-widest"
+            style={{ color: rarityColor(rarity.level) }}
+          >
             {rarity.label}
           </p>
           {subtitle && <p className="text-[10px] text-muted-foreground truncate">{subtitle}</p>}

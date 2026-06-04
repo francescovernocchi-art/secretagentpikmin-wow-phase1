@@ -28,7 +28,10 @@ function computeSuccessChance(
   let chance = 0.55;
   for (const u of units) {
     chance += u.level * 0.015;
-    if (u.specialization_key && obj.specBonus.includes(u.specialization_key as PikminSpecializationKey)) {
+    if (
+      u.specialization_key &&
+      obj.specBonus.includes(u.specialization_key as PikminSpecializationKey)
+    ) {
       chance += 0.08;
     }
   }
@@ -80,14 +83,18 @@ export async function startPhase3Expedition(opts: {
     status: "active",
     started_at: now.toISOString(),
     end_at: end.toISOString(),
-    rewards: estimateExpeditionReward(opts.biome, opts.objective, opts.pikminIds.length, duration, opts.risk),
+    rewards: estimateExpeditionReward(
+      opts.biome,
+      opts.objective,
+      opts.pikminIds.length,
+      duration,
+      opts.risk,
+    ),
   };
 
   const units = localStore.getPikminUnits();
   localStore.setPikminUnits(
-    units.map((u) =>
-      opts.pikminIds.includes(u.id) ? { ...u, status: "in_spedizione" } : u,
-    ),
+    units.map((u) => (opts.pikminIds.includes(u.id) ? { ...u, status: "in_spedizione" } : u)),
   );
 
   try {
@@ -103,7 +110,12 @@ export async function startPhase3Expedition(opts: {
         created_by: opts.agentKey,
         template_key: `phase3_${opts.objective}`,
         success_chance,
-        meta: { phase3: true, objective: opts.objective, pikmin_ids: opts.pikminIds, risk: opts.risk },
+        meta: {
+          phase3: true,
+          objective: opts.objective,
+          pikmin_ids: opts.pikminIds,
+          risk: opts.risk,
+        },
       });
       for (const pid of opts.pikminIds) {
         await gameTable("pikmin_expedition_units").insert({
@@ -124,7 +136,10 @@ export async function completeDueExpeditions(agentKey?: string): Promise<Phase3E
   const all = localStore.getPhase3Expeditions();
   const now = Date.now();
   const due = all.filter(
-    (e) => e.status === "active" && new Date(e.end_at).getTime() <= now && (!agentKey || e.agent_key === agentKey),
+    (e) =>
+      e.status === "active" &&
+      new Date(e.end_at).getTime() <= now &&
+      (!agentKey || e.agent_key === agentKey),
   );
   const completed: Phase3Expedition[] = [];
   for (const exp of due) {
@@ -155,7 +170,8 @@ export async function resolvePhase3Expedition(expId: string): Promise<Phase3Expe
     switch (exp.objective) {
       case "raccolta":
       case "ingredienti": {
-        const ing = biome.ingredients[Math.floor(Math.random() * biome.ingredients.length)] ?? "miele";
+        const ing =
+          biome.ingredients[Math.floor(Math.random() * biome.ingredients.length)] ?? "miele";
         await addInventoryItem({
           agentKey: exp.agent_key,
           itemKey: ing.replace(/\s+/g, "_").toLowerCase(),
@@ -178,7 +194,9 @@ export async function resolvePhase3Expedition(expId: string): Promise<Phase3Expe
         break;
       }
       case "studio_mostri": {
-        const mon = biome.frequentMonsters[Math.floor(Math.random() * biome.frequentMonsters.length)] ?? "Creatura";
+        const mon =
+          biome.frequentMonsters[Math.floor(Math.random() * biome.frequentMonsters.length)] ??
+          "Creatura";
         const key = mon.toLowerCase().replace(/\s+/g, "_");
         const { statusLabel } = await recordMonsterEncounter({
           creatureKey: key,
@@ -202,7 +220,9 @@ export async function resolvePhase3Expedition(expId: string): Promise<Phase3Expe
     }
   }
 
-  exp.summary = success ? `Successo! ${effects.join(" · ")}` : "Spedizione fallita — squadra rientrata stanca";
+  exp.summary = success
+    ? `Successo! ${effects.join(" · ")}`
+    : "Spedizione fallita — squadra rientrata stanca";
   exp.rewards = { ...exp.rewards, effects, success };
 
   const units = localStore.getPikminUnits();
@@ -212,11 +232,13 @@ export async function resolvePhase3Expedition(expId: string): Promise<Phase3Expe
 
   try {
     if (isSupabaseConfigured()) {
-      await gameTable("expeditions").update({
-        status: exp.status,
-        resolved_at: new Date().toISOString(),
-        result: success ? "successo" : "fallito",
-      }).eq("id", exp.id);
+      await gameTable("expeditions")
+        .update({
+          status: exp.status,
+          resolved_at: new Date().toISOString(),
+          result: success ? "successo" : "fallito",
+        })
+        .eq("id", exp.id);
       for (const pid of exp.pikmin_ids) {
         await gameTable("pikmin_units").update({ status: "disponibile" }).eq("id", pid);
       }

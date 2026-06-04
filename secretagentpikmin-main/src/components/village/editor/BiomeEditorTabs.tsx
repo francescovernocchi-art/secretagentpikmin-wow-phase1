@@ -1,7 +1,24 @@
 import { useState } from "react";
-import { ImageIcon, MapPin, Building2, Palette, Sparkles, Layers, Crosshair, FolderOpen } from "lucide-react";
+import {
+  ImageIcon,
+  MapPin,
+  Building2,
+  Palette,
+  Sparkles,
+  Layers,
+  Crosshair,
+  FolderOpen,
+} from "lucide-react";
 
-export type EditorTab = "diorama" | "layout" | "assets" | "slots" | "structures" | "variants" | "bonus" | "events";
+export type EditorTab =
+  | "diorama"
+  | "layout"
+  | "assets"
+  | "slots"
+  | "structures"
+  | "variants"
+  | "bonus"
+  | "events";
 
 interface TabDef {
   key: EditorTab;

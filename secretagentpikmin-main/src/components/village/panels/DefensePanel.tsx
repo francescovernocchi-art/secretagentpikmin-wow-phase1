@@ -14,11 +14,23 @@ interface Props {
   onRefresh: () => void;
 }
 
-export function DefensePanel({ open, onOpenChange, agent, walls, coins, status, onRefresh }: Props) {
+export function DefensePanel({
+  open,
+  onOpenChange,
+  agent,
+  walls,
+  coins,
+  status,
+  onRefresh,
+}: Props) {
   const wallBonus = wallDefenseBonus(walls);
   return (
-    <VillagePanelSheet open={open} onOpenChange={onOpenChange}
-      title="Difese" icon={<ShieldPlus className="h-4 w-4 text-emerald-400" />}>
+    <VillagePanelSheet
+      open={open}
+      onOpenChange={onOpenChange}
+      title="Difese"
+      icon={<ShieldPlus className="h-4 w-4 text-emerald-400" />}
+    >
       <div className="grid grid-cols-3 gap-2 mb-3">
         <Stat label="Difesa" value={status.defenseRating} accent="#7cd99a" />
         <Stat label="Mura" value={walls.length} accent="#94a3b8" />
@@ -27,8 +39,13 @@ export function DefensePanel({ open, onOpenChange, agent, walls, coins, status, 
       <p className="text-[10px] uppercase tracking-widest text-primary mb-2">Editor muri</p>
       <div className="rounded-xl overflow-hidden border border-primary/20">
         {/* WallEditor è un modal: lo rendiamo qui inline come strumento integrato */}
-        <WallEditor agent={agent} walls={walls} coins={coins}
-          onClose={() => onOpenChange(false)} onChange={onRefresh} />
+        <WallEditor
+          agent={agent}
+          walls={walls}
+          coins={coins}
+          onClose={() => onOpenChange(false)}
+          onChange={onRefresh}
+        />
       </div>
     </VillagePanelSheet>
   );
@@ -38,7 +55,9 @@ function Stat({ label, value, accent }: { label: string; value: number | string;
   return (
     <div className="panel-strong p-2 text-center">
       <p className="text-[9px] uppercase tracking-widest text-muted-foreground">{label}</p>
-      <p className="text-lg font-display" style={{ color: accent }}>{value}</p>
+      <p className="text-lg font-display" style={{ color: accent }}>
+        {value}
+      </p>
     </div>
   );
 }

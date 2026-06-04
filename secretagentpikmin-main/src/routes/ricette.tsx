@@ -69,9 +69,7 @@ interface Discovery {
 const MAX_SLOTS = 6;
 const sortedKey = (keys: string[]) => [...keys].sort().join("|");
 const recipeKeys = (r: Recipe): string[] =>
-  r.inputs && r.inputs.length
-    ? r.inputs
-    : ([r.input_a, r.input_b].filter(Boolean) as string[]);
+  r.inputs && r.inputs.length ? r.inputs : ([r.input_a, r.input_b].filter(Boolean) as string[]);
 
 function RecipesPage() {
   const session = typeof window !== "undefined" ? getSession() : null;
@@ -107,20 +105,10 @@ function RecipesPage() {
     load();
     const ch = supabase
       .channel("ricette-rt")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "inventory" },
-        () => load(),
-      )
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "recipes" },
-        () => load(),
-      )
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "recipe_unlocks" },
-        () => load(),
+      .on("postgres_changes", { event: "*", schema: "public", table: "inventory" }, () => load())
+      .on("postgres_changes", { event: "*", schema: "public", table: "recipes" }, () => load())
+      .on("postgres_changes", { event: "*", schema: "public", table: "recipe_unlocks" }, () =>
+        load(),
       )
       .subscribe();
     return () => {
@@ -129,8 +117,7 @@ function RecipesPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const have = (key: string) =>
-    inventory.find((i) => i.ingredient_key === key)?.qty ?? 0;
+  const have = (key: string) => inventory.find((i) => i.ingredient_key === key)?.qty ?? 0;
 
   const annotated = useMemo(() => {
     return recipes
@@ -293,9 +280,7 @@ function RecipesPage() {
               {flash.description && (
                 <p className="text-xs text-muted-foreground mt-2">{flash.description}</p>
               )}
-              <p className="font-display text-2xl text-primary text-glow mt-3">
-                +{flash.xp} XP
-              </p>
+              <p className="font-display text-2xl text-primary text-glow mt-3">+{flash.xp} XP</p>
               <button onClick={() => setFlash(null)} className="btn-neon mt-5 px-5 py-2 text-xs">
                 Continua
               </button>
@@ -344,10 +329,7 @@ function RecipeCard({
 }) {
   const { recipe, items, ready, known } = entry;
   return (
-    <motion.div
-      layout
-      className={`panel p-3 space-y-3 ${ready ? "ring-1 ring-primary/40" : ""}`}
-    >
+    <motion.div layout className={`panel p-3 space-y-3 ${ready ? "ring-1 ring-primary/40" : ""}`}>
       <div className="flex items-center gap-3">
         <div className="h-12 w-12 rounded-xl border border-primary/30 bg-night/60 flex items-center justify-center overflow-hidden">
           <ResultIcon value={recipe.result_emoji} className="text-3xl" alt={recipe.result_name} />
@@ -355,9 +337,7 @@ function RecipeCard({
         <div className="flex-1 min-w-0">
           <p className="font-display text-base text-glow truncate">{recipe.result_name}</p>
           {recipe.description && (
-            <p className="text-[11px] text-muted-foreground line-clamp-2">
-              {recipe.description}
-            </p>
+            <p className="text-[11px] text-muted-foreground line-clamp-2">{recipe.description}</p>
           )}
         </div>
         <div className="text-right flex flex-col items-end gap-1">
@@ -389,9 +369,7 @@ function RecipeCard({
               }`}
             >
               <span className="text-base leading-none">{it.meta?.emoji ?? "❔"}</span>
-              <span className="truncate max-w-[6rem]">
-                {it.meta?.name ?? it.key}
-              </span>
+              <span className="truncate max-w-[6rem]">{it.meta?.name ?? it.key}</span>
               <span className="font-mono opacity-80">
                 {it.own}/{it.need}
               </span>
@@ -477,15 +455,12 @@ function RecipeEditModal({
   const duplicate = useMemo(() => {
     if (filledInputs.length < 2) return false;
     const target = sortedKey(filledInputs);
-    return existing.some(
-      (r) => r.id !== recipe.id && sortedKey(recipeKeys(r)) === target,
-    );
+    return existing.some((r) => r.id !== recipe.id && sortedKey(recipeKeys(r)) === target);
   }, [existing, filledInputs, recipe.id]);
 
   const updateAt = (idx: number, value: string) =>
     setInputs((prev) => prev.map((v, i) => (i === idx ? value : v)));
-  const addInput = () =>
-    setInputs((prev) => (prev.length < MAX_SLOTS ? [...prev, ""] : prev));
+  const addInput = () => setInputs((prev) => (prev.length < MAX_SLOTS ? [...prev, ""] : prev));
   const removeAt = (idx: number) =>
     setInputs((prev) => (prev.length > 2 ? prev.filter((_, i) => i !== idx) : prev));
 
@@ -494,14 +469,12 @@ function RecipeEditModal({
     const trimmedIcon = icon.trim();
     const trimmedDesc = description.trim();
     if (filledInputs.length < 2) return "Servono almeno 2 ingredienti.";
-    if (!trimmedName || trimmedName.length > 80)
-      return "Nome risultato richiesto (max 80).";
+    if (!trimmedName || trimmedName.length > 80) return "Nome risultato richiesto (max 80).";
     if (!trimmedIcon) return "Icona richiesta (emoji o immagine).";
     if (trimmedIcon.length > 500) return "Icona troppo lunga.";
     if (trimmedDesc.length > 240) return "Descrizione troppo lunga (max 240).";
     const xpInt = Math.round(Number(xp));
-    if (!Number.isFinite(xpInt) || xpInt < 0 || xpInt > 999)
-      return "XP fuori range (0-999).";
+    if (!Number.isFinite(xpInt) || xpInt < 0 || xpInt > 999) return "XP fuori range (0-999).";
     if (duplicate) return "Esiste già una ricetta con questa combinazione.";
     return null;
   };
@@ -816,9 +789,7 @@ function RecipeEditModal({
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
-        {label}
-      </span>
+      <span className="text-[10px] uppercase tracking-widest text-muted-foreground">{label}</span>
       <div className="mt-1">{children}</div>
     </label>
   );

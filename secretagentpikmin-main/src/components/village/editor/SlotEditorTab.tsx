@@ -168,7 +168,6 @@ export function SlotEditorTab({ biomeKey }: Props) {
             rotation: Math.round(slot.rotation || 0),
           } satisfies SlotUpdate)
           .eq("id", slot.id),
-
       ),
     );
     setBusy(false);
@@ -187,7 +186,6 @@ export function SlotEditorTab({ biomeKey }: Props) {
               legacy: false,
             }
           : slot,
-
       ),
     );
     toast.success("Slot legacy normalizzati");
@@ -512,7 +510,6 @@ function normalizeSlot(row: SlotRow): SlotDraft {
     legacy,
   };
 }
-
 
 function slotStyle(slot: SlotDraft, diorama: DioramaRow): CSSProperties {
   return {

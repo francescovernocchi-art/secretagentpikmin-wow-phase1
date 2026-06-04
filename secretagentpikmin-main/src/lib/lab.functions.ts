@@ -21,10 +21,11 @@ export const inventDiscovery = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => Schema.parse(input))
   .handler(async ({ data }) => {
     const list = data.ingredients.map((i) => `- ${i.emoji} ${i.name}`).join("\n");
-    const fallbackName = data.ingredients
-      .map((i) => i.name)
-      .slice(0, 3)
-      .join(" + ") + (data.ingredients.length > 3 ? " + …" : "");
+    const fallbackName =
+      data.ingredients
+        .map((i) => i.name)
+        .slice(0, 3)
+        .join(" + ") + (data.ingredients.length > 3 ? " + …" : "");
 
     const apiKey = process.env.LOVABLE_API_KEY;
     if (!apiKey) {

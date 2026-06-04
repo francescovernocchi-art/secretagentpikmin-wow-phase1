@@ -33,7 +33,9 @@ export function clearDioramaLayoutOverride(biome: BiomeKey): void {
 export function useDioramaLayout(biomeInput?: string | BiomeKey) {
   const biome = resolveLayoutBiome(biomeInput ?? "bosco");
 
-  const [override, setOverride] = useState<Partial<DioramaLayout> | null>(() => readStoredLayout(biome));
+  const [override, setOverride] = useState<Partial<DioramaLayout> | null>(() =>
+    readStoredLayout(biome),
+  );
 
   useEffect(() => {
     setOverride(readStoredLayout(biome));

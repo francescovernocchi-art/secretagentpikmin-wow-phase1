@@ -15,7 +15,8 @@ const POOL: NightEvent[] = [
   {
     kind: "passaggio_lucciole",
     title: "Passaggio delle lucciole",
-    description: "Uno sciame di lucciole illumina il villaggio: i Pikmin raccolgono polvere luminosa.",
+    description:
+      "Uno sciame di lucciole illumina il villaggio: i Pikmin raccolgono polvere luminosa.",
     severity: "normal",
     reward: { coins: 15 },
   },
@@ -28,7 +29,8 @@ const POOL: NightEvent[] = [
   {
     kind: "stella_cadente",
     title: "Stella cadente",
-    description: "Una scia stellare cade vicino al perimetro. Hai ricevuto 30 monete della fortuna.",
+    description:
+      "Una scia stellare cade vicino al perimetro. Hai ricevuto 30 monete della fortuna.",
     severity: "normal",
     reward: { coins: 30 },
   },
@@ -86,9 +88,14 @@ export async function maybeTriggerNightEvent(params: {
         .maybeSingle();
       const next = (cur?.coins ?? 0) + pick.reward.coins;
       if (cur) {
-        await supabase.from("agent_coins").update({ coins: next, updated_at: new Date().toISOString() }).eq("agent", params.agent);
+        await supabase
+          .from("agent_coins")
+          .update({ coins: next, updated_at: new Date().toISOString() })
+          .eq("agent", params.agent);
       } else {
-        await supabase.from("agent_coins").insert({ agent: params.agent, coins: pick.reward.coins });
+        await supabase
+          .from("agent_coins")
+          .insert({ agent: params.agent, coins: pick.reward.coins });
       }
       await supabase.from("coin_transactions").insert({
         agent: params.agent,

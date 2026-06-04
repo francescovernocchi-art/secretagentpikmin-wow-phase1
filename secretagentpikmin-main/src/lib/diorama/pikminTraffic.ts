@@ -67,7 +67,14 @@ const PIKMIN_TYPES: DioramaPikminType[] = ["red", "yellow", "blue", "white", "pu
 
 /** Pattern traffico Bosco Lorenzo — Serra mappata su mercato (proxy) */
 export const DEFAULT_BOSCO_TRAFFIC_PATTERNS: DioramaTrafficPattern[] = [
-  { id: "tp-serra-magazzino", from: "mercato", to: "magazzino", task: "carry", cargo: "seed", label: "Serra → Magazzino" },
+  {
+    id: "tp-serra-magazzino",
+    from: "mercato",
+    to: "magazzino",
+    task: "carry",
+    cargo: "seed",
+    label: "Serra → Magazzino",
+  },
   { id: "tp-magazzino-hangar", from: "magazzino", to: "hangar", task: "carry", cargo: "metal" },
   { id: "tp-accademia-piazza", from: "accademia", to: "piazza", task: "walk" },
   { id: "tp-laboratorio-piazza", from: "laboratorio", to: "piazza", task: "work" },
@@ -122,7 +129,11 @@ function pathViaRoads(
   return path;
 }
 
-function pickBestRoad(roads: DioramaRoad[], from: DioramaPoint, to: DioramaPoint): DioramaPoint[] | null {
+function pickBestRoad(
+  roads: DioramaRoad[],
+  from: DioramaPoint,
+  to: DioramaPoint,
+): DioramaPoint[] | null {
   let best: DioramaRoad | null = null;
   let bestScore = Infinity;
   for (const road of roads) {
@@ -138,7 +149,11 @@ function pickBestRoad(roads: DioramaRoad[], from: DioramaPoint, to: DioramaPoint
   return best?.waypoints ?? null;
 }
 
-function orientRoad(waypoints: DioramaPoint[], from: DioramaPoint, to: DioramaPoint): DioramaPoint[] {
+function orientRoad(
+  waypoints: DioramaPoint[],
+  from: DioramaPoint,
+  to: DioramaPoint,
+): DioramaPoint[] {
   const dStart = dist(from, waypoints[0]) + dist(to, waypoints[waypoints.length - 1]);
   const dEnd = dist(from, waypoints[waypoints.length - 1]) + dist(to, waypoints[0]);
   const wps = dStart <= dEnd ? waypoints : [...waypoints].reverse();
@@ -224,7 +239,10 @@ function cssKeyframes(id: string, wps: DioramaPoint[]): string {
 }
 
 /** Genera agenti traffico automatici per il layout */
-export function generateTrafficAgents(layout: DioramaLayout, countOverride?: number): PikminTrafficAgent[] {
+export function generateTrafficAgents(
+  layout: DioramaLayout,
+  countOverride?: number,
+): PikminTrafficAgent[] {
   const cfg = layout.trafficConfig;
   const patterns = cfg?.patterns?.length ? cfg.patterns : DEFAULT_BOSCO_TRAFFIC_PATTERNS;
   const max = cfg?.maxCount ?? 30;

@@ -36,14 +36,23 @@ export function GlobalAudioPlayer() {
       .from("audio_assets")
       .select("*")
       .eq("enabled", true)
-      .then(({ data }) => { if (active) setAssets((data ?? []) as AudioAsset[]); });
+      .then(({ data }) => {
+        if (active) setAssets((data ?? []) as AudioAsset[]);
+      });
     const ch = supabase
       .channel("audio_assets_rt")
       .on("postgres_changes", { event: "*", schema: "public", table: "audio_assets" }, () => {
-        supabase.from("audio_assets").select("*").eq("enabled", true).then(({ data }) => setAssets((data ?? []) as AudioAsset[]));
+        supabase
+          .from("audio_assets")
+          .select("*")
+          .eq("enabled", true)
+          .then(({ data }) => setAssets((data ?? []) as AudioAsset[]));
       })
       .subscribe();
-    return () => { active = false; supabase.removeChannel(ch); };
+    return () => {
+      active = false;
+      supabase.removeChannel(ch);
+    };
   }, []);
 
   // Trova traccia per la pagina corrente (sezione root, es. /villaggio → "villaggio")
@@ -64,7 +73,9 @@ export function GlobalAudioPlayer() {
       el.loop = track.loop;
     }
     el.volume = Math.max(0, Math.min(1, track.volume));
-    el.play().catch(() => {/* autoplay blocked */});
+    el.play().catch(() => {
+      /* autoplay blocked */
+    });
   }, [track?.url, track?.loop, track?.volume, muted]);
 
   const toggle = () => {

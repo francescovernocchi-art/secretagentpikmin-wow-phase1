@@ -3,14 +3,14 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { Mail, Lock, LogIn, Loader2, User, Sparkles } from "lucide-react";
-import {
-  getSession,
-  refreshSession,
-  signInWithEmail,
-  signInWithUsername,
-} from "@/lib/session";
+import { getSession, refreshSession, signInWithEmail, signInWithUsername } from "@/lib/session";
 import { IntroSequence } from "@/components/IntroSequence";
-import { enterDemoSession, shouldOfferDemoEntry, DEMO_AGENTS, isDemoModeActive } from "@/lib/demo-mode";
+import {
+  enterDemoSession,
+  shouldOfferDemoEntry,
+  DEMO_AGENTS,
+  isDemoModeActive,
+} from "@/lib/demo-mode";
 import { isSupabaseConfigured } from "@/lib/game/db";
 
 export const Route = createFileRoute("/")({
@@ -94,7 +94,9 @@ function LoginPage() {
         className="flex flex-col items-center gap-3"
       >
         <img src="/icon-512.png" alt="" width={88} height={88} className="rounded-2xl glow-ring" />
-        <p className="text-[11px] uppercase tracking-[0.45em] text-primary/80">// Accesso riservato</p>
+        <p className="text-[11px] uppercase tracking-[0.45em] text-primary/80">
+          // Accesso riservato
+        </p>
         <h1 className="font-display text-3xl text-glow">007-PIKMIN</h1>
         <p className="text-sm text-muted-foreground">Identificati, agente</p>
       </motion.div>
@@ -129,7 +131,9 @@ function LoginPage() {
             value={identifier}
             onChange={(e) =>
               setIdentifier(
-                mode === "commander" ? e.target.value : e.target.value.toLowerCase().replace(/\s/g, ""),
+                mode === "commander"
+                  ? e.target.value
+                  : e.target.value.toLowerCase().replace(/\s/g, ""),
               )
             }
             placeholder={mode === "commander" ? "email@comando" : "nome agente"}

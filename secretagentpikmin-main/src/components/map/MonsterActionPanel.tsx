@@ -26,9 +26,10 @@ export function MonsterActionPanel({
   onAttack,
   onScout,
 }: Props) {
-  const dist = player && enemyPos
-    ? calculateDistanceMeters(player.lat, player.lng, enemyPos.lat, enemyPos.lng)
-    : null;
+  const dist =
+    player && enemyPos
+      ? calculateDistanceMeters(player.lat, player.lng, enemyPos.lat, enemyPos.lng)
+      : null;
   const inAttackRange = dist != null && dist <= PLAYER_ATTACK_RADIUS;
 
   return (

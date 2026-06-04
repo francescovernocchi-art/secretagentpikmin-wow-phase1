@@ -14,10 +14,10 @@ export interface FactionConfig {
   particles: "leaves" | "sparks" | "embers" | "crystals";
   // Bonus reali applicati al calcolo aggregato
   bonuses: {
-    pikminGrowthMult: number;   // moltiplicatore generazione pikmin
-    energyMaxBonus: number;     // +energy_max base
-    defenseBonus: number;       // +defense_rating base
-    discoveryRate: number;      // % bonus scoperte rare
+    pikminGrowthMult: number; // moltiplicatore generazione pikmin
+    energyMaxBonus: number; // +energy_max base
+    defenseBonus: number; // +defense_rating base
+    discoveryRate: number; // % bonus scoperte rare
   };
   weakness: string;
   favoredPikmin: string[];

@@ -21,16 +21,17 @@ const BUILDING_FILE_BY_STATE: Record<DioramaBuildingVisualState, string> = {
   level_5: "lv5.webp",
 };
 
-const BUILDING_SLOT_BY_STATE: Record<DioramaBuildingVisualState, keyof DioramaBuildingAssetSlots> = {
-  locked: "locked",
-  buildable: "buildable",
-  under_construction: "construction",
-  level_1: "lv1",
-  level_2: "lv2",
-  level_3: "lv3",
-  level_4: "lv4",
-  level_5: "lv5",
-};
+const BUILDING_SLOT_BY_STATE: Record<DioramaBuildingVisualState, keyof DioramaBuildingAssetSlots> =
+  {
+    locked: "locked",
+    buildable: "buildable",
+    under_construction: "construction",
+    level_1: "lv1",
+    level_2: "lv2",
+    level_3: "lv3",
+    level_4: "lv4",
+    level_5: "lv5",
+  };
 
 /** Mappa stato gioco → stato visivo sprite */
 export function resolveBuildingVisualState(

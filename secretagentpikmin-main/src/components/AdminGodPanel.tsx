@@ -4,8 +4,16 @@ import { toast } from "sonner";
 import { Crown, Coins, Zap, AlertTriangle, Sparkles, RefreshCw, Database } from "lucide-react";
 import { hapticTap } from "@/lib/haptic";
 
-interface BaseLite { agent: string; name: string; level: number; faction: string | null; }
-interface AgentLite { agent: string; coins: number; }
+interface BaseLite {
+  agent: string;
+  name: string;
+  level: number;
+  faction: string | null;
+}
+interface AgentLite {
+  agent: string;
+  coins: number;
+}
 
 /**
  * Modalità Dio: solo per il Comandante.
@@ -61,9 +69,7 @@ export function AdminGodPanel() {
         amount: coinDelta,
         reason: `Decreto Comandante`,
       });
-      toast.success(
-        `${coinDelta >= 0 ? "+" : ""}${coinDelta} monete a ${coinTarget}`
-      );
+      toast.success(`${coinDelta >= 0 ? "+" : ""}${coinDelta} monete a ${coinTarget}`);
       await load();
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Errore");
@@ -90,7 +96,7 @@ export function AdminGodPanel() {
       toast.error(
         e instanceof Error
           ? e.message
-          : "Errore (forse solo il proprietario può cambiare la fazione)"
+          : "Errore (forse solo il proprietario può cambiare la fazione)",
       );
     } finally {
       setBusy(false);
@@ -112,14 +118,12 @@ export function AdminGodPanel() {
         toast.success(`${agent} → Lv ${level}`);
         await load();
       } catch (e) {
-        toast.error(
-          e instanceof Error ? e.message : "Errore (limitato dalle regole)"
-        );
+        toast.error(e instanceof Error ? e.message : "Errore (limitato dalle regole)");
       } finally {
         setBusy(false);
       }
     },
-    [load]
+    [load],
   );
 
   const spawnEvent = useCallback(async () => {
@@ -205,17 +209,13 @@ export function AdminGodPanel() {
         <h3 className="font-display text-sm uppercase tracking-widest text-amber-400">
           Modalità Dio
         </h3>
-        <button
-          onClick={handleLoadRefresh}
-          className="panel p-1 ml-auto"
-          title="Ricarica"
-        >
+        <button onClick={handleLoadRefresh} className="panel p-1 ml-auto" title="Ricarica">
           <RefreshCw className="h-3 w-3" />
         </button>
       </div>
       <p className="text-[11px] text-muted-foreground -mt-2">
-        Riservato al Comandante. Modifica monete, fazioni, livelli ed eventi
-        senza toccare il database.
+        Riservato al Comandante. Modifica monete, fazioni, livelli ed eventi senza toccare il
+        database.
       </p>
 
       {/* GRANT COINS */}
@@ -243,11 +243,7 @@ export function AdminGodPanel() {
             onChange={(e) => setCoinDelta(parseInt(e.target.value) || 0)}
             className="flex-1 px-2 py-1.5 bg-night/60 rounded-lg border border-primary/20 text-xs"
           />
-          <button
-            onClick={handleGrantCoins}
-            disabled={busy}
-            className="btn-neon px-3 text-xs"
-          >
+          <button onClick={handleGrantCoins} disabled={busy} className="btn-neon px-3 text-xs">
             Eroga
           </button>
         </div>
@@ -281,11 +277,7 @@ export function AdminGodPanel() {
             <option value="battle">Battle</option>
             <option value="mystic">Mystic</option>
           </select>
-          <button
-            onClick={handleSetFaction}
-            disabled={busy}
-            className="btn-neon px-3 text-xs"
-          >
+          <button onClick={handleSetFaction} disabled={busy} className="btn-neon px-3 text-xs">
             Imposta
           </button>
         </div>
@@ -332,11 +324,7 @@ export function AdminGodPanel() {
           rows={2}
           className="px-2 py-1.5 bg-night/60 rounded-lg border border-primary/20 text-xs resize-none"
         />
-        <button
-          onClick={handleSpawnEvent}
-          disabled={busy}
-          className="btn-neon px-3 py-1.5 text-xs"
-        >
+        <button onClick={handleSpawnEvent} disabled={busy} className="btn-neon px-3 py-1.5 text-xs">
           Lancia decreto
         </button>
       </section>
@@ -354,8 +342,7 @@ export function AdminGodPanel() {
           Disattiva tutti i nemici sulla mappa
         </button>
         <p className="text-[10px] text-muted-foreground flex items-center gap-1">
-          <Database className="h-3 w-3" /> Tutte le modifiche sono tracciate
-          negli eventi.
+          <Database className="h-3 w-3" /> Tutte le modifiche sono tracciate negli eventi.
         </p>
       </section>
     </div>

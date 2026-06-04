@@ -24,7 +24,12 @@ export function pikminCostFor(rarity: string | null | undefined): number {
 }
 
 /** Aggiunge pikmin al contatore della squadra. */
-export async function addPikmin(amount: number, reason: string, agent: string, meta?: Record<string, unknown>) {
+export async function addPikmin(
+  amount: number,
+  reason: string,
+  agent: string,
+  meta?: Record<string, unknown>,
+) {
   if (amount <= 0) return;
   const { data, error } = await supabase.rpc("adjust_pikmin", {
     p_delta: amount,
@@ -37,7 +42,12 @@ export async function addPikmin(amount: number, reason: string, agent: string, m
 }
 
 /** Spende pikmin dal contatore. Lancia eccezione se non bastano. */
-export async function spendPikmin(amount: number, reason: string, agent: string, meta?: Record<string, unknown>) {
+export async function spendPikmin(
+  amount: number,
+  reason: string,
+  agent: string,
+  meta?: Record<string, unknown>,
+) {
   if (amount <= 0) return;
   const { data, error } = await supabase.rpc("adjust_pikmin", {
     p_delta: -amount,

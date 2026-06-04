@@ -87,8 +87,8 @@ export function FamilyPanel() {
         </h3>
       </div>
       <p className="text-[11px] text-muted-foreground -mt-2">
-        Crea tu stesso ogni agente: scegli nome, password e ruolo. Solo tu (Comandante)
-        entri con email; gli altri usano nome agente + password.
+        Crea tu stesso ogni agente: scegli nome, password e ruolo. Solo tu (Comandante) entri con
+        email; gli altri usano nome agente + password.
       </p>
 
       <div className="flex flex-col gap-2 max-h-48 overflow-y-auto">

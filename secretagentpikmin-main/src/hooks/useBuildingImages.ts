@@ -15,7 +15,10 @@ export function useBuildingImages(): Map<string, BuildingImageSet> {
     const unsub = subscribeBuildingImages(() => {
       loadBuildingImages().then((m) => alive && setMap(new Map(m)));
     });
-    return () => { alive = false; unsub(); };
+    return () => {
+      alive = false;
+      unsub();
+    };
   }, []);
 
   return map;

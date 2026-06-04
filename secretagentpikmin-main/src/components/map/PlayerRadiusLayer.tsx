@@ -15,11 +15,14 @@ export function PlayerRadiusLayer({ mapRef, ready, me, show }: Props) {
     if (!ready) return;
     (async () => {
       const L = await import("leaflet");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       const map = mapRef.current as any;
       if (!map) return;
       if (!me || !show) {
-        if (ref.current) { map.removeLayer(ref.current); ref.current = null; }
+        if (ref.current) {
+          map.removeLayer(ref.current);
+          ref.current = null;
+        }
         return;
       }
       if (!ref.current) {
@@ -39,7 +42,6 @@ export function PlayerRadiusLayer({ mapRef, ready, me, show }: Props) {
 
   useEffect(() => {
     return () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const map = mapRef.current as any;
       if (map && ref.current) map.removeLayer(ref.current);
     };

@@ -4,7 +4,12 @@ import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { VILLAGE_BUILDINGS } from "@/data/secretPikminWorld";
 import { hapticTap } from "@/lib/haptic";
-import { useVillageDiorama, useSpaceshipParts, usePikminSquad, usePlayerBiome } from "@/hooks/useGameData";
+import {
+  useVillageDiorama,
+  useSpaceshipParts,
+  usePikminSquad,
+  usePlayerBiome,
+} from "@/hooks/useGameData";
 import { useDioramaLayout, useEngineMode } from "@/hooks/useDioramaLayout";
 import { shipProgressPercent } from "@/lib/game/spaceship";
 import { resolveBuildingVisualState } from "@/lib/diorama/dioramaAssets";
@@ -14,7 +19,11 @@ import { getBiomeByKey } from "@/data/secretPikminWorld";
 import { SpaceshipAssemblyPanel } from "@/components/game/SpaceshipAssemblyPanel";
 import { DioramaBuildingPanel } from "@/components/game/diorama/DioramaBuildingPanel";
 import { DioramaEngine } from "@/components/game/diorama/engine/DioramaEngine";
-import { DIORAMA_BUILDINGS, BIOME_DIORAMA_THEMES, type BuildingKey } from "@/components/game/diorama/diorama-data";
+import {
+  DIORAMA_BUILDINGS,
+  BIOME_DIORAMA_THEMES,
+  type BuildingKey,
+} from "@/components/game/diorama/diorama-data";
 import styles from "@/styles/village-diorama.module.css";
 import type { BiomeKey } from "@/types/secretPikmin";
 
@@ -87,7 +96,10 @@ export function VillageDiorama({
   const theme = BIOME_DIORAMA_THEMES[(biome as BiomeKey) ?? "bosco"] ?? BIOME_DIORAMA_THEMES.bosco;
   const biomeDef = getBiomeByKey(biome);
 
-  const buildingByKey = useMemo(() => new Map(liveBuildings.map((b) => [b.building_key, b])), [liveBuildings]);
+  const buildingByKey = useMemo(
+    () => new Map(liveBuildings.map((b) => [b.building_key, b])),
+    [liveBuildings],
+  );
 
   const displayBuildings =
     liveBuildings.length > 0
@@ -107,7 +119,10 @@ export function VillageDiorama({
           def,
           level: VILLAGE_BUILDINGS.find((b) => b.key === def.key)?.level ?? i + 1,
           status: "active" as const,
-          visualState: resolveBuildingVisualState("active", VILLAGE_BUILDINGS.find((b) => b.key === def.key)?.level ?? i + 1),
+          visualState: resolveBuildingVisualState(
+            "active",
+            VILLAGE_BUILDINGS.find((b) => b.key === def.key)?.level ?? i + 1,
+          ),
         }));
 
   const selectedBuilding = buildingPanelKey ? buildingByKey.get(buildingPanelKey) : undefined;
@@ -120,18 +135,26 @@ export function VillageDiorama({
   const trafficSize = compact ? 20 : isHero ? 24 : 26;
 
   return (
-    <section className={`${styles.dioramaRoot} ${compact ? styles.compact : ""} ${isHero ? styles.heroMode : ""} ${fullscreenMode ? styles.fullscreenMode : ""} ${engineMode === "image" ? styles.engineImageMode : ""} ${fullScreen ? "rounded-none border-0 min-h-0 flex-1 flex flex-col" : ""}`}>
+    <section
+      className={`${styles.dioramaRoot} ${compact ? styles.compact : ""} ${isHero ? styles.heroMode : ""} ${fullscreenMode ? styles.fullscreenMode : ""} ${engineMode === "image" ? styles.engineImageMode : ""} ${fullScreen ? "rounded-none border-0 min-h-0 flex-1 flex flex-col" : ""}`}
+    >
       {!compact && villageName && !isHero && (
         <div className={styles.dioramaHeader}>
           <div>
-            <p className="text-[10px] uppercase tracking-[0.35em] text-primary/90 font-display">{villageName}</p>
+            <p className="text-[10px] uppercase tracking-[0.35em] text-primary/90 font-display">
+              {villageName}
+            </p>
             <p className="text-[9px] text-muted-foreground mt-0.5">
               {biomeDef?.emoji} {biomeDef?.label} · CC Lv{controlLevel} · max {maxVillages} villaggi
               {engineMode === "image" && <span className="text-primary/60"> · engine</span>}
             </p>
           </div>
           {!fullScreen && (
-            <Link to="/villaggio/edifici" onClick={hapticTap} className="text-[9px] uppercase tracking-widest text-primary panel px-2 py-1">
+            <Link
+              to="/villaggio/edifici"
+              onClick={hapticTap}
+              className="text-[9px] uppercase tracking-widest text-primary panel px-2 py-1"
+            >
               Edifici →
             </Link>
           )}
@@ -163,15 +186,28 @@ export function VillageDiorama({
         <div className="relative px-4 pb-3 flex items-center justify-between gap-2 flex-wrap border-t border-primary/10 bg-black/20">
           <div className="text-[10px] uppercase tracking-widest py-2">
             <span className="text-primary">{squad.length || pikminCount}</span>{" "}
-            <span className="text-muted-foreground">Pikmin · {loading ? "…" : `${displayBuildings.length} edifici`}</span>
+            <span className="text-muted-foreground">
+              Pikmin · {loading ? "…" : `${displayBuildings.length} edifici`}
+            </span>
             {onMission.length > 0 && (
-              <span className="block text-[9px] text-amber-300 mt-0.5">{onMission.length} in spedizione</span>
+              <span className="block text-[9px] text-amber-300 mt-0.5">
+                {onMission.length} in spedizione
+              </span>
             )}
           </div>
           <div className="flex gap-1">
-            {parts.filter((p) => p.collected).slice(0, 5).map((p) => (
-              <span key={p.key} className="text-sm drop-shadow-[0_0_4px_rgba(56,189,248,0.6)]" title={p.name}>{p.emoji}</span>
-            ))}
+            {parts
+              .filter((p) => p.collected)
+              .slice(0, 5)
+              .map((p) => (
+                <span
+                  key={p.key}
+                  className="text-sm drop-shadow-[0_0_4px_rgba(56,189,248,0.6)]"
+                  title={p.name}
+                >
+                  {p.emoji}
+                </span>
+              ))}
           </div>
         </div>
       )}
@@ -197,15 +233,24 @@ export function VillageDiorama({
               aria-labelledby="ship-hangar-title"
             >
               <div className="flex items-center justify-between mb-3">
-                <h3 id="ship-hangar-title" className="font-display text-lg text-glow">Hangar Navicella</h3>
-                <button type="button" onClick={closeShip} className="panel p-1.5" aria-label="Chiudi hangar">
+                <h3 id="ship-hangar-title" className="font-display text-lg text-glow">
+                  Hangar Navicella
+                </h3>
+                <button
+                  type="button"
+                  onClick={closeShip}
+                  className="panel p-1.5"
+                  aria-label="Chiudi hangar"
+                >
                   <X className="h-4 w-4" />
                 </button>
               </div>
               <SpaceshipAssemblyPanel />
               {hangarBuilding && villageId && (
                 <div className="mt-4 pt-4 border-t border-border/40">
-                  <p className="text-[10px] uppercase tracking-widest text-primary mb-2">Hangar · Building System</p>
+                  <p className="text-[10px] uppercase tracking-widest text-primary mb-2">
+                    Hangar · Building System
+                  </p>
                   <DioramaBuildingPanel
                     building={hangarBuilding}
                     villageId={villageId}
@@ -239,8 +284,15 @@ export function VillageDiorama({
               aria-labelledby="building-panel-title"
             >
               <div className="flex items-center justify-between mb-2">
-                <span id="building-panel-title" className="sr-only">{selectedBuilding.name}</span>
-                <button type="button" onClick={closeBuilding} className="panel p-1.5 ml-auto" aria-label="Chiudi pannello edificio">
+                <span id="building-panel-title" className="sr-only">
+                  {selectedBuilding.name}
+                </span>
+                <button
+                  type="button"
+                  onClick={closeBuilding}
+                  className="panel p-1.5 ml-auto"
+                  aria-label="Chiudi pannello edificio"
+                >
                   <X className="h-4 w-4" />
                 </button>
               </div>

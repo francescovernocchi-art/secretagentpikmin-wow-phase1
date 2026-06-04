@@ -87,11 +87,12 @@ export function FactionSelector({ agent, onChosen }: Props) {
                 <Bonus label="Crescita Pikmin" value={`×${f.bonuses.pikminGrowthMult}`} />
                 <Bonus label="Energia max" value={`+${f.bonuses.energyMaxBonus}`} />
                 <Bonus label="Difesa base" value={`+${f.bonuses.defenseBonus}`} />
-                <Bonus label="Scoperte rare" value={`+${Math.round(f.bonuses.discoveryRate * 100)}%`} />
+                <Bonus
+                  label="Scoperte rare"
+                  value={`+${Math.round(f.bonuses.discoveryRate * 100)}%`}
+                />
               </div>
-              <p className="relative mt-2 text-[10px] text-foreground/60 italic">
-                ⚠ {f.weakness}
-              </p>
+              <p className="relative mt-2 text-[10px] text-foreground/60 italic">⚠ {f.weakness}</p>
             </motion.button>
           );
         })}

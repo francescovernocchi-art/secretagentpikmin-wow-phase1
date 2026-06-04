@@ -37,7 +37,9 @@ export function setGameAudioEnabled(on: boolean): void {
   if (typeof window !== "undefined") {
     try {
       localStorage.setItem(STORAGE_KEY, on ? "1" : "0");
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   }
 }
 
@@ -64,7 +66,9 @@ export function playGameSound(sound: GameSound): void {
       break;
     case "chat_open":
       sfx.tap();
-      setTimeout(() => { if (enabled) sfx.tap(); }, 80);
+      setTimeout(() => {
+        if (enabled) sfx.tap();
+      }, 80);
       break;
     case "ship_update":
       sfx.upgrade();

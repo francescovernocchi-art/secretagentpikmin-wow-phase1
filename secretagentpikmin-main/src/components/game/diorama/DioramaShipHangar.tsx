@@ -73,11 +73,21 @@ export function DioramaShipHangar({ parts, percent, onClick, compact }: DioramaS
           <span className={styles.hangarCraneHook} />
         </div>
 
-        <div className={styles.hangarCrate} style={{ left: "4%", bottom: "14%" }}>📦</div>
-        <div className={styles.hangarCrate} style={{ left: "88%", bottom: "12%" }}>🔋</div>
-        <div className={styles.hangarCrateSm} style={{ left: "10%", bottom: "24%" }}>🔩</div>
-        <div className={styles.hangarCrateSm} style={{ left: "78%", bottom: "22%" }}>🛢️</div>
-        <div className={styles.hangarCrateSm} style={{ left: "92%", bottom: "26%" }}>⚙️</div>
+        <div className={styles.hangarCrate} style={{ left: "4%", bottom: "14%" }}>
+          📦
+        </div>
+        <div className={styles.hangarCrate} style={{ left: "88%", bottom: "12%" }}>
+          🔋
+        </div>
+        <div className={styles.hangarCrateSm} style={{ left: "10%", bottom: "24%" }}>
+          🔩
+        </div>
+        <div className={styles.hangarCrateSm} style={{ left: "78%", bottom: "22%" }}>
+          🛢️
+        </div>
+        <div className={styles.hangarCrateSm} style={{ left: "92%", bottom: "26%" }}>
+          ⚙️
+        </div>
 
         <div className={styles.hangarCableL} />
         <div className={styles.hangarCableR} />
@@ -99,13 +109,20 @@ export function DioramaShipHangar({ parts, percent, onClick, compact }: DioramaS
         {/* FX ambiente */}
         {flags.smoke && <div className={styles.shipSmoke} />}
         {flags.sparks && <div className={styles.shipSparks} />}
-        <ParticleEffect variant="ship-glow" className={flags.engineGlow ? styles.shipFxStrong : styles.shipFxSoft} />
+        <ParticleEffect
+          variant="ship-glow"
+          className={flags.engineGlow ? styles.shipFxStrong : styles.shipFxSoft}
+        />
 
         {/* Navicella */}
         <motion.div
           className={`${styles.shipModel} ${tierClass} ${flags.engineGlow ? styles.shipGlow : ""}`}
           animate={{ y: tier === "complete" ? [0, -5, 0] : [0, -3, 0] }}
-          transition={{ repeat: Infinity, duration: tier === "complete" ? 2.4 : 3.2, ease: "easeInOut" }}
+          transition={{
+            repeat: Infinity,
+            duration: tier === "complete" ? 2.4 : 3.2,
+            ease: "easeInOut",
+          }}
         >
           <svg viewBox="0 0 160 120" className={styles.shipSvg} aria-hidden>
             <defs>
@@ -134,15 +151,27 @@ export function DioramaShipHangar({ parts, percent, onClick, compact }: DioramaS
             {/* Stabilizzatori */}
             {flags.stabilizers && (
               <>
-                <path d="M 48 88 L 38 102 L 48 98 Z" fill={`url(#${metalId})`} opacity={flags.panelsIntact ? 1 : 0.65} />
-                <path d="M 112 88 L 122 102 L 112 98 Z" fill={`url(#${metalId})`} opacity={flags.panelsIntact ? 1 : 0.65} />
+                <path
+                  d="M 48 88 L 38 102 L 48 98 Z"
+                  fill={`url(#${metalId})`}
+                  opacity={flags.panelsIntact ? 1 : 0.65}
+                />
+                <path
+                  d="M 112 88 L 122 102 L 112 98 Z"
+                  fill={`url(#${metalId})`}
+                  opacity={flags.panelsIntact ? 1 : 0.65}
+                />
               </>
             )}
 
             {/* Ala sinistra */}
             {flags.wings && (
               <path
-                d={flags.leftWingFull ? "M 18 58 L 4 72 L 18 78 L 32 68 Z" : "M 22 62 L 12 72 L 22 76 L 30 68 Z"}
+                d={
+                  flags.leftWingFull
+                    ? "M 18 58 L 4 72 L 18 78 L 32 68 Z"
+                    : "M 22 62 L 12 72 L 22 76 L 30 68 Z"
+                }
                 fill={flags.leftWingFull ? `url(#${hullId})` : "#334155"}
                 stroke={flags.leftWingFull ? "#7dd3fc" : "#475569"}
                 strokeWidth="1.2"
@@ -150,25 +179,74 @@ export function DioramaShipHangar({ parts, percent, onClick, compact }: DioramaS
               />
             )}
             {tier === "wreck" && (
-              <path d="M 20 64 L 8 76 L 18 74 Z" fill="#1e293b" stroke="#475569" strokeWidth="1" opacity="0.8" />
+              <path
+                d="M 20 64 L 8 76 L 18 74 Z"
+                fill="#1e293b"
+                stroke="#475569"
+                strokeWidth="1"
+                opacity="0.8"
+              />
             )}
 
             {/* Ala destra */}
             {flags.rightWingFull ? (
-              <path d="M 142 58 L 156 72 L 142 78 L 128 68 Z" fill={`url(#${hullId})`} stroke="#7dd3fc" strokeWidth="1.2" />
+              <path
+                d="M 142 58 L 156 72 L 142 78 L 128 68 Z"
+                fill={`url(#${hullId})`}
+                stroke="#7dd3fc"
+                strokeWidth="1.2"
+              />
             ) : flags.wings ? (
-              <path d="M 138 62 L 148 72 L 138 76 L 130 68 Z" fill="#334155" stroke="#475569" strokeWidth="1" opacity="0.7" />
+              <path
+                d="M 138 62 L 148 72 L 138 76 L 130 68 Z"
+                fill="#334155"
+                stroke="#475569"
+                strokeWidth="1"
+                opacity="0.7"
+              />
             ) : null}
 
             {/* Motori */}
             {flags.engines && (
               <>
-                <rect x="58" y="92" width="14" height="12" rx="2" fill={`url(#${darkId})`} stroke="#64748b" strokeWidth="0.8" />
-                <rect x="88" y="92" width="14" height="12" rx="2" fill={`url(#${darkId})`} stroke="#64748b" strokeWidth="0.8" />
+                <rect
+                  x="58"
+                  y="92"
+                  width="14"
+                  height="12"
+                  rx="2"
+                  fill={`url(#${darkId})`}
+                  stroke="#64748b"
+                  strokeWidth="0.8"
+                />
+                <rect
+                  x="88"
+                  y="92"
+                  width="14"
+                  height="12"
+                  rx="2"
+                  fill={`url(#${darkId})`}
+                  stroke="#64748b"
+                  strokeWidth="0.8"
+                />
                 {flags.engineGlow && (
                   <>
-                    <ellipse cx="65" cy="104" rx="6" ry="4" fill={`url(#${glowId})`} className={styles.shipEnginePulse} />
-                    <ellipse cx="95" cy="104" rx="6" ry="4" fill={`url(#${glowId})`} className={styles.shipEnginePulse} />
+                    <ellipse
+                      cx="65"
+                      cy="104"
+                      rx="6"
+                      ry="4"
+                      fill={`url(#${glowId})`}
+                      className={styles.shipEnginePulse}
+                    />
+                    <ellipse
+                      cx="95"
+                      cy="104"
+                      rx="6"
+                      ry="4"
+                      fill={`url(#${glowId})`}
+                      className={styles.shipEnginePulse}
+                    />
                   </>
                 )}
               </>
@@ -190,8 +268,20 @@ export function DioramaShipHangar({ parts, percent, onClick, compact }: DioramaS
             {/* Pannelli danneggiati (relitto) */}
             {(tier === "wreck" || tier === "p25") && (
               <>
-                <path d="M 70 42 L 78 50 L 72 58 L 64 50 Z" fill="#0f172a" stroke="#ef4444" strokeWidth="0.8" opacity="0.85" />
-                <path d="M 92 48 L 98 56 L 90 62 L 84 54 Z" fill="#1e293b" stroke="#475569" strokeWidth="0.6" opacity="0.7" />
+                <path
+                  d="M 70 42 L 78 50 L 72 58 L 64 50 Z"
+                  fill="#0f172a"
+                  stroke="#ef4444"
+                  strokeWidth="0.8"
+                  opacity="0.85"
+                />
+                <path
+                  d="M 92 48 L 98 56 L 90 62 L 84 54 Z"
+                  fill="#1e293b"
+                  stroke="#475569"
+                  strokeWidth="0.6"
+                  opacity="0.7"
+                />
               </>
             )}
 
@@ -213,7 +303,13 @@ export function DioramaShipHangar({ parts, percent, onClick, compact }: DioramaS
             {flags.antenna && (
               <>
                 <line x1="80" y1="14" x2="80" y2="4" stroke="#94a3b8" strokeWidth="2" />
-                <circle cx="80" cy="3" r="3" fill={flags.hullBright ? "#38bdf8" : "#64748b"} className={styles.shipAntennaBlink} />
+                <circle
+                  cx="80"
+                  cy="3"
+                  r="3"
+                  fill={flags.hullBright ? "#38bdf8" : "#64748b"}
+                  className={styles.shipAntennaBlink}
+                />
               </>
             )}
 
@@ -221,7 +317,13 @@ export function DioramaShipHangar({ parts, percent, onClick, compact }: DioramaS
             {flags.navLights && (
               <>
                 <circle cx="34" cy="66" r="2.5" fill="#ef4444" className={styles.shipNavLightRed} />
-                <circle cx="126" cy="66" r="2.5" fill="#38bdf8" className={styles.shipNavLightBlue} />
+                <circle
+                  cx="126"
+                  cy="66"
+                  r="2.5"
+                  fill="#38bdf8"
+                  className={styles.shipNavLightBlue}
+                />
               </>
             )}
           </svg>
@@ -254,7 +356,9 @@ export function DioramaShipHangar({ parts, percent, onClick, compact }: DioramaS
             <span className={styles.hangarMiniCart}>🚜</span>
             <span className={styles.hangarCart2}>🛒</span>
             <div className={styles.hangarMaterialPile}>
-              <span>🔩</span><span>📦</span><span>🛢️</span>
+              <span>🔩</span>
+              <span>📦</span>
+              <span>🛢️</span>
             </div>
             <div className={styles.hangarPalletStack}>
               <span className={styles.hangarPallet}>▬</span>
@@ -265,11 +369,21 @@ export function DioramaShipHangar({ parts, percent, onClick, compact }: DioramaS
               <span>👷</span>
               <span className={styles.hangarTechBadge}>TEC</span>
             </div>
-            <span className={styles.hangarYardCrate} style={{ left: "14%" }}>📦</span>
-            <span className={styles.hangarYardCrate} style={{ left: "68%" }}>🔋</span>
-            <span className={styles.hangarYardCrate} style={{ left: "82%" }}>⚙️</span>
-            <span className={styles.hangarYardMaterial} style={{ left: "24%" }}>🪵</span>
-            <span className={styles.hangarYardMaterial} style={{ left: "58%" }}>🔩</span>
+            <span className={styles.hangarYardCrate} style={{ left: "14%" }}>
+              📦
+            </span>
+            <span className={styles.hangarYardCrate} style={{ left: "68%" }}>
+              🔋
+            </span>
+            <span className={styles.hangarYardCrate} style={{ left: "82%" }}>
+              ⚙️
+            </span>
+            <span className={styles.hangarYardMaterial} style={{ left: "24%" }}>
+              🪵
+            </span>
+            <span className={styles.hangarYardMaterial} style={{ left: "58%" }}>
+              🔩
+            </span>
           </div>
         )}
       </div>

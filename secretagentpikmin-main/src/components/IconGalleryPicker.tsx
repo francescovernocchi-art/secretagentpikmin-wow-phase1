@@ -68,12 +68,10 @@ function GalleryModal({
   const load = async () => {
     setLoading(true);
     setError(null);
-    const { data, error: err } = await supabase.storage
-      .from("captures")
-      .list(folder, {
-        limit: 200,
-        sortBy: { column: "updated_at", order: "desc" },
-      });
+    const { data, error: err } = await supabase.storage.from("captures").list(folder, {
+      limit: 200,
+      sortBy: { column: "updated_at", order: "desc" },
+    });
     if (err) {
       setError(err.message);
       setItems([]);
@@ -172,9 +170,7 @@ function GalleryModal({
           )}
         </div>
 
-        <p className="text-[10px] text-muted-foreground text-center">
-          Tocca un’icona per usarla.
-        </p>
+        <p className="text-[10px] text-muted-foreground text-center">Tocca un’icona per usarla.</p>
       </motion.div>
     </motion.div>
   );

@@ -3,14 +3,23 @@ import { fetchHomeDashboard, type HomeDashboardData } from "@/lib/game/home";
 import { fetchMissionProgress } from "@/lib/game/planet";
 import { fetchPikminUnits, updatePikminSpecialization } from "@/lib/game/pikmin-units";
 import { fetchPrimaryVillage } from "@/lib/game/villages";
-import { fetchSellableInventory, sellInventoryItem, fetchRecentTransactions } from "@/lib/game/market";
+import {
+  fetchSellableInventory,
+  sellInventoryItem,
+  fetchRecentTransactions,
+} from "@/lib/game/market";
 import { fetchChatMessagesWithLegacy, sendChatMessage } from "@/lib/game/chat";
 import { fetchCurrentBiome, fetchRecentScans, runWeightedAreaScan } from "@/lib/game/scanner";
 import { fetchSpaceshipParts } from "@/lib/game/spaceship";
 import { agentKeyFromSession } from "@/lib/game/planet";
 import { getSession } from "@/lib/session";
 import type { MissionProgressData } from "@/types/phase2-db";
-import type { PikminUnit, PikminSpecializationKey, ChatChannelKey, BiomeKey } from "@/types/secretPikmin";
+import type {
+  PikminUnit,
+  PikminSpecializationKey,
+  ChatChannelKey,
+  BiomeKey,
+} from "@/types/secretPikmin";
 import type { DbVillageBuilding } from "@/types/phase2-db";
 
 export function useHomeDashboard() {
@@ -122,14 +131,19 @@ export function useMarket(agentKey?: string) {
   const session = typeof window !== "undefined" ? getSession() : null;
   const agent = agentKey ?? agentKeyFromSession(session?.role);
   const [items, setItems] = useState<Awaited<ReturnType<typeof fetchSellableInventory>>>([]);
-  const [transactions, setTransactions] = useState<Awaited<ReturnType<typeof fetchRecentTransactions>>>([]);
+  const [transactions, setTransactions] = useState<
+    Awaited<ReturnType<typeof fetchRecentTransactions>>
+  >([]);
   const [loading, setLoading] = useState(true);
   const [selling, setSelling] = useState<string | null>(null);
 
   const reload = useCallback(async () => {
     setLoading(true);
     try {
-      const [inv, tx] = await Promise.all([fetchSellableInventory(agent), fetchRecentTransactions(agent)]);
+      const [inv, tx] = await Promise.all([
+        fetchSellableInventory(agent),
+        fetchRecentTransactions(agent),
+      ]);
       setItems(inv);
       setTransactions(tx);
     } finally {
@@ -159,7 +173,9 @@ export function useMarket(agentKey?: string) {
 }
 
 export function useFamilyChat(channel?: ChatChannelKey) {
-  const [messages, setMessages] = useState<Awaited<ReturnType<typeof fetchChatMessagesWithLegacy>>>([]);
+  const [messages, setMessages] = useState<Awaited<ReturnType<typeof fetchChatMessagesWithLegacy>>>(
+    [],
+  );
   const [loading, setLoading] = useState(true);
 
   const reload = useCallback(async () => {
@@ -171,20 +187,17 @@ export function useFamilyChat(channel?: ChatChannelKey) {
     }
   }, [channel]);
 
-  const send = useCallback(
-    async (content: string, ch: ChatChannelKey, messageType = "text") => {
-      const session = getSession();
-      if (!session) return;
-      const msg = await sendChatMessage({
-        channel: ch,
-        senderAgent: agentKeyFromSession(session.role),
-        content,
-        messageType,
-      });
-      setMessages((prev) => [...prev, msg]);
-    },
-    [],
-  );
+  const send = useCallback(async (content: string, ch: ChatChannelKey, messageType = "text") => {
+    const session = getSession();
+    if (!session) return;
+    const msg = await sendChatMessage({
+      channel: ch,
+      senderAgent: agentKeyFromSession(session.role),
+      content,
+      messageType,
+    });
+    setMessages((prev) => [...prev, msg]);
+  }, []);
 
   useEffect(() => {
     reload();
@@ -195,7 +208,9 @@ export function useFamilyChat(channel?: ChatChannelKey) {
 
 export function useScannerBiome() {
   const [biome, setBiome] = useState<BiomeKey>("bosco");
-  const [recentScans, setRecentScans] = useState<Awaited<ReturnType<typeof fetchRecentScans>>["data"]>([]);
+  const [recentScans, setRecentScans] = useState<
+    Awaited<ReturnType<typeof fetchRecentScans>>["data"]
+  >([]);
   const [processing, setProcessing] = useState(false);
 
   useEffect(() => {
@@ -240,7 +255,9 @@ export function useSpaceshipParts() {
 export function useGameNotifications(agentKey?: string) {
   const session = typeof window !== "undefined" ? getSession() : null;
   const agent = agentKey ?? agentKeyFromSession(session?.role);
-  const [notifications, setNotifications] = useState<Awaited<ReturnType<typeof import("@/lib/game/notifications").fetchGameNotifications>>>([]);
+  const [notifications, setNotifications] = useState<
+    Awaited<ReturnType<typeof import("@/lib/game/notifications").fetchGameNotifications>>
+  >([]);
 
   const reload = useCallback(async () => {
     const { fetchGameNotifications, unreadCount } = await import("@/lib/game/notifications");
@@ -257,11 +274,14 @@ export function useGameNotifications(agentKey?: string) {
     return () => clearInterval(t);
   }, [reload]);
 
-  const markRead = useCallback(async (id: string) => {
-    const { markNotificationRead } = await import("@/lib/game/notifications");
-    await markNotificationRead(id, agent);
-    await reload().then(setUnread);
-  }, [agent, reload]);
+  const markRead = useCallback(
+    async (id: string) => {
+      const { markNotificationRead } = await import("@/lib/game/notifications");
+      await markNotificationRead(id, agent);
+      await reload().then(setUnread);
+    },
+    [agent, reload],
+  );
 
   const markAllRead = useCallback(async () => {
     const { markAllNotificationsRead } = await import("@/lib/game/notifications");
@@ -276,7 +296,9 @@ export function usePlayerBiome(agentKey?: string) {
   const session = typeof window !== "undefined" ? getSession() : null;
   const agent = agentKey ?? agentKeyFromSession(session?.role);
   const [biome, setBiome] = useState<BiomeKey>("bosco");
-  const [location, setLocation] = useState<Awaited<ReturnType<typeof import("@/lib/game/player-location").fetchPlayerLocation>> | null>(null);
+  const [location, setLocation] = useState<Awaited<
+    ReturnType<typeof import("@/lib/game/player-location").fetchPlayerLocation>
+  > | null>(null);
 
   const reload = useCallback(async () => {
     const { fetchPlayerLocation } = await import("@/lib/game/player-location");

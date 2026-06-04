@@ -36,7 +36,12 @@ import type {
   FamilyTradeOfferFull,
 } from "@/types/phase4-db";
 import type { PlayerLocationState } from "@/types/phase4-db";
-import type { ChatChannelKey, PikminSpecializationKey, PikminTypeKey, BiomeKey } from "@/types/secretPikmin";
+import type {
+  ChatChannelKey,
+  PikminSpecializationKey,
+  PikminTypeKey,
+  BiomeKey,
+} from "@/types/secretPikmin";
 
 const PREFIX = "secretPikmin.phase2.";
 
@@ -100,22 +105,78 @@ function seedPikmin(): DbPikminUnit[] {
 
 function seedInventory(agent: string): DbInventoryItem[] {
   const buildingResources = [
-    { item_key: "legno", item_name: "Legno", emoji: "🪵", category: "materiale" as const, quantity: 80, sell_price: 8 },
-    { item_key: "resina", item_name: "Resina", emoji: "🍯", category: "materiale" as const, quantity: 40, sell_price: 12 },
-    { item_key: "semi", item_name: "Semi", emoji: "🌱", category: "materiale" as const, quantity: 50, sell_price: 10 },
-    { item_key: "rottami", item_name: "Rottami", emoji: "⚙️", category: "materiale" as const, quantity: 35, sell_price: 15 },
+    {
+      item_key: "legno",
+      item_name: "Legno",
+      emoji: "🪵",
+      category: "materiale" as const,
+      quantity: 80,
+      sell_price: 8,
+    },
+    {
+      item_key: "resina",
+      item_name: "Resina",
+      emoji: "🍯",
+      category: "materiale" as const,
+      quantity: 40,
+      sell_price: 12,
+    },
+    {
+      item_key: "semi",
+      item_name: "Semi",
+      emoji: "🌱",
+      category: "materiale" as const,
+      quantity: 50,
+      sell_price: 10,
+    },
+    {
+      item_key: "rottami",
+      item_name: "Rottami",
+      emoji: "⚙️",
+      category: "materiale" as const,
+      quantity: 35,
+      sell_price: 15,
+    },
   ];
   const base =
     agent === "papa"
       ? [
           ...buildingResources,
-          { item_key: "cristallo_rame", item_name: "Cristallo di rame", emoji: "💎", category: "oggetto" as const, quantity: 2, sell_price: 120 },
-          { item_key: "miele_dorato", item_name: "Miele dorato", emoji: "🍯", category: "ingrediente" as const, quantity: 5, sell_price: 30 },
+          {
+            item_key: "cristallo_rame",
+            item_name: "Cristallo di rame",
+            emoji: "💎",
+            category: "oggetto" as const,
+            quantity: 2,
+            sell_price: 120,
+          },
+          {
+            item_key: "miele_dorato",
+            item_name: "Miele dorato",
+            emoji: "🍯",
+            category: "ingrediente" as const,
+            quantity: 5,
+            sell_price: 30,
+          },
         ]
       : [
           ...buildingResources,
-          { item_key: "batteria_usata", item_name: "Batteria usata", emoji: "🔋", category: "materiale" as const, quantity: 3, sell_price: 45 },
-          { item_key: "seme_rosso", item_name: "Seme rosso", emoji: "🔴", category: "ingrediente" as const, quantity: 8, sell_price: 15 },
+          {
+            item_key: "batteria_usata",
+            item_name: "Batteria usata",
+            emoji: "🔋",
+            category: "materiale" as const,
+            quantity: 3,
+            sell_price: 45,
+          },
+          {
+            item_key: "seme_rosso",
+            item_name: "Seme rosso",
+            emoji: "🔴",
+            category: "ingrediente" as const,
+            quantity: 8,
+            sell_price: 15,
+          },
         ];
   return base.map((b, i) => ({
     id: `local-inv-${agent}-${i}`,
@@ -182,15 +243,57 @@ function seedScans(): DbScanResult[] {
 
 function seedChat(): DbChatMessage[] {
   return [
-    { id: "local-chat-1", channel: "famiglia", sender_agent: "papa", content: "Missione Famiglia attiva.", message_type: "text", created_at: new Date().toISOString() },
-    { id: "local-chat-2", channel: "missioni", sender_agent: "lorenzo", content: "Ho trovato un pezzo della navicella.", message_type: "quick", created_at: new Date().toISOString() },
+    {
+      id: "local-chat-1",
+      channel: "famiglia",
+      sender_agent: "papa",
+      content: "Missione Famiglia attiva.",
+      message_type: "text",
+      created_at: new Date().toISOString(),
+    },
+    {
+      id: "local-chat-2",
+      channel: "missioni",
+      sender_agent: "lorenzo",
+      content: "Ho trovato un pezzo della navicella.",
+      message_type: "quick",
+      created_at: new Date().toISOString(),
+    },
   ];
 }
 
 function seedBestiary(): DbBestiaryEntry[] {
   return [
-    { id: "local-be-1", creature_key: "bulborb_nano", name: "Bulborb nano", emoji: "👾", biome_key: "bosco", rarity: "comune", danger_level: 2, weakness: null, discovered_by: "lorenzo", scan_count: 1, study_status: "avvistato", data_points: 1, weakness_unlocked: false },
-    { id: "local-be-2", creature_key: "scarabee", name: "Scarabée", emoji: "🪲", biome_key: "bosco", rarity: "comune", danger_level: 1, weakness: "schiacciamento", discovered_by: "papa", scan_count: 2, study_status: "studiato", data_points: 3, weakness_unlocked: false },
+    {
+      id: "local-be-1",
+      creature_key: "bulborb_nano",
+      name: "Bulborb nano",
+      emoji: "👾",
+      biome_key: "bosco",
+      rarity: "comune",
+      danger_level: 2,
+      weakness: null,
+      discovered_by: "lorenzo",
+      scan_count: 1,
+      study_status: "avvistato",
+      data_points: 1,
+      weakness_unlocked: false,
+    },
+    {
+      id: "local-be-2",
+      creature_key: "scarabee",
+      name: "Scarabée",
+      emoji: "🪲",
+      biome_key: "bosco",
+      rarity: "comune",
+      danger_level: 1,
+      weakness: "schiacciamento",
+      discovered_by: "papa",
+      scan_count: 2,
+      study_status: "studiato",
+      data_points: 3,
+      weakness_unlocked: false,
+    },
   ];
 }
 
@@ -199,7 +302,8 @@ function seedExpeditions(): DbExpeditionRow[] {
     id: e.id,
     title: e.title,
     biome: e.biome,
-    status: e.status === "attiva" ? "running" : e.status === "in_ritorno" ? "returning" : "completed",
+    status:
+      e.status === "attiva" ? "running" : e.status === "in_ritorno" ? "returning" : "completed",
     duration_minutes: e.etaMinutes,
     end_at: new Date(Date.now() + e.etaMinutes * 60000).toISOString(),
     created_by: "papa",
@@ -282,7 +386,12 @@ export const localStore = {
         data_points: entry.data_points ?? (all[idx].data_points ?? 0) + 1,
       };
     } else {
-      all.push({ ...entry, study_status: entry.study_status ?? "avvistato", data_points: entry.data_points ?? 1, weakness_unlocked: entry.weakness_unlocked ?? false });
+      all.push({
+        ...entry,
+        study_status: entry.study_status ?? "avvistato",
+        data_points: entry.data_points ?? 1,
+        weakness_unlocked: entry.weakness_unlocked ?? false,
+      });
     }
     write("bestiary", all);
     const planet = localStore.getPlanet();
@@ -348,16 +457,21 @@ export const localStore = {
     const all = read<Record<string, DbVillageExtended[]>>("agentVillages", {});
     if (all[agent]?.length) return all[agent];
     const primary = seedVillage(agent);
-    return [{
-      ...primary,
-      lat: null,
-      lng: null,
-      action_radius_m: VILLAGE_RULES.actionRadiusMeters,
-    }];
+    return [
+      {
+        ...primary,
+        lat: null,
+        lng: null,
+        action_radius_m: VILLAGE_RULES.actionRadiusMeters,
+      },
+    ];
   },
   addVillage(village: DbVillageExtended, buildings: DbVillageBuilding[]) {
     const all = read<Record<string, DbVillageExtended[]>>("agentVillages", {});
-    all[village.owner_agent] = [...(all[village.owner_agent] ?? localStore.getAgentVillages(village.owner_agent)), village];
+    all[village.owner_agent] = [
+      ...(all[village.owner_agent] ?? localStore.getAgentVillages(village.owner_agent)),
+      village,
+    ];
     write("agentVillages", all);
     const bAll = read<Record<string, DbVillageBuilding[]>>("villageBuildings", {});
     bAll[village.id] = buildings;
@@ -431,12 +545,18 @@ export const localStore = {
   markNotificationRead(id: string, agent: string) {
     const key = `notifications.${agent}`;
     const all = read<DbGameNotification[]>(key, []);
-    write(key, all.map((n) => (n.id === id ? { ...n, read_at: new Date().toISOString() } : n)));
+    write(
+      key,
+      all.map((n) => (n.id === id ? { ...n, read_at: new Date().toISOString() } : n)),
+    );
   },
   markAllNotificationsRead(agent: string) {
     const key = `notifications.${agent}`;
     const now = new Date().toISOString();
-    write(key, read<DbGameNotification[]>(key, []).map((n) => ({ ...n, read_at: n.read_at ?? now })));
+    write(
+      key,
+      read<DbGameNotification[]>(key, []).map((n) => ({ ...n, read_at: n.read_at ?? now })),
+    );
   },
 };
 

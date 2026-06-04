@@ -23,7 +23,10 @@ export async function fetchHomeDashboard(): Promise<HomeDashboardData> {
     fetchSpaceshipParts(),
     fetchRecentScans(5),
     safeGameQuery(
-      () => import("@/lib/game/db").then(({ gameTable }) => gameTable("family_members").select("*").order("display_name")),
+      () =>
+        import("@/lib/game/db").then(({ gameTable }) =>
+          gameTable("family_members").select("*").order("display_name"),
+        ),
       () => localStore.getFamily(),
     ),
     fetchActiveExpeditions(),

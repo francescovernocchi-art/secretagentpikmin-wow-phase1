@@ -30,24 +30,32 @@ export function BuildingsEditor() {
     setList((data ?? []) as CatalogRow[]);
     invalidateBuildingImagesCache();
   };
-  useEffect(() => { reload(); }, []);
+  useEffect(() => {
+    reload();
+  }, []);
 
   const patch = (key: string, p: Partial<CatalogRow>) =>
     setList((prev) => prev.map((b) => (b.key === key ? { ...b, ...p } : b)));
 
   const save = async (b: CatalogRow) => {
     setBusy(b.key);
-    const { error } = await supabase.from("building_catalog").update({
-      name: b.name,
-      emoji: b.emoji,
-      description: b.description,
-      image_url: b.image_url,
-      visual_stages: b.visual_stages ?? [],
-      sort_order: b.sort_order,
-    }).eq("key", b.key);
+    const { error } = await supabase
+      .from("building_catalog")
+      .update({
+        name: b.name,
+        emoji: b.emoji,
+        description: b.description,
+        image_url: b.image_url,
+        visual_stages: b.visual_stages ?? [],
+        sort_order: b.sort_order,
+      })
+      .eq("key", b.key);
     setBusy(null);
     if (error) toast.error(error.message);
-    else { toast.success("Salvato"); invalidateBuildingImagesCache(); }
+    else {
+      toast.success("Salvato");
+      invalidateBuildingImagesCache();
+    }
   };
 
   const uploadBase = async (b: CatalogRow, file: File) => {
@@ -58,8 +66,11 @@ export function BuildingsEditor() {
       await supabase.from("building_catalog").update({ image_url: url }).eq("key", b.key);
       invalidateBuildingImagesCache();
       toast.success("Immagine base caricata");
-    } catch (e: any) { toast.error(e.message); }
-    finally { setBusy(null); }
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setBusy(null);
+    }
   };
 
   const uploadStage = async (b: CatalogRow, level: number, file: File) => {
@@ -73,8 +84,11 @@ export function BuildingsEditor() {
       await supabase.from("building_catalog").update({ visual_stages: stages }).eq("key", b.key);
       invalidateBuildingImagesCache();
       toast.success(`Immagine livello ${level} caricata`);
-    } catch (e: any) { toast.error(e.message); }
-    finally { setBusy(null); }
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setBusy(null);
+    }
   };
 
   const stageUrl = (b: CatalogRow, level: number): string => {
@@ -85,8 +99,9 @@ export function BuildingsEditor() {
   return (
     <div className="flex flex-col gap-3">
       <p className="text-[11px] text-muted-foreground panel p-2">
-        Carica un'immagine <b>base</b> per ogni struttura, oppure immagini specifiche per ciascun livello (1 → 5).
-        Le immagini caricate qui appaiono automaticamente nello sfondo del villaggio quando la struttura viene costruita.
+        Carica un'immagine <b>base</b> per ogni struttura, oppure immagini specifiche per ciascun
+        livello (1 → 5). Le immagini caricate qui appaiono automaticamente nello sfondo del
+        villaggio quando la struttura viene costruita.
       </p>
 
       {list.map((b) => (
@@ -94,27 +109,63 @@ export function BuildingsEditor() {
           <div className="flex gap-3 items-start">
             <div className="flex flex-col items-center gap-1">
               <div className="w-16 h-16 panel flex items-center justify-center overflow-hidden">
-                {b.image_url
-                  ? <img src={b.image_url} alt={b.name} className="w-full h-full object-contain" />
-                  : <span className="text-2xl">{b.emoji}</span>}
+                {b.image_url ? (
+                  <img src={b.image_url} alt={b.name} className="w-full h-full object-contain" />
+                ) : (
+                  <span className="text-2xl">{b.emoji}</span>
+                )}
               </div>
               <label className="text-[10px] panel px-2 py-1 cursor-pointer">
-                <Upload className="h-3 w-3 inline mr-1" />Base
-                <input type="file" accept="image/*" className="hidden"
-                  onChange={(e) => e.target.files?.[0] && uploadBase(b, e.target.files[0])} />
+                <Upload className="h-3 w-3 inline mr-1" />
+                Base
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => e.target.files?.[0] && uploadBase(b, e.target.files[0])}
+                />
               </label>
             </div>
 
             <div className="flex-1 grid grid-cols-2 gap-2 text-xs">
-              <label className="col-span-1">Chiave<input className="w-full input" value={b.key} disabled /></label>
-              <label className="col-span-1">Nome<input className="w-full input" value={b.name}
-                onChange={(e) => patch(b.key, { name: e.target.value })} /></label>
-              <label className="col-span-1">Emoji<input className="w-full input" value={b.emoji}
-                onChange={(e) => patch(b.key, { emoji: e.target.value })} /></label>
-              <label className="col-span-1">Ordine<input type="number" className="w-full input" value={b.sort_order}
-                onChange={(e) => patch(b.key, { sort_order: Number(e.target.value) })} /></label>
-              <label className="col-span-2">Descrizione<textarea className="w-full input" rows={2} value={b.description ?? ""}
-                onChange={(e) => patch(b.key, { description: e.target.value })} /></label>
+              <label className="col-span-1">
+                Chiave
+                <input className="w-full input" value={b.key} disabled />
+              </label>
+              <label className="col-span-1">
+                Nome
+                <input
+                  className="w-full input"
+                  value={b.name}
+                  onChange={(e) => patch(b.key, { name: e.target.value })}
+                />
+              </label>
+              <label className="col-span-1">
+                Emoji
+                <input
+                  className="w-full input"
+                  value={b.emoji}
+                  onChange={(e) => patch(b.key, { emoji: e.target.value })}
+                />
+              </label>
+              <label className="col-span-1">
+                Ordine
+                <input
+                  type="number"
+                  className="w-full input"
+                  value={b.sort_order}
+                  onChange={(e) => patch(b.key, { sort_order: Number(e.target.value) })}
+                />
+              </label>
+              <label className="col-span-2">
+                Descrizione
+                <textarea
+                  className="w-full input"
+                  rows={2}
+                  value={b.description ?? ""}
+                  onChange={(e) => patch(b.key, { description: e.target.value })}
+                />
+              </label>
             </div>
           </div>
 
@@ -125,22 +176,31 @@ export function BuildingsEditor() {
                 <div key={lv} className="flex flex-col items-center gap-1">
                   <div className="text-[10px] text-muted-foreground">Lv {lv}</div>
                   <div className="w-full aspect-square panel flex items-center justify-center overflow-hidden">
-                    {url
-                      ? <img src={url} alt={`lv${lv}`} className="w-full h-full object-contain" />
-                      : <span className="text-lg opacity-50">{b.emoji}</span>}
+                    {url ? (
+                      <img src={url} alt={`lv${lv}`} className="w-full h-full object-contain" />
+                    ) : (
+                      <span className="text-lg opacity-50">{b.emoji}</span>
+                    )}
                   </div>
                   <label className="text-[10px] panel px-1 py-0.5 cursor-pointer w-full text-center">
                     <Upload className="h-3 w-3 inline" />
-                    <input type="file" accept="image/*" className="hidden"
-                      onChange={(e) => e.target.files?.[0] && uploadStage(b, lv, e.target.files[0])} />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => e.target.files?.[0] && uploadStage(b, lv, e.target.files[0])}
+                    />
                   </label>
                 </div>
               );
             })}
           </div>
 
-          <button onClick={() => save(b)} disabled={busy === b.key}
-            className="panel-strong p-2 flex items-center justify-center gap-1 text-xs">
+          <button
+            onClick={() => save(b)}
+            disabled={busy === b.key}
+            className="panel-strong p-2 flex items-center justify-center gap-1 text-xs"
+          >
             <Save className="h-3 w-3" /> {busy === b.key ? "Salvo…" : "Salva"}
           </button>
         </div>

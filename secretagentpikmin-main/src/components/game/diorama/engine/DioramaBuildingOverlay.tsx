@@ -42,7 +42,9 @@ export function DioramaBuildingOverlay({
   const merged = layoutBuildingToDef(layoutBuilding, def) ?? def;
   const scale = layoutBuilding.scale ?? 1;
   const [imgFailed, setImgFailed] = useState(false);
-  const rawSprite = layoutBuilding.image ?? resolveBuildingSprite(layoutBuilding.assets, visualState, layoutBuilding.key);
+  const rawSprite =
+    layoutBuilding.image ??
+    resolveBuildingSprite(layoutBuilding.assets, visualState, layoutBuilding.key);
   const spriteSrc = useResolvedAssetUrl(rawSprite);
   const useSprite = Boolean(spriteSrc) && !imgFailed;
   const fallback = layoutBuilding.fallback ?? "silhouette";
@@ -89,13 +91,19 @@ export function DioramaBuildingOverlay({
           onError={() => setImgFailed(true)}
           draggable={false}
         />
-        {status === "upgrading" && <span className={styles.buildingSpark} aria-hidden>✨</span>}
+        {status === "upgrading" && (
+          <span className={styles.buildingSpark} aria-hidden>
+            ✨
+          </span>
+        )}
         {!labelsOnDemand && !compact && visualState.startsWith("level_") && (
           <span className={styles.engineBuildingBadge}>Lv{level}</span>
         )}
         <div className={styles.buildingTooltip} role="tooltip">
           <p className="font-medium">{def.name}</p>
-          <p className="text-muted-foreground">{def.role} · Lv{level}</p>
+          <p className="text-muted-foreground">
+            {def.role} · Lv{level}
+          </p>
           <p className="text-primary text-[9px] mt-0.5">Clicca per entrare</p>
         </div>
       </motion.div>
@@ -103,7 +111,16 @@ export function DioramaBuildingOverlay({
 
     if (def.action === "ship") {
       return (
-        <button type="button" className={styles.engineBuildingHit} style={posStyle} onClick={() => { hapticBuildingClick(); onShipClick?.(); }} aria-label={`${def.name}, livello ${level}`}>
+        <button
+          type="button"
+          className={styles.engineBuildingHit}
+          style={posStyle}
+          onClick={() => {
+            hapticBuildingClick();
+            onShipClick?.();
+          }}
+          aria-label={`${def.name}, livello ${level}`}
+        >
           {inner}
         </button>
       );
@@ -114,7 +131,10 @@ export function DioramaBuildingOverlay({
           type="button"
           className={styles.engineBuildingHit}
           style={posStyle}
-          onClick={() => { hapticBuildingClick(); onBuildingClick(layoutBuilding.key); }}
+          onClick={() => {
+            hapticBuildingClick();
+            onBuildingClick(layoutBuilding.key);
+          }}
           aria-label={`${def.name}, livello ${level}`}
         >
           {inner}
@@ -123,12 +143,22 @@ export function DioramaBuildingOverlay({
     }
     if (def.route && layoutBuilding.clickable !== false) {
       return (
-        <Link to={def.route} className={styles.engineBuildingHit} style={posStyle} onClick={hapticBuildingClick} aria-label={`${def.name}, livello ${level}`}>
+        <Link
+          to={def.route}
+          className={styles.engineBuildingHit}
+          style={posStyle}
+          onClick={hapticBuildingClick}
+          aria-label={`${def.name}, livello ${level}`}
+        >
           {inner}
         </Link>
       );
     }
-    return <div className={styles.engineBuildingHit} style={posStyle}>{inner}</div>;
+    return (
+      <div className={styles.engineBuildingHit} style={posStyle}>
+        {inner}
+      </div>
+    );
   }
 
   if (fallback === "emoji") {

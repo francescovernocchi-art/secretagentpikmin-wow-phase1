@@ -13,7 +13,10 @@ interface Props {
 export function BonusPanel({ open, onOpenChange, status, biomeKey }: Props) {
   const { events } = useActiveVillageEvents(biomeKey ?? null);
   // Raggruppa per bonus key
-  const grouped = new Map<BonusKey, { total: number; sources: { name: string; level: number; amount: number }[] }>();
+  const grouped = new Map<
+    BonusKey,
+    { total: number; sources: { name: string; level: number; amount: number }[] }
+  >();
   for (const s of status.sources) {
     const g = grouped.get(s.bonus) ?? { total: 0, sources: [] };
     g.total += s.amount;
@@ -31,12 +34,18 @@ export function BonusPanel({ open, onOpenChange, status, biomeKey }: Props) {
   ];
 
   return (
-    <VillagePanelSheet open={open} onOpenChange={onOpenChange}
-      title="Bonus aggregati" icon={<Sparkles className="h-4 w-4 text-cyan-400" />}>
+    <VillagePanelSheet
+      open={open}
+      onOpenChange={onOpenChange}
+      title="Bonus aggregati"
+      icon={<Sparkles className="h-4 w-4 text-cyan-400" />}
+    >
       <div className="space-y-3">
         {events.length > 0 && (
           <section>
-            <p className="text-[10px] uppercase tracking-widest text-amber-400 mb-2">Eventi attivi</p>
+            <p className="text-[10px] uppercase tracking-widest text-amber-400 mb-2">
+              Eventi attivi
+            </p>
             <div className="space-y-1.5">
               {events.map((ev) => (
                 <div key={ev.id} className="panel p-2">
@@ -50,7 +59,8 @@ export function BonusPanel({ open, onOpenChange, status, biomeKey }: Props) {
                         <li key={`b${i}`} className="flex justify-between">
                           <span>{BONUS_LABEL[b.key as BonusKey] ?? b.key}</span>
                           <span className={b.amount >= 0 ? "text-emerald-400" : "text-rose-400"}>
-                            {b.amount >= 0 ? "+" : ""}{b.amount}
+                            {b.amount >= 0 ? "+" : ""}
+                            {b.amount}
                           </span>
                         </li>
                       ))}
@@ -98,7 +108,9 @@ export function BonusPanel({ open, onOpenChange, status, biomeKey }: Props) {
             <ul className="text-[11px] text-muted-foreground space-y-0.5">
               {g.sources.map((s, i) => (
                 <li key={i} className="flex justify-between">
-                  <span>{s.name} <span className="text-[9px]">Lv {s.level}</span></span>
+                  <span>
+                    {s.name} <span className="text-[9px]">Lv {s.level}</span>
+                  </span>
                   <span>+{s.amount}</span>
                 </li>
               ))}

@@ -12,7 +12,8 @@ export function DioramaTab({ biomeKey }: Props) {
   return (
     <div className="space-y-3">
       <p className="text-[11px] text-muted-foreground">
-        Carica e gestisci l'immagine di sfondo del bioma. Il diorama attivo viene mostrato a tutti gli agenti.
+        Carica e gestisci l'immagine di sfondo del bioma. Il diorama attivo viene mostrato a tutti
+        gli agenti.
       </p>
       {loading && <p className="text-xs text-muted-foreground">Caricamento…</p>}
       {!loading && items.length === 0 && (
@@ -23,8 +24,15 @@ export function DioramaTab({ biomeKey }: Props) {
       )}
       <div className="grid grid-cols-2 gap-2">
         {items.map((d) => (
-          <div key={d.id} className={`rounded-xl overflow-hidden border ${d.is_active ? "border-primary ring-2 ring-primary/50" : "border-border/50"}`}>
-            <img src={d.image_url} alt={d.name ?? "Diorama"} className="w-full aspect-video object-cover" />
+          <div
+            key={d.id}
+            className={`rounded-xl overflow-hidden border ${d.is_active ? "border-primary ring-2 ring-primary/50" : "border-border/50"}`}
+          >
+            <img
+              src={d.image_url}
+              alt={d.name ?? "Diorama"}
+              className="w-full aspect-video object-cover"
+            />
             <div className="p-2 text-[10px] flex items-center justify-between">
               <span className="truncate">{d.name ?? "—"}</span>
               {d.is_active && <span className="text-primary">attivo</span>}

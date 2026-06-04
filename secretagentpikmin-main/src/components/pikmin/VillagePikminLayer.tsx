@@ -1,9 +1,7 @@
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { AnimatedPikmin } from "./AnimatedPikmin";
 import { usePikminSpecies, type PikminSpeciesRow } from "@/hooks/usePikminSpecies";
-import {
-  type PikminAnimation,
-} from "@/data/pikminSprites";
+import { type PikminAnimation } from "@/data/pikminSprites";
 import type { BaseBuilding } from "@/lib/base";
 
 export const MAX_PIKMIN = 30;
@@ -32,19 +30,27 @@ export function loadPikminPrefs(): PikminLayerPrefs {
     if (!raw) return DEFAULT_PIKMIN_PREFS;
     const p = JSON.parse(raw);
     return { ...DEFAULT_PIKMIN_PREFS, ...p, filters: { ...(p.filters ?? {}) } };
-  } catch { return DEFAULT_PIKMIN_PREFS; }
+  } catch {
+    return DEFAULT_PIKMIN_PREFS;
+  }
 }
 
 export function savePikminPrefs(p: PikminLayerPrefs) {
-  try { localStorage.setItem(LS_KEY, JSON.stringify(p)); } catch { /* noop */ }
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify(p));
+  } catch {
+    /* noop */
+  }
 }
 
 interface Agent {
   id: number;
   speciesKey: string;
   name: string;
-  x: number; y: number;
-  tx: number; ty: number;
+  x: number;
+  y: number;
+  tx: number;
+  ty: number;
   speed: number;
   anim: PikminAnimation;
   flip: boolean;
@@ -60,30 +66,46 @@ interface Props {
   /** Preferenze controllate dall'esterno (Estetica panel). Se assenti usa localStorage. */
   prefs?: PikminLayerPrefs;
   onPrefsChange?: (p: PikminLayerPrefs) => void;
-  onSelect?: (a: { name: string; speciesKey: string; level: number; anim: PikminAnimation }) => void;
+  onSelect?: (a: {
+    name: string;
+    speciesKey: string;
+    level: number;
+    anim: PikminAnimation;
+  }) => void;
 }
 
-function rand(a: number, b: number) { return a + Math.random() * (b - a); }
+function rand(a: number, b: number) {
+  return a + Math.random() * (b - a);
+}
 function randomAnim(): PikminAnimation {
   const r = Math.random();
   if (r < 0.18) return "idle";
-  if (r < 0.5)  return "walk";
+  if (r < 0.5) return "walk";
   if (r < 0.65) return "run";
   if (r < 0.78) return "carry";
-  if (r < 0.9)  return "work";
+  if (r < 0.9) return "work";
   if (r < 0.97) return "celebrate";
   return "sleep";
 }
 
 /** Layer Pikmin del villaggio — solo render. Toolbar/filtri vivono nel pannello Estetica. */
-export function VillagePikminLayer({ buildings, pikminCount, threat, breakdown, prefs: prefsProp, onSelect }: Props) {
+export function VillagePikminLayer({
+  buildings,
+  pikminCount,
+  threat,
+  breakdown,
+  prefs: prefsProp,
+  onSelect,
+}: Props) {
   const [internalPrefs, setInternalPrefs] = useState<PikminLayerPrefs>(() => loadPikminPrefs());
   const prefs = prefsProp ?? internalPrefs;
   const { species } = usePikminSpecies();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [size, setSize] = useState({ w: 600, h: 360 });
 
-  useEffect(() => { if (!prefsProp) savePikminPrefs(internalPrefs); }, [internalPrefs, prefsProp]);
+  useEffect(() => {
+    if (!prefsProp) savePikminPrefs(internalPrefs);
+  }, [internalPrefs, prefsProp]);
 
   // Inizializza filtri default su DB
   useEffect(() => {
@@ -91,7 +113,11 @@ export function VillagePikminLayer({ buildings, pikminCount, threat, breakdown, 
     setInternalPrefs((p) => {
       const next = { ...p.filters };
       let changed = false;
-      for (const s of species) if (next[s.key] === undefined) { next[s.key] = true; changed = true; }
+      for (const s of species)
+        if (next[s.key] === undefined) {
+          next[s.key] = true;
+          changed = true;
+        }
       return changed ? { ...p, filters: next } : p;
     });
   }, [species, prefsProp]);
@@ -116,7 +142,7 @@ export function VillagePikminLayer({ buildings, pikminCount, threat, breakdown, 
     const pts: { x: number; y: number }[] = [];
     for (const b of buildings) {
       const x = (b.position_x / 100) * size.w;
-      const y = size.h - (b.position_y * 0.55 / 100) * size.h - 30;
+      const y = size.h - ((b.position_y * 0.55) / 100) * size.h - 30;
       pts.push({ x, y });
     }
     if (pts.length === 0) pts.push({ x: size.w / 2, y: size.h / 2 });
@@ -135,15 +161,20 @@ export function VillagePikminLayer({ buildings, pikminCount, threat, breakdown, 
     if (total <= cap) {
       for (const e of owned) for (let i = 0; i < e.n; i++) pool.push(e.key);
     } else {
-      const scaled = owned.map((e) => ({ key: e.key, n: Math.max(1, Math.round((e.n / total) * cap)) }));
+      const scaled = owned.map((e) => ({
+        key: e.key,
+        n: Math.max(1, Math.round((e.n / total) * cap)),
+      }));
       let sum = scaled.reduce((a, e) => a + e.n, 0);
       while (sum > cap) {
         const idx = scaled.reduce((mi, e, i, arr) => (e.n > arr[mi].n ? i : mi), 0);
-        scaled[idx].n--; sum--;
+        scaled[idx].n--;
+        sum--;
       }
       while (sum < cap) {
         const idx = scaled.reduce((mi, e, i, arr) => (e.n < arr[mi].n ? i : mi), 0);
-        scaled[idx].n++; sum++;
+        scaled[idx].n++;
+        sum++;
       }
       for (const e of scaled) for (let i = 0; i < e.n; i++) pool.push(e.key);
     }
@@ -192,14 +223,16 @@ export function VillagePikminLayer({ buildings, pikminCount, threat, breakdown, 
       last = now;
       renderAcc += dt;
       const speedMul = prefs.speed * (threat ? 1.6 : 1);
-      const padX = 16, padY = 16;
+      const padX = 16,
+        padY = 16;
       for (const a of agentsRef.current) {
         if (a.anim === "sleep" && now < a.nextThinkAt) continue;
-        const dx = a.tx - a.x, dy = a.ty - a.y;
+        const dx = a.tx - a.x,
+          dy = a.ty - a.y;
         const dist = Math.hypot(dx, dy);
         const moveStates: PikminAnimation[] = ["walk", "run", "carry"];
         if (moveStates.includes(a.anim) && dist > 2) {
-          const v = (a.anim === "run" ? a.speed * 1.6 : a.speed) * speedMul / 1000;
+          const v = ((a.anim === "run" ? a.speed * 1.6 : a.speed) * speedMul) / 1000;
           a.x += (dx / dist) * v * dt;
           a.y += (dy / dist) * v * dt;
           a.flip = dx < 0;
@@ -213,9 +246,10 @@ export function VillagePikminLayer({ buildings, pikminCount, threat, breakdown, 
         }
         if (now >= a.nextThinkAt) {
           a.anim = threat ? "run" : randomAnim();
-          const target = Math.random() < 0.7 && anchors.length
-            ? anchors[Math.floor(Math.random() * anchors.length)]
-            : { x: rand(padX, size.w - padX), y: rand(padY, size.h - padY) };
+          const target =
+            Math.random() < 0.7 && anchors.length
+              ? anchors[Math.floor(Math.random() * anchors.length)]
+              : { x: rand(padX, size.w - padX), y: rand(padY, size.h - padY) };
           a.tx = Math.max(padX, Math.min(size.w - padX, target.x + rand(-40, 40)));
           a.ty = Math.max(padY, Math.min(size.h - padY, target.y + rand(-30, 30)));
           a.nextThinkAt = now + rand(2500, 6500);
@@ -231,41 +265,53 @@ export function VillagePikminLayer({ buildings, pikminCount, threat, breakdown, 
     return () => cancelAnimationFrame(raf);
   }, [prefs.show, prefs.speed, threat, anchors, size.w, size.h]);
 
-  const handleClick = useCallback((a: Agent) => {
-    onSelect?.({ name: a.name, speciesKey: a.speciesKey, level: a.level, anim: a.anim });
-  }, [onSelect]);
+  const handleClick = useCallback(
+    (a: Agent) => {
+      onSelect?.({ name: a.name, speciesKey: a.speciesKey, level: a.level, anim: a.anim });
+    },
+    [onSelect],
+  );
 
   return (
-    <div ref={containerRef} className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden={!prefs.show}>
-      {prefs.show && agentsRef.current.map((a) => {
-        void agentsTick;
-        const sp = speciesByKey.get(a.speciesKey);
-        return (
-          <AnimatedPikmin
-            key={a.id}
-            type={a.speciesKey}
-            animation={a.anim}
-            x={a.x - 18}
-            y={a.y - 36}
-            size={36}
-            flip={a.flip}
-            night={prefs.night}
-            showShadow
-            showDust={a.anim === "run"}
-            showBubbles={a.speciesKey === "blue" && (a.anim === "idle" || a.anim === "work")}
-            showParticles={a.anim === "celebrate"}
-            showZ={a.anim === "sleep"}
-            spriteUrls={sp ? {
-              idle: sp.sprite_idle_url,
-              walk: sp.sprite_walk_url,
-              sleep: sp.sprite_sleep_url,
-            } : undefined}
-            fallbackImageUrl={sp?.image_url ?? sp?.icon_url ?? null}
-            tintColor={sp?.color ?? null}
-            onClick={() => handleClick(a)}
-          />
-        );
-      })}
+    <div
+      ref={containerRef}
+      className="absolute inset-0 overflow-hidden pointer-events-none"
+      aria-hidden={!prefs.show}
+    >
+      {prefs.show &&
+        agentsRef.current.map((a) => {
+          void agentsTick;
+          const sp = speciesByKey.get(a.speciesKey);
+          return (
+            <AnimatedPikmin
+              key={a.id}
+              type={a.speciesKey}
+              animation={a.anim}
+              x={a.x - 18}
+              y={a.y - 36}
+              size={36}
+              flip={a.flip}
+              night={prefs.night}
+              showShadow
+              showDust={a.anim === "run"}
+              showBubbles={a.speciesKey === "blue" && (a.anim === "idle" || a.anim === "work")}
+              showParticles={a.anim === "celebrate"}
+              showZ={a.anim === "sleep"}
+              spriteUrls={
+                sp
+                  ? {
+                      idle: sp.sprite_idle_url,
+                      walk: sp.sprite_walk_url,
+                      sleep: sp.sprite_sleep_url,
+                    }
+                  : undefined
+              }
+              fallbackImageUrl={sp?.image_url ?? sp?.icon_url ?? null}
+              tintColor={sp?.color ?? null}
+              onClick={() => handleClick(a)}
+            />
+          );
+        })}
       <style>{`[aria-hidden="false"] > div { pointer-events: auto; }`}</style>
     </div>
   );

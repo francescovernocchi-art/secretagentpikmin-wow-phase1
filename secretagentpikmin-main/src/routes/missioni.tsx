@@ -52,11 +52,36 @@ interface ShipPartLite {
 }
 
 const SAMPLES = [
-  { title: "Ricognizione zona verde", description: "Individua un obiettivo verde e fotografalo come prova.", xp: 15, difficulty: "facile" },
-  { title: "Scheda creatura", description: "Schizza un nuovo modello di Pikmin per l'archivio.", xp: 25, difficulty: "media" },
-  { title: "Documenta il bersaglio botanico", description: "Foto nitida di una pianta sospetta.", xp: 20, difficulty: "facile" },
-  { title: "Operazione 'Buon segnale'", description: "Migliora la giornata di un civile (senza farti notare).", xp: 30, difficulty: "media" },
-  { title: "Cifrario notturno", description: "Inventa un codice cifrato personale prima del rientro alla base.", xp: 50, difficulty: "rara" },
+  {
+    title: "Ricognizione zona verde",
+    description: "Individua un obiettivo verde e fotografalo come prova.",
+    xp: 15,
+    difficulty: "facile",
+  },
+  {
+    title: "Scheda creatura",
+    description: "Schizza un nuovo modello di Pikmin per l'archivio.",
+    xp: 25,
+    difficulty: "media",
+  },
+  {
+    title: "Documenta il bersaglio botanico",
+    description: "Foto nitida di una pianta sospetta.",
+    xp: 20,
+    difficulty: "facile",
+  },
+  {
+    title: "Operazione 'Buon segnale'",
+    description: "Migliora la giornata di un civile (senza farti notare).",
+    xp: 30,
+    difficulty: "media",
+  },
+  {
+    title: "Cifrario notturno",
+    description: "Inventa un codice cifrato personale prima del rientro alla base.",
+    xp: 50,
+    difficulty: "rara",
+  },
 ];
 
 function MissioniPage() {
@@ -84,7 +109,9 @@ function MissioniPage() {
     const ch = supabase
       .channel("missions-rt")
       .on("postgres_changes", { event: "*", schema: "public", table: "missions" }, () => load())
-      .on("postgres_changes", { event: "*", schema: "public", table: "ship_parts_collected" }, () => load())
+      .on("postgres_changes", { event: "*", schema: "public", table: "ship_parts_collected" }, () =>
+        load(),
+      )
       .subscribe();
     return () => {
       supabase.removeChannel(ch);
@@ -115,7 +142,10 @@ function MissioniPage() {
       theme="mission"
       action={
         isAdmin && (
-          <button onClick={() => setShowNew(true)} className="btn-neon px-3 py-2 text-xs flex items-center gap-1">
+          <button
+            onClick={() => setShowNew(true)}
+            className="btn-neon px-3 py-2 text-xs flex items-center gap-1"
+          >
             <Plus className="h-4 w-4" /> Nuova
           </button>
         )
@@ -154,7 +184,8 @@ function MissioniPage() {
             <AlertDialogHeader>
               <AlertDialogTitle>Eliminare tutte le missioni?</AlertDialogTitle>
               <AlertDialogDescription>
-                Verranno rimosse {missions.length} missioni (incluse quelle completate e approvate). L'azione non è reversibile.
+                Verranno rimosse {missions.length} missioni (incluse quelle completate e approvate).
+                L'azione non è reversibile.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -196,7 +227,9 @@ function MissioniPage() {
                     <StatusBadge s={m.status} />
                   </div>
                   <h3 className="font-display text-lg text-glow leading-tight">{m.title}</h3>
-                  {m.description && <p className="text-sm text-muted-foreground mt-1">{m.description}</p>}
+                  {m.description && (
+                    <p className="text-sm text-muted-foreground mt-1">{m.description}</p>
+                  )}
                   {m.proof && (
                     <div className="mt-2">
                       <p className="text-xs text-primary flex items-center gap-1">
@@ -233,12 +266,17 @@ function MissioniPage() {
 
               <div className="mt-3 flex flex-wrap gap-2">
                 {!isAdmin && m.status === "nuova" && (
-                  <button onClick={() => update(m.id, { status: "accettata" })} className="btn-neon px-3 py-1.5 text-xs">
+                  <button
+                    onClick={() => update(m.id, { status: "accettata" })}
+                    className="btn-neon px-3 py-1.5 text-xs"
+                  >
                     Accetta
                   </button>
                 )}
                 {!isAdmin && m.status === "accettata" && (
-                  <CompleteButton onComplete={(proof) => update(m.id, { status: "completata", proof })} />
+                  <CompleteButton
+                    onComplete={(proof) => update(m.id, { status: "completata", proof })}
+                  />
                 )}
                 {isAdmin && m.status === "completata" && (
                   <button
@@ -253,7 +291,9 @@ function MissioniPage() {
                       const drops = rollIngredients("mission");
                       await grantIngredients("lorenzo", drops);
                       if (m.coin_reward > 0) {
-                        await addCoins("lorenzo", m.coin_reward, "mission_reward", { mission_id: m.id });
+                        await addCoins("lorenzo", m.coin_reward, "mission_reward", {
+                          mission_id: m.id,
+                        });
                       }
                       if (m.reward_part_key) {
                         try {
@@ -304,7 +344,13 @@ function DiffBadge({ d }: { d: string }) {
     difficile: "bg-orange-500/20 text-orange-200 border-orange-500/40",
     rara: "bg-fuchsia-500/20 text-fuchsia-200 border-fuchsia-500/40",
   };
-  return <span className={`text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full border ${map[d] ?? ""}`}>{d}</span>;
+  return (
+    <span
+      className={`text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full border ${map[d] ?? ""}`}
+    >
+      {d}
+    </span>
+  );
 }
 
 function StatusBadge({ s }: { s: string }) {
@@ -321,14 +367,21 @@ function CompleteButton({ onComplete }: { onComplete: (proof: string) => void })
   const [camOpen, setCamOpen] = useState(false);
   if (!open)
     return (
-      <button onClick={() => setOpen(true)} className="btn-neon px-3 py-1.5 text-xs flex items-center gap-1">
+      <button
+        onClick={() => setOpen(true)}
+        className="btn-neon px-3 py-1.5 text-xs flex items-center gap-1"
+      >
         <Check className="h-3 w-3" /> Completa
       </button>
     );
   return (
     <div className="w-full space-y-2">
       {proof.startsWith("http") && (
-        <img src={proof} alt="prova" className="rounded-lg border border-primary/30 max-h-32 object-cover" />
+        <img
+          src={proof}
+          alt="prova"
+          className="rounded-lg border border-primary/30 max-h-32 object-cover"
+        />
       )}
       <div className="flex gap-2">
         <input
@@ -375,7 +428,7 @@ function NewMissionSheet({
   const [rewardPartKey, setRewardPartKey] = useState<string>("");
   const [coinReward, setCoinReward] = useState<number>(10);
 
-  const create = async (preset?: typeof SAMPLES[number]) => {
+  const create = async (preset?: (typeof SAMPLES)[number]) => {
     const payload = preset ?? { title, description, xp, difficulty };
     if (!payload.title) return;
     await supabase.from("missions").insert({
@@ -405,7 +458,9 @@ function NewMissionSheet({
       >
         <div className="flex items-center justify-between">
           <h2 className="font-display text-lg text-glow">Nuova Missione</h2>
-          <button onClick={onClose} className="text-muted-foreground"><X /></button>
+          <button onClick={onClose} className="text-muted-foreground">
+            <X />
+          </button>
         </div>
         <input
           placeholder="Titolo missione"
@@ -445,7 +500,9 @@ function NewMissionSheet({
           </label>
         </div>
         <label className="block text-xs text-muted-foreground">
-          <span className="flex items-center gap-1"><Coins className="h-3 w-3 text-amber-300" /> Monete in premio</span>
+          <span className="flex items-center gap-1">
+            <Coins className="h-3 w-3 text-amber-300" /> Monete in premio
+          </span>
           <input
             type="number"
             min={0}
@@ -456,7 +513,9 @@ function NewMissionSheet({
         </label>
         {availableParts.length > 0 && (
           <label className="block text-xs text-muted-foreground">
-            <span className="flex items-center gap-1"><Rocket className="h-3 w-3 text-amber-300" /> Ricompensa: pezzo navicella (opzionale)</span>
+            <span className="flex items-center gap-1">
+              <Rocket className="h-3 w-3 text-amber-300" /> Ricompensa: pezzo navicella (opzionale)
+            </span>
             <select
               value={rewardPartKey}
               onChange={(e) => setRewardPartKey(e.target.value)}
@@ -464,15 +523,21 @@ function NewMissionSheet({
             >
               <option value="">— nessun pezzo —</option>
               {availableParts.map((p) => (
-                <option key={p.key} value={p.key}>{p.emoji} {p.name}</option>
+                <option key={p.key} value={p.key}>
+                  {p.emoji} {p.name}
+                </option>
               ))}
             </select>
           </label>
         )}
-        <button onClick={() => create()} className="btn-neon w-full py-3 text-sm">Crea Missione</button>
+        <button onClick={() => create()} className="btn-neon w-full py-3 text-sm">
+          Crea Missione
+        </button>
 
         <div className="pt-2">
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2">Missioni rapide</p>
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
+            Missioni rapide
+          </p>
           <div className="space-y-2">
             {SAMPLES.map((s) => (
               <button

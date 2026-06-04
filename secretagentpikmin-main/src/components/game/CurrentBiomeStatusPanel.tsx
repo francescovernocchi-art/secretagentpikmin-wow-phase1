@@ -18,7 +18,10 @@ interface CurrentBiomeStatusPanelProps {
   onBiomeChange?: (biome: BiomeKey) => void;
 }
 
-export function CurrentBiomeStatusPanel({ compact = false, onBiomeChange }: CurrentBiomeStatusPanelProps) {
+export function CurrentBiomeStatusPanel({
+  compact = false,
+  onBiomeChange,
+}: CurrentBiomeStatusPanelProps) {
   const session = typeof window !== "undefined" ? getSession() : null;
   const agent = agentKeyFromSession(session?.role);
   const [loc, setLoc] = useState<PlayerLocationState | null>(null);
@@ -26,7 +29,9 @@ export function CurrentBiomeStatusPanel({ compact = false, onBiomeChange }: Curr
 
   const reload = () => fetchPlayerLocation(agent).then(setLoc);
 
-  useEffect(() => { reload(); }, [agent]);
+  useEffect(() => {
+    reload();
+  }, [agent]);
 
   const syncGps = async () => {
     hapticTap();
@@ -35,10 +40,14 @@ export function CurrentBiomeStatusPanel({ compact = false, onBiomeChange }: Curr
       const state = await syncGeolocationToProfile(agent);
       setLoc(state);
       onBiomeChange?.(state.current_biome as BiomeKey);
-      toast.success(`Bioma: ${getBiomeByKey(state.current_biome as BiomeKey)?.label ?? state.current_biome}`);
+      toast.success(
+        `Bioma: ${getBiomeByKey(state.current_biome as BiomeKey)?.label ?? state.current_biome}`,
+      );
     } catch {
       toast.error("Geolocalizzazione negata — usa selezione manuale");
-    } finally { setSyncing(false); }
+    } finally {
+      setSyncing(false);
+    }
   };
 
   const pickBiome = async (biome: BiomeKey) => {
@@ -63,20 +72,35 @@ export function CurrentBiomeStatusPanel({ compact = false, onBiomeChange }: Curr
       <div className="panel-strong p-4 space-y-2">
         {active && (
           <>
-            <p className="text-2xl">{active.emoji} <span className="font-display text-glow">{active.label}</span></p>
+            <p className="text-2xl">
+              {active.emoji} <span className="font-display text-glow">{active.label}</span>
+            </p>
             <p className="text-xs text-muted-foreground">{active.theme}</p>
           </>
         )}
         {loc && (
           <div className="text-[10px] text-muted-foreground space-y-1">
-            <p>Fonte: {loc.source === "gps" ? "GPS" : loc.source === "manual" ? "Manuale" : "Default"}</p>
+            <p>
+              Fonte:{" "}
+              {loc.source === "gps" ? "GPS" : loc.source === "manual" ? "Manuale" : "Default"}
+            </p>
             {loc.lat != null && (
-              <p className="flex items-center gap-1"><MapPin className="h-3 w-3" /> {loc.lat.toFixed(5)}, {loc.lng?.toFixed(5)}</p>
+              <p className="flex items-center gap-1">
+                <MapPin className="h-3 w-3" /> {loc.lat.toFixed(5)}, {loc.lng?.toFixed(5)}
+              </p>
             )}
           </div>
         )}
-        <button onClick={syncGps} disabled={syncing} className="btn-neon w-full py-2 text-xs flex items-center justify-center gap-2">
-          {syncing ? <Loader2 className="h-3 w-3 animate-spin" /> : <Navigation className="h-3 w-3" />}
+        <button
+          onClick={syncGps}
+          disabled={syncing}
+          className="btn-neon w-full py-2 text-xs flex items-center justify-center gap-2"
+        >
+          {syncing ? (
+            <Loader2 className="h-3 w-3 animate-spin" />
+          ) : (
+            <Navigation className="h-3 w-3" />
+          )}
           Aggiorna da GPS
         </button>
       </div>

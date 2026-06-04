@@ -1,7 +1,14 @@
 import { supabase } from "@/integrations/supabase/client";
 
 export type GroundPattern = "liscio" | "erba" | "esagoni" | "rune" | "circuito" | "sabbia";
-export type PikminAccessory = "nessuno" | "foglia" | "fiore" | "cappello" | "elmo" | "stella" | "antenna";
+export type PikminAccessory =
+  | "nessuno"
+  | "foglia"
+  | "fiore"
+  | "cappello"
+  | "elmo"
+  | "stella"
+  | "antenna";
 export type PikminAura = "nessuna" | "soffice" | "neon" | "scintille" | "ombra";
 
 export interface VillageCosmetics {
@@ -27,7 +34,10 @@ export const DEFAULT_COSMETICS: VillageCosmetics = {
   pikminAura: "soffice",
 };
 
-export const COSMETIC_PRESETS: Record<string, Partial<VillageCosmetics> & { label: string; emoji: string }> = {
+export const COSMETIC_PRESETS: Record<
+  string,
+  Partial<VillageCosmetics> & { label: string; emoji: string }
+> = {
   bosco: {
     label: "Bosco antico",
     emoji: "🌳",
@@ -120,9 +130,16 @@ export function getCosmetics(layout: Record<string, unknown> | null | undefined)
 }
 
 export async function saveCosmetics(agent: string, cosmetics: VillageCosmetics) {
-  const { data: cur } = await supabase.from("bases").select("layout").eq("agent", agent).maybeSingle();
+  const { data: cur } = await supabase
+    .from("bases")
+    .select("layout")
+    .eq("agent", agent)
+    .maybeSingle();
   const layout = { ...((cur?.layout as Record<string, unknown>) ?? {}), cosmetics };
-  await supabase.from("bases").update({ layout: layout as any, updated_at: new Date().toISOString() }).eq("agent", agent);
+  await supabase
+    .from("bases")
+    .update({ layout: layout as any, updated_at: new Date().toISOString() })
+    .eq("agent", agent);
   await supabase.from("base_events").insert({
     agent,
     type: "cosmetics_updated",

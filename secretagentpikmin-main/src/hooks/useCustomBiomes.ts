@@ -45,7 +45,9 @@ export function useCustomBiomes() {
     setLoading(false);
   }, []);
 
-  useEffect(() => { void reload(); }, [reload]);
+  useEffect(() => {
+    void reload();
+  }, [reload]);
 
   return { rows, loading, reload, allBiomes: getAllBiomes() };
 }
@@ -65,7 +67,9 @@ export function useAllCustomBiomes() {
     setLoading(false);
   }, []);
 
-  useEffect(() => { void reload(); }, [reload]);
+  useEffect(() => {
+    void reload();
+  }, [reload]);
 
   return { rows, loading, reload };
 }

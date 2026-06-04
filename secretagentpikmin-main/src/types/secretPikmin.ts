@@ -69,7 +69,12 @@ export type VillageBuildingKey =
 
 export type ChatChannelKey = "famiglia" | "missioni" | "villaggio" | "comandante";
 
-export type PikminOperationalStatus = "disponibile" | "in_missione" | "in_spedizione" | "ferito" | "addestramento";
+export type PikminOperationalStatus =
+  | "disponibile"
+  | "in_missione"
+  | "in_spedizione"
+  | "ferito"
+  | "addestramento";
 
 export interface FamilyCommander {
   id: string;

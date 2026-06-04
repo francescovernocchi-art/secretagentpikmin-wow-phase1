@@ -29,8 +29,12 @@ export function FamilyChatPanel({
   };
   const { messages, loading, send } = useFamilyChat(channel);
 
-  const filtered = messages.filter((m) => m.channel === channel || (!embedded && channel === "famiglia"));
-  const quickForChannel = CHAT_QUICK_MESSAGES.filter((q) => q.channel === channel || q.channel === "famiglia");
+  const filtered = messages.filter(
+    (m) => m.channel === channel || (!embedded && channel === "famiglia"),
+  );
+  const quickForChannel = CHAT_QUICK_MESSAGES.filter(
+    (q) => q.channel === channel || q.channel === "famiglia",
+  );
 
   const handleQuick = async (text: string) => {
     if (onSend) {
@@ -55,7 +59,9 @@ export function FamilyChatPanel({
             key={c.key}
             onClick={() => setChannel(c.key)}
             className={`rounded-full px-3 py-1.5 text-[10px] uppercase tracking-wider border transition ${
-              channel === c.key ? "bg-primary/20 border-primary/50 text-primary" : "bg-night/50 border-border text-muted-foreground"
+              channel === c.key
+                ? "bg-primary/20 border-primary/50 text-primary"
+                : "bg-night/50 border-border text-muted-foreground"
             }`}
           >
             {c.emoji} {c.label}
@@ -69,7 +75,9 @@ export function FamilyChatPanel({
           {filtered.map((m) => (
             <div key={m.id} className="text-xs">
               <span className="text-primary/80">{senderDisplayName(m.sender_agent)}</span>
-              <span className="text-muted-foreground/60 ml-1">{formatRelativeTime(m.created_at)}</span>
+              <span className="text-muted-foreground/60 ml-1">
+                {formatRelativeTime(m.created_at)}
+              </span>
               <p className="text-foreground/90">{m.content}</p>
             </div>
           ))}

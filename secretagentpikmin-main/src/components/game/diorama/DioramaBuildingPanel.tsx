@@ -59,7 +59,10 @@ export function DioramaBuildingPanel({ building, villageId, agentKey, onUpdated,
     const tick = () => {
       setLive((prev) => {
         const next = applyConstructionTimers([prev])[0] ?? prev;
-        if (next.status === "completed" && normalizeBuildingStatus(prev.status) === "under_construction") {
+        if (
+          next.status === "completed" &&
+          normalizeBuildingStatus(prev.status) === "under_construction"
+        ) {
           refreshVillageBuildings(villageId).then(onUpdated);
           toast.success(`${next.name} completato`, { description: `Livello ${next.level}` });
         }
@@ -101,10 +104,14 @@ export function DioramaBuildingPanel({ building, villageId, agentKey, onUpdated,
 
   const statusLabel = useMemo(() => {
     switch (status) {
-      case "locked": return "Bloccato";
-      case "buildable": return "Costruibile";
-      case "under_construction": return "In costruzione";
-      case "completed": return "Completato";
+      case "locked":
+        return "Bloccato";
+      case "buildable":
+        return "Costruibile";
+      case "under_construction":
+        return "In costruzione";
+      case "completed":
+        return "Completato";
     }
   }, [status]);
 
@@ -123,7 +130,10 @@ export function DioramaBuildingPanel({ building, villageId, agentKey, onUpdated,
       {currentBonus && (
         <div className="panel px-3 py-2 mb-3 text-[11px]">
           <p className="text-[9px] uppercase tracking-widest text-primary mb-1">Bonus attivo</p>
-          <p>{currentBonus.label}{currentBonus.unit ? ` ${currentBonus.unit}` : ""}</p>
+          <p>
+            {currentBonus.label}
+            {currentBonus.unit ? ` ${currentBonus.unit}` : ""}
+          </p>
         </div>
       )}
 
@@ -145,7 +155,9 @@ export function DioramaBuildingPanel({ building, villageId, agentKey, onUpdated,
           </div>
 
           <div className="panel px-3 py-2 mb-4 text-[11px]">
-            <p className="text-[9px] uppercase tracking-widest text-muted-foreground mb-1.5">Costi</p>
+            <p className="text-[9px] uppercase tracking-widest text-muted-foreground mb-1.5">
+              Costi
+            </p>
             <ul className="space-y-1">
               {formatBuildingCosts(levelCfg.costs).map((line) => (
                 <li key={line}>{line}</li>
@@ -159,7 +171,9 @@ export function DioramaBuildingPanel({ building, villageId, agentKey, onUpdated,
       )}
 
       {isMax && (
-        <p className="text-[11px] text-muted-foreground mb-4 text-center">Livello massimo raggiunto</p>
+        <p className="text-[11px] text-muted-foreground mb-4 text-center">
+          Livello massimo raggiunto
+        </p>
       )}
 
       <div className="flex gap-2">

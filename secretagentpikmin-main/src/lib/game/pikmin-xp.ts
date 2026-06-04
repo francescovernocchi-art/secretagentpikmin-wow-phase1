@@ -9,7 +9,10 @@ export function xpToNextLevel(level: number): number {
   return Math.floor(100 + level * 80 + level * level * 10);
 }
 
-export function specBadgeForLevel(spec: PikminSpecializationKey | null, level: number): string | null {
+export function specBadgeForLevel(
+  spec: PikminSpecializationKey | null,
+  level: number,
+): string | null {
   if (!spec) return null;
   const badges = SPEC_BADGES[spec];
   if (level >= 8) return badges[2];
@@ -18,7 +21,10 @@ export function specBadgeForLevel(spec: PikminSpecializationKey | null, level: n
   return null;
 }
 
-function applyXpToUnit(unit: DbPikminUnit, amount: number): { unit: DbPikminUnit; leveledUp: boolean; levelsGained: number } {
+function applyXpToUnit(
+  unit: DbPikminUnit,
+  amount: number,
+): { unit: DbPikminUnit; leveledUp: boolean; levelsGained: number } {
   let xp = unit.experience + amount;
   let level = unit.level;
   let toNext = unit.experience_to_next;
@@ -92,16 +98,24 @@ export async function addPikminXp(
       const { data } = await gameTable("pikmin_units").select("*").eq("id", pikminId).maybeSingle();
       if (!data) return { leveledUp: false, newLevel: 0 };
       const { unit, leveledUp } = applyXpToUnit(data as DbPikminUnit, amount);
-      await gameTable("pikmin_units").update({
-        experience: unit.experience,
-        level: unit.level,
-        experience_to_next: unit.experience_to_next,
-        stats: unit.stats,
-        spec_badge: (unit as DbPikminUnit & { spec_badge?: string }).spec_badge,
-        total_xp_earned: (unit as DbPikminUnit & { total_xp_earned?: number }).total_xp_earned,
-        updated_at: unit.updated_at,
-      }).eq("id", pikminId);
-      await logActivity({ pikmin_id: pikminId, owner_agent: unit.owner_agent, reason, xp_amount: amount, meta: meta ?? {} });
+      await gameTable("pikmin_units")
+        .update({
+          experience: unit.experience,
+          level: unit.level,
+          experience_to_next: unit.experience_to_next,
+          stats: unit.stats,
+          spec_badge: (unit as DbPikminUnit & { spec_badge?: string }).spec_badge,
+          total_xp_earned: (unit as DbPikminUnit & { total_xp_earned?: number }).total_xp_earned,
+          updated_at: unit.updated_at,
+        })
+        .eq("id", pikminId);
+      await logActivity({
+        pikmin_id: pikminId,
+        owner_agent: unit.owner_agent,
+        reason,
+        xp_amount: amount,
+        meta: meta ?? {},
+      });
       return { leveledUp, newLevel: unit.level };
     } catch {
       return { leveledUp: false, newLevel: 0 };
@@ -114,19 +128,28 @@ export async function addPikminXp(
 
   try {
     if (isSupabaseConfigured()) {
-      await gameTable("pikmin_units").update({
-        experience: unit.experience,
-        level: unit.level,
-        experience_to_next: unit.experience_to_next,
-        stats: unit.stats,
-        spec_badge: (unit as DbPikminUnit & { spec_badge?: string }).spec_badge,
-        total_xp_earned: (unit as DbPikminUnit & { total_xp_earned?: number }).total_xp_earned ?? amount,
-        updated_at: unit.updated_at,
-      }).eq("id", pikminId);
+      await gameTable("pikmin_units")
+        .update({
+          experience: unit.experience,
+          level: unit.level,
+          experience_to_next: unit.experience_to_next,
+          stats: unit.stats,
+          spec_badge: (unit as DbPikminUnit & { spec_badge?: string }).spec_badge,
+          total_xp_earned:
+            (unit as DbPikminUnit & { total_xp_earned?: number }).total_xp_earned ?? amount,
+          updated_at: unit.updated_at,
+        })
+        .eq("id", pikminId);
     }
   } catch {}
 
-  await logActivity({ pikmin_id: pikminId, owner_agent: unit.owner_agent, reason, xp_amount: amount, meta: meta ?? {} });
+  await logActivity({
+    pikmin_id: pikminId,
+    owner_agent: unit.owner_agent,
+    reason,
+    xp_amount: amount,
+    meta: meta ?? {},
+  });
   return { leveledUp, newLevel: unit.level };
 }
 
@@ -137,7 +160,10 @@ export async function addXpToAvailableSquad(
   reason: PikminXpReason,
   limit = 3,
 ): Promise<number> {
-  const units = localStore.getPikminUnits(ownerAgent).filter((u) => u.status === "disponibile").slice(0, limit);
+  const units = localStore
+    .getPikminUnits(ownerAgent)
+    .filter((u) => u.status === "disponibile")
+    .slice(0, limit);
   let count = 0;
   for (const u of units) {
     await addPikminXp(u.id, amount, reason);
@@ -146,13 +172,20 @@ export async function addXpToAvailableSquad(
   return count;
 }
 
-export async function addXpToPikminIds(ids: string[], amount: number, reason: PikminXpReason): Promise<void> {
+export async function addXpToPikminIds(
+  ids: string[],
+  amount: number,
+  reason: PikminXpReason,
+): Promise<void> {
   for (const id of ids) {
     await addPikminXp(id, amount, reason);
   }
 }
 
-export async function fetchActivityLog(pikminId?: string, limit = 20): Promise<DbPikminActivityLog[]> {
+export async function fetchActivityLog(
+  pikminId?: string,
+  limit = 20,
+): Promise<DbPikminActivityLog[]> {
   const logs = localStore.getActivityLogs();
   const filtered = pikminId ? logs.filter((l) => l.pikmin_id === pikminId) : logs;
   return filtered.slice(0, limit);

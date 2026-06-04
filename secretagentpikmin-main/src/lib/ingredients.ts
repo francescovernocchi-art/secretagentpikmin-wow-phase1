@@ -1,7 +1,16 @@
 import { supabase } from "@/integrations/supabase/client";
 
 const POOLS: Record<string, string[]> = {
-  mission: ["seed_red", "seed_yellow", "seed_blue", "water", "leaf", "honey", "star_dust", "sun_energy"],
+  mission: [
+    "seed_red",
+    "seed_yellow",
+    "seed_blue",
+    "water",
+    "leaf",
+    "honey",
+    "star_dust",
+    "sun_energy",
+  ],
   radar: ["seed_white", "rock_frag", "mushroom", "spark"],
 };
 
@@ -50,7 +59,10 @@ export async function consumeIngredient(agent: string, key: string) {
   if (data.qty <= 1) {
     await supabase.from("inventory").delete().eq("id", data.id);
   } else {
-    await supabase.from("inventory").update({ qty: data.qty - 1 }).eq("id", data.id);
+    await supabase
+      .from("inventory")
+      .update({ qty: data.qty - 1 })
+      .eq("id", data.id);
   }
   return true;
 }

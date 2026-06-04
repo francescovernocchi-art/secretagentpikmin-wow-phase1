@@ -208,9 +208,7 @@ export function StructuresTab({ biomeKey }: Props) {
                 key={lv}
                 onClick={() => setLevel(lv)}
                 className={`min-h-[44px] rounded-lg border text-xs inline-flex flex-col items-center justify-center ${
-                  on
-                    ? "bg-primary/25 border-primary text-primary"
-                    : "bg-card/40 border-border/50"
+                  on ? "bg-primary/25 border-primary text-primary" : "bg-card/40 border-border/50"
                 }`}
               >
                 lv{lv}
@@ -342,7 +340,11 @@ export function StructuresTab({ biomeKey }: Props) {
               disabled={busy}
               className="btn-neon min-h-[44px] text-xs inline-flex items-center justify-center gap-1.5 disabled:opacity-50"
             >
-              {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
+              {busy ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <Save className="h-3.5 w-3.5" />
+              )}
               Salva lv{level}
             </button>
             <button

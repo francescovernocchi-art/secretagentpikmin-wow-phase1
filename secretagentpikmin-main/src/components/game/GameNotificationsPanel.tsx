@@ -13,7 +13,10 @@ export function GameNotificationsPanel({ compact = false }: { compact?: boolean 
             <h2 className="font-display text-lg text-glow">Eventi di gioco</h2>
           </div>
           {unread > 0 && (
-            <button onClick={markAllRead} className="text-[10px] text-primary flex items-center gap-1">
+            <button
+              onClick={markAllRead}
+              className="text-[10px] text-primary flex items-center gap-1"
+            >
               <Check className="h-3 w-3" /> Segna lette
             </button>
           )}
@@ -32,11 +35,15 @@ export function GameNotificationsPanel({ compact = false }: { compact?: boolean 
             className={`panel p-2 text-xs cursor-pointer ${!n.read_at ? "border-primary/30 bg-primary/5" : "opacity-70"}`}
           >
             <div className="flex items-start gap-2">
-              <Bell className={`h-3 w-3 shrink-0 mt-0.5 ${!n.read_at ? "text-primary" : "text-muted-foreground"}`} />
+              <Bell
+                className={`h-3 w-3 shrink-0 mt-0.5 ${!n.read_at ? "text-primary" : "text-muted-foreground"}`}
+              />
               <div>
                 <p className="font-medium">{n.title}</p>
                 {n.body && <p className="text-muted-foreground">{n.body}</p>}
-                <p className="text-[9px] text-muted-foreground/70 mt-0.5">{new Date(n.created_at).toLocaleString("it-IT")}</p>
+                <p className="text-[9px] text-muted-foreground/70 mt-0.5">
+                  {new Date(n.created_at).toLocaleString("it-IT")}
+                </p>
               </div>
             </div>
           </li>

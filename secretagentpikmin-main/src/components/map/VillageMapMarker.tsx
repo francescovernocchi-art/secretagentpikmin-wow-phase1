@@ -17,7 +17,7 @@ interface WallSeg {
 interface Props {
   mapRef: MutableRefObject<unknown | null>;
   ready: boolean;
-  base: BaseRow & { base_name?: string; village_level?: number } | null;
+  base: (BaseRow & { base_name?: string; village_level?: number }) | null;
   buildings: BaseBuilding[];
   walls: WallSeg[];
   show: boolean;
@@ -77,7 +77,7 @@ export function VillageMapMarker({
     if (!ready) return;
     (async () => {
       const L = await import("leaflet");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       const map = mapRef.current as any;
       if (!map) return;
       if (!base || base.lat == null || base.lng == null || !show) {
@@ -100,7 +100,10 @@ export function VillageMapMarker({
       if (villageMarkerRef.current) {
         villageMarkerRef.current.setLatLng([base.lat, base.lng]).setIcon(icon);
       } else {
-        villageMarkerRef.current = L.marker([base.lat, base.lng], { icon, zIndexOffset: 1100 }).addTo(map);
+        villageMarkerRef.current = L.marker([base.lat, base.lng], {
+          icon,
+          zIndexOffset: 1100,
+        }).addTo(map);
         villageMarkerRef.current.on("click", () => {
           navigate({ to: "/villaggio" });
         });
@@ -109,17 +112,29 @@ export function VillageMapMarker({
         );
       }
     })();
-  }, [ready, mapRef, base?.lat, base?.lng, base?.base_name, base?.name, base?.level, base?.faction, show, navigate]);
+  }, [
+    ready,
+    mapRef,
+    base?.lat,
+    base?.lng,
+    base?.base_name,
+    base?.name,
+    base?.level,
+    base?.faction,
+    show,
+    navigate,
+  ]);
 
   // Strutture: edifici + mura disegnati attorno al campo base
   useEffect(() => {
     if (!ready) return;
     (async () => {
       const L = await import("leaflet");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       const map = mapRef.current as any;
       if (!map) return;
-      const center = base && base.lat != null && base.lng != null ? { lat: base.lat, lng: base.lng } : null;
+      const center =
+        base && base.lat != null && base.lng != null ? { lat: base.lat, lng: base.lng } : null;
 
       // Pulisci se nascosto / senza base
       if (!center || !show || !showStructures) {
@@ -161,16 +176,32 @@ export function VillageMapMarker({
         const c = gridToOffset(w.to_x, w.to_y);
         const p1 = offsetMeters(center, a.dx, a.dy);
         const p2 = offsetMeters(center, c.dx, c.dy);
-        const color = w.material === "crystal" ? "#a78bfa" : w.material === "tech" ? "#7ec0ff" : w.material === "stone" ? "#9ca3af" : "#a16207";
+        const color =
+          w.material === "crystal"
+            ? "#a78bfa"
+            : w.material === "tech"
+              ? "#7ec0ff"
+              : w.material === "stone"
+                ? "#9ca3af"
+                : "#a16207";
         const existing = wallLinesRef.current.get(w.id);
         if (existing) {
-          existing.setLatLngs([[p1.lat, p1.lng], [p2.lat, p2.lng]]);
+          existing.setLatLngs([
+            [p1.lat, p1.lng],
+            [p2.lat, p2.lng],
+          ]);
         } else {
-          const line = L.polyline([[p1.lat, p1.lng], [p2.lat, p2.lng]], {
-            color,
-            weight: 3 + (w.level - 1),
-            opacity: 0.85,
-          }).addTo(map);
+          const line = L.polyline(
+            [
+              [p1.lat, p1.lng],
+              [p2.lat, p2.lng],
+            ],
+            {
+              color,
+              weight: 3 + (w.level - 1),
+              opacity: 0.85,
+            },
+          ).addTo(map);
           wallLinesRef.current.set(w.id, line);
         }
       }
@@ -185,7 +216,6 @@ export function VillageMapMarker({
 
   useEffect(() => {
     return () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const map = mapRef.current as any;
       if (!map) return;
       if (villageMarkerRef.current) map.removeLayer(villageMarkerRef.current);

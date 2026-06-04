@@ -13,11 +13,14 @@ export interface WallSegment {
   updated_at: string;
 }
 
-export const WALL_MATERIALS: Record<string, { label: string; color: string; defense: number; cost: number }> = {
-  wood:    { label: "Legno",    color: "#a0522d", defense: 2, cost: 10 },
-  stone:   { label: "Pietra",   color: "#94a3b8", defense: 5, cost: 30 },
-  crystal: { label: "Cristallo",color: "#c084fc", defense: 9, cost: 80 },
-  alloy:   { label: "Lega tech",color: "#7dd3fc", defense: 12, cost: 150 },
+export const WALL_MATERIALS: Record<
+  string,
+  { label: string; color: string; defense: number; cost: number }
+> = {
+  wood: { label: "Legno", color: "#a0522d", defense: 2, cost: 10 },
+  stone: { label: "Pietra", color: "#94a3b8", defense: 5, cost: 30 },
+  crystal: { label: "Cristallo", color: "#c084fc", defense: 9, cost: 80 },
+  alloy: { label: "Lega tech", color: "#7dd3fc", defense: 12, cost: 150 },
 };
 
 export async function listWalls(agent: string): Promise<WallSegment[]> {
@@ -53,7 +56,10 @@ export async function deleteWall(id: string) {
 }
 
 export async function upgradeWall(id: string, level: number) {
-  await supabase.from("village_walls").update({ level, updated_at: new Date().toISOString() }).eq("id", id);
+  await supabase
+    .from("village_walls")
+    .update({ level, updated_at: new Date().toISOString() })
+    .eq("id", id);
 }
 
 /** Bonus difensivo aggregato dei muri (sommato al defense_rating della base). */

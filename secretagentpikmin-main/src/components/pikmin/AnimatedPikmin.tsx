@@ -1,9 +1,5 @@
 import { memo } from "react";
-import {
-  ANIMATIONS,
-  type PikminAnimation,
-  type PikminType,
-} from "@/data/pikminSprites";
+import { ANIMATIONS, type PikminAnimation, type PikminType } from "@/data/pikminSprites";
 import "@/styles/pikminAnimations.css";
 
 export interface AnimatedPikminProps {
@@ -105,7 +101,14 @@ function AnimatedPikminBase({
           filter: night ? "drop-shadow(0 0 4px rgba(255,255,200,0.5))" : undefined,
         }}
       >
-        <div style={{ width: "100%", height: "100%", transform: `scale(${scale})`, transformOrigin: "center bottom" }}>
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            transform: `scale(${scale})`,
+            transformOrigin: "center bottom",
+          }}
+        >
           {sprite ? (
             <img
               src={sprite}
@@ -119,7 +122,9 @@ function AnimatedPikminBase({
                 pointerEvents: "none",
                 filter: "drop-shadow(0 2px 2px rgba(0,0,0,.4))",
               }}
-              onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).style.display = "none";
+              }}
             />
           ) : (
             <div
@@ -156,14 +161,26 @@ function AnimatedPikminBase({
       {showBubbles && (
         <>
           <span className="pikmin-bubble" style={{ left: "70%", top: "20%" }} />
-          <span className="pikmin-bubble" style={{ left: "80%", top: "40%", animationDelay: "500ms" }} />
+          <span
+            className="pikmin-bubble"
+            style={{ left: "80%", top: "40%", animationDelay: "500ms" }}
+          />
         </>
       )}
       {showParticles && (
         <>
-          <span className="pikmin-particle" style={{ left: "20%", top: "10%", background: "#facc15" }} />
-          <span className="pikmin-particle" style={{ left: "60%", top: "15%", background: "#fb7185", animationDelay: "200ms" }} />
-          <span className="pikmin-particle" style={{ left: "40%", top: "5%",  background: "#60a5fa", animationDelay: "400ms" }} />
+          <span
+            className="pikmin-particle"
+            style={{ left: "20%", top: "10%", background: "#facc15" }}
+          />
+          <span
+            className="pikmin-particle"
+            style={{ left: "60%", top: "15%", background: "#fb7185", animationDelay: "200ms" }}
+          />
+          <span
+            className="pikmin-particle"
+            style={{ left: "40%", top: "5%", background: "#60a5fa", animationDelay: "400ms" }}
+          />
         </>
       )}
       {showZ && <span className="pikmin-z">z z z</span>}

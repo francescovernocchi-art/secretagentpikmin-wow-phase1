@@ -26,16 +26,21 @@ function persistBuildings(villageId: string, buildings: DbVillageBuilding[]): vo
 async function trySyncSupabase(building: DbVillageBuilding): Promise<void> {
   try {
     if (!isSupabaseConfigured()) return;
-    await gameTable("village_buildings").update({
-      level: building.level,
-      status: building.status,
-    }).eq("id", building.id);
+    await gameTable("village_buildings")
+      .update({
+        level: building.level,
+        status: building.status,
+      })
+      .eq("id", building.id);
   } catch {
     /* local-first */
   }
 }
 
-export async function canAffordCosts(agentKey: string, costs: BuildingResourceCost): Promise<boolean> {
+export async function canAffordCosts(
+  agentKey: string,
+  costs: BuildingResourceCost,
+): Promise<boolean> {
   const { data: inv } = await fetchInventory(agentKey);
   for (const { key, amount } of costEntries(costs)) {
     const itemKey = BUILDING_RESOURCE_META[key].itemKey;

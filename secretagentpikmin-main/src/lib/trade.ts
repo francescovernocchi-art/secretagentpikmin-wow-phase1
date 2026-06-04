@@ -170,7 +170,8 @@ export async function acceptOffer(agent: string, t: TradeOffer) {
   if (t.offer.ingredients?.length) await grantIngredients(agent, t.offer.ingredients);
 
   if (t.request.coins) await addCoins(t.from_agent, t.request.coins, "trade_receive", { id: t.id });
-  if (t.request.pikmin) await addPikmin(t.request.pikmin, "trade_receive", t.from_agent, { id: t.id });
+  if (t.request.pikmin)
+    await addPikmin(t.request.pikmin, "trade_receive", t.from_agent, { id: t.id });
   if (t.request.ingredients?.length) await grantIngredients(t.from_agent, t.request.ingredients);
 
   await supabase

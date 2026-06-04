@@ -95,12 +95,48 @@ export const PLANET_STATE: PlanetState = {
 };
 
 export const SHIP_PARTS: ShipPartState[] = [
-  { key: "motore", name: "Motore ionico", emoji: "🔥", collected: true, locationHint: "Zona industriale" },
-  { key: "antenna", name: "Antenna di comunicazione", emoji: "📡", collected: true, locationHint: "Campo aperto" },
-  { key: "cabina", name: "Cabina di comando", emoji: "🛸", collected: false, locationHint: "Bosco antico" },
-  { key: "modulo_energia", name: "Modulo energia", emoji: "⚡", collected: false, locationHint: "Grotta cristallina" },
-  { key: "stabilizzatori", name: "Stabilizzatori", emoji: "🪽", collected: true, locationHint: "Giardino" },
-  { key: "nucleo", name: "Nucleo centrale", emoji: "💎", collected: false, locationHint: "Anomalia spaziale" },
+  {
+    key: "motore",
+    name: "Motore ionico",
+    emoji: "🔥",
+    collected: true,
+    locationHint: "Zona industriale",
+  },
+  {
+    key: "antenna",
+    name: "Antenna di comunicazione",
+    emoji: "📡",
+    collected: true,
+    locationHint: "Campo aperto",
+  },
+  {
+    key: "cabina",
+    name: "Cabina di comando",
+    emoji: "🛸",
+    collected: false,
+    locationHint: "Bosco antico",
+  },
+  {
+    key: "modulo_energia",
+    name: "Modulo energia",
+    emoji: "⚡",
+    collected: false,
+    locationHint: "Grotta cristallina",
+  },
+  {
+    key: "stabilizzatori",
+    name: "Stabilizzatori",
+    emoji: "🪽",
+    collected: true,
+    locationHint: "Giardino",
+  },
+  {
+    key: "nucleo",
+    name: "Nucleo centrale",
+    emoji: "💎",
+    collected: false,
+    locationHint: "Anomalia spaziale",
+  },
 ];
 
 export const CORE_MISSIONS: CoreMission[] = [
@@ -159,15 +195,87 @@ export const CORE_MISSIONS: CoreMission[] = [
 ];
 
 export const PIKMIN_TYPES: PikminTypeDefinition[] = [
-  { key: "rosso", label: "Rosso", emoji: "🔴", color: "#ef4444", predispositions: ["combattimento", "raccolta"], affinities: ["bosco", "campo"], notes: "Fuoco, assalto, difesa attiva" },
-  { key: "blu", label: "Blu", emoji: "🔵", color: "#3b82f6", predispositions: ["raccolta", "scouting"], affinities: ["acqua", "giardino"], notes: "Acqua, recupero, esplorazione" },
-  { key: "giallo", label: "Giallo", emoji: "🟡", color: "#eab308", predispositions: ["ricerca", "raccolta"], affinities: ["campo", "industriale"], notes: "Energia, tecnologia, ricerca" },
-  { key: "viola", label: "Viola", emoji: "🟣", color: "#a855f7", predispositions: ["trasporto", "combattimento"], affinities: ["roccia", "grotta"], notes: "Forza, trasporto pesante" },
-  { key: "bianco", label: "Bianco", emoji: "⚪", color: "#f8fafc", predispositions: ["spionaggio", "ricerca"], affinities: ["grotta", "citta"], notes: "Analisi, tossine, intelligence" },
-  { key: "roccia", label: "Roccia", emoji: "🪨", color: "#78716c", predispositions: ["combattimento", "trasporto"], affinities: ["roccia", "industriale"], notes: "Demolizione, difesa, miniere" },
-  { key: "alato", label: "Alato", emoji: "🪽", color: "#38bdf8", predispositions: ["scouting", "trasporto"], affinities: ["campo", "bosco"], notes: "Scouting, consegne rapide" },
-  { key: "ghiaccio", label: "Ghiaccio", emoji: "❄️", color: "#67e8f9", predispositions: ["supporto", "raccolta"], affinities: ["grotta", "acqua"], notes: "Controllo, supporto squadra" },
-  { key: "luminoso", label: "Luminoso", emoji: "✨", color: "#fde047", predispositions: ["ricerca", "spionaggio"], affinities: ["grotta", "industriale"], notes: "Anomalie, eventi rari (opzionale)" },
+  {
+    key: "rosso",
+    label: "Rosso",
+    emoji: "🔴",
+    color: "#ef4444",
+    predispositions: ["combattimento", "raccolta"],
+    affinities: ["bosco", "campo"],
+    notes: "Fuoco, assalto, difesa attiva",
+  },
+  {
+    key: "blu",
+    label: "Blu",
+    emoji: "🔵",
+    color: "#3b82f6",
+    predispositions: ["raccolta", "scouting"],
+    affinities: ["acqua", "giardino"],
+    notes: "Acqua, recupero, esplorazione",
+  },
+  {
+    key: "giallo",
+    label: "Giallo",
+    emoji: "🟡",
+    color: "#eab308",
+    predispositions: ["ricerca", "raccolta"],
+    affinities: ["campo", "industriale"],
+    notes: "Energia, tecnologia, ricerca",
+  },
+  {
+    key: "viola",
+    label: "Viola",
+    emoji: "🟣",
+    color: "#a855f7",
+    predispositions: ["trasporto", "combattimento"],
+    affinities: ["roccia", "grotta"],
+    notes: "Forza, trasporto pesante",
+  },
+  {
+    key: "bianco",
+    label: "Bianco",
+    emoji: "⚪",
+    color: "#f8fafc",
+    predispositions: ["spionaggio", "ricerca"],
+    affinities: ["grotta", "citta"],
+    notes: "Analisi, tossine, intelligence",
+  },
+  {
+    key: "roccia",
+    label: "Roccia",
+    emoji: "🪨",
+    color: "#78716c",
+    predispositions: ["combattimento", "trasporto"],
+    affinities: ["roccia", "industriale"],
+    notes: "Demolizione, difesa, miniere",
+  },
+  {
+    key: "alato",
+    label: "Alato",
+    emoji: "🪽",
+    color: "#38bdf8",
+    predispositions: ["scouting", "trasporto"],
+    affinities: ["campo", "bosco"],
+    notes: "Scouting, consegne rapide",
+  },
+  {
+    key: "ghiaccio",
+    label: "Ghiaccio",
+    emoji: "❄️",
+    color: "#67e8f9",
+    predispositions: ["supporto", "raccolta"],
+    affinities: ["grotta", "acqua"],
+    notes: "Controllo, supporto squadra",
+  },
+  {
+    key: "luminoso",
+    label: "Luminoso",
+    emoji: "✨",
+    color: "#fde047",
+    predispositions: ["ricerca", "spionaggio"],
+    affinities: ["grotta", "industriale"],
+    notes: "Anomalie, eventi rari (opzionale)",
+  },
 ];
 
 export const PIKMIN_SPECIALIZATIONS: PikminSpecialization[] = [
@@ -417,22 +525,113 @@ export const GEO_BIOME_RULES = BIOMES.map((b) => ({
 }));
 
 export const SCANNER_TARGETS: ScannerTarget[] = [
-  { type: "pikmin_selvatico", label: "Pikmin selvatico", icon: Sprout, emoji: "🌱", note: "Può unirsi alla squadra se il segnale arriva al 100%", biomeLinked: true },
-  { type: "oggetto_raro", label: "Oggetto raro", icon: Sparkles, emoji: "✨", note: "Vendibile, studiabile o usabile per missioni", biomeLinked: true },
-  { type: "ingrediente", label: "Ingrediente", icon: Leaf, emoji: "🍯", note: "Convertibile in cibo o ricette di supporto", biomeLinked: true },
-  { type: "materiale", label: "Materiale", icon: Package, emoji: "📦", note: "Usato per edifici e craft del villaggio", biomeLinked: true },
-  { type: "mostro", label: "Mostro", icon: Camera, emoji: "👾", note: "Fotografalo e invia Pikmin spia per completare la scheda", biomeLinked: true },
-  { type: "anomalia", label: "Anomalia energetica", icon: Zap, emoji: "⚡", note: "Evento speciale legato al bioma corrente", biomeLinked: true },
-  { type: "pezzo_navicella", label: "Pezzo navicella", icon: Rocket, emoji: "🚀", note: "Aggiorna la missione Ricostruzione Navicella", biomeLinked: false },
+  {
+    type: "pikmin_selvatico",
+    label: "Pikmin selvatico",
+    icon: Sprout,
+    emoji: "🌱",
+    note: "Può unirsi alla squadra se il segnale arriva al 100%",
+    biomeLinked: true,
+  },
+  {
+    type: "oggetto_raro",
+    label: "Oggetto raro",
+    icon: Sparkles,
+    emoji: "✨",
+    note: "Vendibile, studiabile o usabile per missioni",
+    biomeLinked: true,
+  },
+  {
+    type: "ingrediente",
+    label: "Ingrediente",
+    icon: Leaf,
+    emoji: "🍯",
+    note: "Convertibile in cibo o ricette di supporto",
+    biomeLinked: true,
+  },
+  {
+    type: "materiale",
+    label: "Materiale",
+    icon: Package,
+    emoji: "📦",
+    note: "Usato per edifici e craft del villaggio",
+    biomeLinked: true,
+  },
+  {
+    type: "mostro",
+    label: "Mostro",
+    icon: Camera,
+    emoji: "👾",
+    note: "Fotografalo e invia Pikmin spia per completare la scheda",
+    biomeLinked: true,
+  },
+  {
+    type: "anomalia",
+    label: "Anomalia energetica",
+    icon: Zap,
+    emoji: "⚡",
+    note: "Evento speciale legato al bioma corrente",
+    biomeLinked: true,
+  },
+  {
+    type: "pezzo_navicella",
+    label: "Pezzo navicella",
+    icon: Rocket,
+    emoji: "🚀",
+    note: "Aggiorna la missione Ricostruzione Navicella",
+    biomeLinked: false,
+  },
 ];
 
 export const VILLAGE_BUILDINGS: VillageBuildingDefinition[] = [
-  { key: "centro_controllo", name: "Centro di Controllo", emoji: "🎛️", description: "Gestisce villaggi e comando remoto. Lv1=1 villaggio, Lv3=2, Lv5=3.", level: 1, maxLevel: 5 },
-  { key: "magazzino", name: "Magazzino", emoji: "📦", description: "Conserva risorse e oggetti recuperati.", level: 1, maxLevel: 5 },
-  { key: "accademia", name: "Accademia Pikmin", emoji: "🎓", description: "Addestra specializzazioni e mansioni.", level: 1, maxLevel: 4 },
-  { key: "laboratorio", name: "Laboratorio", emoji: "🔬", description: "Analizza mostri, ingredienti e anomalie.", level: 1, maxLevel: 4 },
-  { key: "mercato", name: "Mercato", emoji: "🏪", description: "Scambio locale prima del Market galattico.", level: 1, maxLevel: 3 },
-  { key: "hangar", name: "Hangar Navicella", emoji: "🚀", description: "Mostra la navicella in costruzione.", level: 1, maxLevel: 3 },
+  {
+    key: "centro_controllo",
+    name: "Centro di Controllo",
+    emoji: "🎛️",
+    description: "Gestisce villaggi e comando remoto. Lv1=1 villaggio, Lv3=2, Lv5=3.",
+    level: 1,
+    maxLevel: 5,
+  },
+  {
+    key: "magazzino",
+    name: "Magazzino",
+    emoji: "📦",
+    description: "Conserva risorse e oggetti recuperati.",
+    level: 1,
+    maxLevel: 5,
+  },
+  {
+    key: "accademia",
+    name: "Accademia Pikmin",
+    emoji: "🎓",
+    description: "Addestra specializzazioni e mansioni.",
+    level: 1,
+    maxLevel: 4,
+  },
+  {
+    key: "laboratorio",
+    name: "Laboratorio",
+    emoji: "🔬",
+    description: "Analizza mostri, ingredienti e anomalie.",
+    level: 1,
+    maxLevel: 4,
+  },
+  {
+    key: "mercato",
+    name: "Mercato",
+    emoji: "🏪",
+    description: "Scambio locale prima del Market galattico.",
+    level: 1,
+    maxLevel: 3,
+  },
+  {
+    key: "hangar",
+    name: "Hangar Navicella",
+    emoji: "🚀",
+    description: "Mostra la navicella in costruzione.",
+    level: 1,
+    maxLevel: 3,
+  },
 ];
 
 export const VILLAGE_RULES = {
@@ -458,29 +657,106 @@ export const CHAT_QUICK_MESSAGES: ChatQuickMessage[] = [
 
 export const MOCK_FAMILY_ONLINE: FamilyCommander[] = [
   { id: "francesco", name: "Francesco", role: "comandante", emoji: "⭐", online: true },
-  { id: "lorenzo", name: "Lorenzo", role: "comandante", emoji: "🌱", online: true, lastSeen: "2 min fa" },
+  {
+    id: "lorenzo",
+    name: "Lorenzo",
+    role: "comandante",
+    emoji: "🌱",
+    online: true,
+    lastSeen: "2 min fa",
+  },
 ];
 
 export const MOCK_EXPEDITIONS: ExpeditionSummary[] = [
-  { id: "exp-1", title: "Ricognizione Bosco Nord", biome: "bosco", status: "attiva", pikminCount: 8, etaMinutes: 25 },
-  { id: "exp-2", title: "Recupero cristalli", biome: "roccia", status: "in_ritorno", pikminCount: 5, etaMinutes: 8 },
+  {
+    id: "exp-1",
+    title: "Ricognizione Bosco Nord",
+    biome: "bosco",
+    status: "attiva",
+    pikminCount: 8,
+    etaMinutes: 25,
+  },
+  {
+    id: "exp-2",
+    title: "Recupero cristalli",
+    biome: "roccia",
+    status: "in_ritorno",
+    pikminCount: 5,
+    etaMinutes: 8,
+  },
 ];
 
 export const MOCK_DISCOVERIES: DiscoverySummary[] = [
-  { id: "d1", label: "Seme luminoso", emoji: "✨", type: "oggetto_raro", foundBy: "Lorenzo", foundAt: "12 min fa" },
-  { id: "d2", label: "Bulborb nano", emoji: "👾", type: "mostro", foundBy: "Francesco", foundAt: "1 ora fa" },
-  { id: "d3", label: "Stabilizzatore", emoji: "🪽", type: "pezzo_navicella", foundBy: "Francesco", foundAt: "ieri" },
+  {
+    id: "d1",
+    label: "Seme luminoso",
+    emoji: "✨",
+    type: "oggetto_raro",
+    foundBy: "Lorenzo",
+    foundAt: "12 min fa",
+  },
+  {
+    id: "d2",
+    label: "Bulborb nano",
+    emoji: "👾",
+    type: "mostro",
+    foundBy: "Francesco",
+    foundAt: "1 ora fa",
+  },
+  {
+    id: "d3",
+    label: "Stabilizzatore",
+    emoji: "🪽",
+    type: "pezzo_navicella",
+    foundBy: "Francesco",
+    foundAt: "ieri",
+  },
 ];
 
 export const MOCK_MARKET_LISTINGS: MarketListing[] = [
-  { id: "m1", name: "Cristallo di rame", emoji: "💎", price: 120, seller: "Francesco", category: "oggetto" },
-  { id: "m2", name: "Batteria usata", emoji: "🔋", price: 45, seller: "Lorenzo", category: "materiale" },
-  { id: "m3", name: "Miele dorato", emoji: "🍯", price: 30, seller: "Francesco", category: "ingrediente" },
+  {
+    id: "m1",
+    name: "Cristallo di rame",
+    emoji: "💎",
+    price: 120,
+    seller: "Francesco",
+    category: "oggetto",
+  },
+  {
+    id: "m2",
+    name: "Batteria usata",
+    emoji: "🔋",
+    price: 45,
+    seller: "Lorenzo",
+    category: "materiale",
+  },
+  {
+    id: "m3",
+    name: "Miele dorato",
+    emoji: "🍯",
+    price: 30,
+    seller: "Francesco",
+    category: "ingrediente",
+  },
 ];
 
 export const MOCK_FAMILY_TRADES: FamilyTradeOffer[] = [
-  { id: "t1", from: "Francesco", to: "Lorenzo", offer: "2× Cristallo", request: "5× Seme rosso", status: "aperta" },
-  { id: "t2", from: "Lorenzo", to: "Francesco", offer: "Pezzo antenna", request: "Energia villaggio", status: "completata" },
+  {
+    id: "t1",
+    from: "Francesco",
+    to: "Lorenzo",
+    offer: "2× Cristallo",
+    request: "5× Seme rosso",
+    status: "aperta",
+  },
+  {
+    id: "t2",
+    from: "Lorenzo",
+    to: "Francesco",
+    offer: "Pezzo antenna",
+    request: "Energia villaggio",
+    status: "completata",
+  },
 ];
 
 export function getBiomeByKey(key: BiomeKey): BiomeDefinition | undefined {

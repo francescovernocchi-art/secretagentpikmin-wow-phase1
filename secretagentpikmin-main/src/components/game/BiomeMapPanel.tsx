@@ -13,7 +13,11 @@ interface BiomeMapPanelProps {
   showGps?: boolean;
 }
 
-export function BiomeMapPanel({ currentBiome, showActions = true, showGps = true }: BiomeMapPanelProps) {
+export function BiomeMapPanel({
+  currentBiome,
+  showActions = true,
+  showGps = true,
+}: BiomeMapPanelProps) {
   const [biome, setBiome] = useState<BiomeKey>(currentBiome ?? "bosco");
 
   useEffect(() => {
@@ -83,15 +87,27 @@ export function BiomeMapPanel({ currentBiome, showActions = true, showGps = true
 
       {showActions && (
         <div className="grid grid-cols-3 gap-2">
-          <Link to="/mappa" onClick={hapticTap} className="panel p-3 flex flex-col items-center gap-1 active:scale-95 transition">
+          <Link
+            to="/mappa"
+            onClick={hapticTap}
+            className="panel p-3 flex flex-col items-center gap-1 active:scale-95 transition"
+          >
             <Crosshair className="h-5 w-5 text-primary" />
             <span className="text-[10px] uppercase tracking-wider">Mappa GPS</span>
           </Link>
-          <Link to="/radar" onClick={hapticTap} className="panel p-3 flex flex-col items-center gap-1 active:scale-95 transition">
+          <Link
+            to="/radar"
+            onClick={hapticTap}
+            className="panel p-3 flex flex-col items-center gap-1 active:scale-95 transition"
+          >
             <ScanLine className="h-5 w-5 text-primary" />
             <span className="text-[10px] uppercase tracking-wider">Scansiona</span>
           </Link>
-          <Link to="/villaggio" onClick={hapticTap} className="panel p-3 flex flex-col items-center gap-1 active:scale-95 transition">
+          <Link
+            to="/villaggio"
+            onClick={hapticTap}
+            className="panel p-3 flex flex-col items-center gap-1 active:scale-95 transition"
+          >
             <span className="text-lg">🏘️</span>
             <span className="text-[10px] uppercase tracking-wider">Villaggi</span>
           </Link>

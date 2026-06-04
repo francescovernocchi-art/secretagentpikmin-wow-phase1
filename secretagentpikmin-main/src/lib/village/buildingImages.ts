@@ -25,9 +25,7 @@ export async function loadBuildingImages(): Promise<Map<string, BuildingImageSet
   if (cache) return cache;
   if (inflight) return inflight;
   inflight = (async () => {
-    const { data } = await supabase
-      .from("building_catalog")
-      .select("key,image_url,visual_stages");
+    const { data } = await supabase.from("building_catalog").select("key,image_url,visual_stages");
     const map = new Map<string, BuildingImageSet>();
     (data ?? []).forEach((r: any) => {
       const stagesRaw = Array.isArray(r.visual_stages) ? r.visual_stages : [];

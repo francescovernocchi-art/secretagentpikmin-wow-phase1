@@ -2,7 +2,9 @@ import { gameTable, safeGameQuery } from "@/lib/game/db";
 import { localStore } from "@/lib/game/local-store";
 import type { DbInventoryItem } from "@/types/phase2-db";
 
-export async function fetchInventory(agentKey: string): Promise<{ data: DbInventoryItem[]; source: "supabase" | "local" }> {
+export async function fetchInventory(
+  agentKey: string,
+): Promise<{ data: DbInventoryItem[]; source: "supabase" | "local" }> {
   return safeGameQuery(
     () => gameTable("player_inventory").select("*").eq("agent_key", agentKey).order("item_name"),
     () => localStore.getInventory(agentKey),

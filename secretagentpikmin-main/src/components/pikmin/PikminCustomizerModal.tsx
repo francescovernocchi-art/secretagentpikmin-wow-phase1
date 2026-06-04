@@ -52,10 +52,7 @@ export function PikminCustomizerModal({ open, onClose, onSaved }: Props) {
       for (const r of rows) {
         const patch: any = { name: r.name.trim() || r.key };
         if (isAdmin) patch.image_url = r.image_url;
-        const { error } = await supabase
-          .from("pikmin_species")
-          .update(patch)
-          .eq("key", r.key);
+        const { error } = await supabase.from("pikmin_species").update(patch).eq("key", r.key);
         if (error) throw error;
       }
       onSaved?.();
@@ -78,10 +75,13 @@ export function PikminCustomizerModal({ open, onClose, onSaved }: Props) {
       >
         <div className="flex items-center justify-between">
           <p className="font-display text-base">Personalizza Pikmin</p>
-          <button onClick={onClose} className="text-xs text-muted-foreground">✕</button>
+          <button onClick={onClose} className="text-xs text-muted-foreground">
+            ✕
+          </button>
         </div>
         <p className="text-[11px] text-muted-foreground">
-          Tutti i membri possono rinominare i Pikmin. {isAdmin
+          Tutti i membri possono rinominare i Pikmin.{" "}
+          {isAdmin
             ? "Come admin puoi anche cambiare l'icona."
             : "Solo l'admin può cambiare l'icona."}
         </p>
@@ -133,7 +133,9 @@ export function PikminCustomizerModal({ open, onClose, onSaved }: Props) {
         </div>
 
         <div className="flex gap-2">
-          <button onClick={onClose} className="btn-neon p-2 text-xs flex-1">Annulla</button>
+          <button onClick={onClose} className="btn-neon p-2 text-xs flex-1">
+            Annulla
+          </button>
           <button
             onClick={save}
             disabled={saving}

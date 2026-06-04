@@ -22,13 +22,16 @@ export async function pushGameNotification(opts: {
 
   try {
     if (isSupabaseConfigured()) {
-      const { data, error } = await gameTable("game_notifications").insert({
-        agent_key: row.agent_key,
-        kind: row.kind,
-        title: row.title,
-        body: row.body,
-        payload: row.payload,
-      }).select("*").single();
+      const { data, error } = await gameTable("game_notifications")
+        .insert({
+          agent_key: row.agent_key,
+          kind: row.kind,
+          title: row.title,
+          body: row.body,
+          payload: row.payload,
+        })
+        .select("*")
+        .single();
       if (error) throw error;
       return data as DbGameNotification;
     }
@@ -51,10 +54,17 @@ export async function pushGameNotification(opts: {
   return row;
 }
 
-export async function fetchGameNotifications(agentKey: string, unreadOnly = false): Promise<DbGameNotification[]> {
+export async function fetchGameNotifications(
+  agentKey: string,
+  unreadOnly = false,
+): Promise<DbGameNotification[]> {
   try {
     if (isSupabaseConfigured()) {
-      let q = gameTable("game_notifications").select("*").eq("agent_key", agentKey).order("created_at", { ascending: false }).limit(50);
+      let q = gameTable("game_notifications")
+        .select("*")
+        .eq("agent_key", agentKey)
+        .order("created_at", { ascending: false })
+        .limit(50);
       if (unreadOnly) q = q.is("read_at", null);
       const { data, error } = await q;
       if (error) throw error;
@@ -68,7 +78,9 @@ export async function fetchGameNotifications(agentKey: string, unreadOnly = fals
 export async function markNotificationRead(id: string, agentKey: string): Promise<void> {
   try {
     if (isSupabaseConfigured()) {
-      await gameTable("game_notifications").update({ read_at: new Date().toISOString() }).eq("id", id);
+      await gameTable("game_notifications")
+        .update({ read_at: new Date().toISOString() })
+        .eq("id", id);
       return;
     }
   } catch {}
@@ -79,7 +91,10 @@ export async function markAllNotificationsRead(agentKey: string): Promise<void> 
   const now = new Date().toISOString();
   try {
     if (isSupabaseConfigured()) {
-      await gameTable("game_notifications").update({ read_at: now }).eq("agent_key", agentKey).is("read_at", null);
+      await gameTable("game_notifications")
+        .update({ read_at: now })
+        .eq("agent_key", agentKey)
+        .is("read_at", null);
       return;
     }
   } catch {}

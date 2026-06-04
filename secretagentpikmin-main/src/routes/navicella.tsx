@@ -67,10 +67,8 @@ function ShipPage() {
     const ch = supabase
       .channel("navicella-rt")
       .on("postgres_changes", { event: "*", schema: "public", table: "ship_parts" }, () => load())
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "ship_parts_collected" },
-        () => load(),
+      .on("postgres_changes", { event: "*", schema: "public", table: "ship_parts_collected" }, () =>
+        load(),
       )
       .subscribe();
     return () => {
@@ -105,94 +103,101 @@ function ShipPage() {
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground px-1">
             Catalogo admin legacy (ship_parts)
           </p>
-      {parts.length === 0 ? (
-        <div className="panel p-6 text-center text-xs text-muted-foreground space-y-2">
-          <Rocket className="h-5 w-5 text-primary mx-auto opacity-70" />
-          <p>
-            Nessun pezzo nel catalogo.{" "}
-            {isPapa
-              ? "Aggiungi il primo pezzo per iniziare."
-              : "Aspetta che il Comandante prepari la lista."}
-          </p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-          {parts.map((p) => {
-            const got = collectedKeys.has(p.key);
-            const meta = collected.find((c) => c.part_key === p.key);
-            return (
-              <motion.div
-                key={p.id}
-                layout
-                className={`panel p-3 space-y-1 relative ${
-                  got ? "ring-1 ring-primary/40" : "opacity-70"
-                }`}
-              >
-                {isPapa && (
-                  <button
-                    onClick={() => setEditing(p)}
-                    className="absolute top-1.5 right-1.5 panel h-6 w-6 flex items-center justify-center text-primary"
-                    aria-label="Modifica pezzo"
+          {parts.length === 0 ? (
+            <div className="panel p-6 text-center text-xs text-muted-foreground space-y-2">
+              <Rocket className="h-5 w-5 text-primary mx-auto opacity-70" />
+              <p>
+                Nessun pezzo nel catalogo.{" "}
+                {isPapa
+                  ? "Aggiungi il primo pezzo per iniziare."
+                  : "Aspetta che il Comandante prepari la lista."}
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {parts.map((p) => {
+                const got = collectedKeys.has(p.key);
+                const meta = collected.find((c) => c.part_key === p.key);
+                return (
+                  <motion.div
+                    key={p.id}
+                    layout
+                    className={`panel p-3 space-y-1 relative ${
+                      got ? "ring-1 ring-primary/40" : "opacity-70"
+                    }`}
                   >
-                    <Pencil className="h-3 w-3" />
-                  </button>
-                )}
-                <div
-                  className={`h-12 w-12 rounded-xl flex items-center justify-center text-2xl border ${
-                    got
-                      ? "border-primary/40 bg-primary/10"
-                      : "border-primary/15 bg-night/60 grayscale"
-                  }`}
-                >
-                  {got ? p.emoji : "❔"}
-                </div>
-                <p className="font-display text-sm text-glow leading-tight truncate">
-                  {p.name}
-                </p>
-                <p className={`text-[9px] uppercase tracking-wider flex items-center gap-1 ${RARITY_COLOR[p.rarity ?? "comune"]}`}>
-                  <span>{RARITY_LABEL[p.rarity ?? "comune"]}</span>
-                  <span className="text-muted-foreground">· {pikminCostFor(p.rarity)} 🌱</span>
-                </p>
-                {p.description && (
-                  <p className="text-[10px] text-muted-foreground line-clamp-2">
-                    {p.description}
-                  </p>
-                )}
-                {got ? (
-                  <p className="text-[10px] text-primary flex items-center gap-1">
-                    <Check className="h-3 w-3" /> recuperato
-                    {meta && (
-                      <span className="text-muted-foreground">
-                        · {meta.source === "mission" ? "missione" : meta.source === "drop" ? "mappa" : "manuale"}
-                      </span>
+                    {isPapa && (
+                      <button
+                        onClick={() => setEditing(p)}
+                        className="absolute top-1.5 right-1.5 panel h-6 w-6 flex items-center justify-center text-primary"
+                        aria-label="Modifica pezzo"
+                      >
+                        <Pencil className="h-3 w-3" />
+                      </button>
                     )}
-                  </p>
-                ) : (
-                  <p className="text-[10px] text-muted-foreground">// mancante</p>
-                )}
-              </motion.div>
-            );
-          })}
-        </div>
-      )}
+                    <div
+                      className={`h-12 w-12 rounded-xl flex items-center justify-center text-2xl border ${
+                        got
+                          ? "border-primary/40 bg-primary/10"
+                          : "border-primary/15 bg-night/60 grayscale"
+                      }`}
+                    >
+                      {got ? p.emoji : "❔"}
+                    </div>
+                    <p className="font-display text-sm text-glow leading-tight truncate">
+                      {p.name}
+                    </p>
+                    <p
+                      className={`text-[9px] uppercase tracking-wider flex items-center gap-1 ${RARITY_COLOR[p.rarity ?? "comune"]}`}
+                    >
+                      <span>{RARITY_LABEL[p.rarity ?? "comune"]}</span>
+                      <span className="text-muted-foreground">· {pikminCostFor(p.rarity)} 🌱</span>
+                    </p>
+                    {p.description && (
+                      <p className="text-[10px] text-muted-foreground line-clamp-2">
+                        {p.description}
+                      </p>
+                    )}
+                    {got ? (
+                      <p className="text-[10px] text-primary flex items-center gap-1">
+                        <Check className="h-3 w-3" /> recuperato
+                        {meta && (
+                          <span className="text-muted-foreground">
+                            ·{" "}
+                            {meta.source === "mission"
+                              ? "missione"
+                              : meta.source === "drop"
+                                ? "mappa"
+                                : "manuale"}
+                          </span>
+                        )}
+                      </p>
+                    ) : (
+                      <p className="text-[10px] text-muted-foreground">// mancante</p>
+                    )}
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
 
-      <AnimatePresence>
-        {(creating || editing) && isPapa && (
-          <PartEditor
-            part={editing}
-            existing={parts}
-            onClose={() => {
-              setEditing(null);
-              setCreating(false);
-            }}
-            onSaved={async () => {
-              setEditing(null);
-              setCreating(false);
-              await load();
-            }}
-          />
-        )}
-      </AnimatePresence>
+          <AnimatePresence>
+            {(creating || editing) && isPapa && (
+              <PartEditor
+                part={editing}
+                existing={parts}
+                onClose={() => {
+                  setEditing(null);
+                  setCreating(false);
+                }}
+                onSaved={async () => {
+                  setEditing(null);
+                  setCreating(false);
+                  await load();
+                }}
+              />
+            )}
+          </AnimatePresence>
         </>
       )}
     </PageShell>
@@ -223,10 +228,8 @@ function PartEditor({
 
   const validate = (): string | null => {
     const k = key.trim().toLowerCase();
-    if (!/^[a-z0-9_-]{2,40}$/.test(k))
-      return "Chiave: 2-40 caratteri (a-z, 0-9, _ -).";
-    if (isNew && existing.some((p) => p.key === k))
-      return "Chiave già esistente.";
+    if (!/^[a-z0-9_-]{2,40}$/.test(k)) return "Chiave: 2-40 caratteri (a-z, 0-9, _ -).";
+    if (isNew && existing.some((p) => p.key === k)) return "Chiave già esistente.";
     if (!name.trim() || name.trim().length > 60) return "Nome richiesto (max 60).";
     if (!emoji.trim() || emoji.trim().length > 8) return "Emoji richiesta (max 8 caratteri).";
     if (description.trim().length > 200) return "Descrizione max 200 caratteri.";
@@ -428,9 +431,7 @@ function PartEditor({
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
-        {label}
-      </span>
+      <span className="text-[10px] uppercase tracking-widest text-muted-foreground">{label}</span>
       <div className="mt-1">{children}</div>
     </label>
   );

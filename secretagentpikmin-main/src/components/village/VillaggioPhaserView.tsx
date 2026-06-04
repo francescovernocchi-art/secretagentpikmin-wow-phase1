@@ -217,9 +217,11 @@ export function VillaggioPhaserView() {
     };
 
     refreshNearby();
-    scanThreats({ agent, baseLat, baseLng, totalDefense, force: true }).then(({ created, auto }) => {
-      if (created || auto) reload();
-    });
+    scanThreats({ agent, baseLat, baseLng, totalDefense, force: true }).then(
+      ({ created, auto }) => {
+        if (created || auto) reload();
+      },
+    );
 
     const id = setInterval(() => {
       refreshNearby();
@@ -260,9 +262,7 @@ export function VillaggioPhaserView() {
 
     const due = buildings.filter(
       (b) =>
-        b.status !== "idle" &&
-        b.build_end_at &&
-        new Date(b.build_end_at).getTime() <= Date.now(),
+        b.status !== "idle" && b.build_end_at && new Date(b.build_end_at).getTime() <= Date.now(),
     );
     if (due.length) {
       (async () => {
@@ -554,7 +554,9 @@ function Onboarding({ agent, onCreated }: { agent: string; onCreated: () => void
         className="max-w-md mx-auto pt-6 space-y-4"
       >
         <header>
-          <p className="text-[11px] uppercase tracking-[0.3em] text-primary/80">// Nuovo villaggio</p>
+          <p className="text-[11px] uppercase tracking-[0.3em] text-primary/80">
+            // Nuovo villaggio
+          </p>
           <h1 className="font-display text-2xl text-glow mt-1">Fonda la tua colonia</h1>
         </header>
 
@@ -569,7 +571,9 @@ function Onboarding({ agent, onCreated }: { agent: string; onCreated: () => void
           </div>
 
           <div>
-            <p className="text-[11px] uppercase tracking-widest text-primary mb-2">Bioma di partenza</p>
+            <p className="text-[11px] uppercase tracking-widest text-primary mb-2">
+              Bioma di partenza
+            </p>
             <div className="grid grid-cols-2 gap-2">
               {Object.entries(THEMES).map(([key, t]) => (
                 <button

@@ -31,10 +31,15 @@ export function AssetLibraryEditor() {
   const [uploadCategory, setUploadCategory] = useState("decorazione");
 
   const reload = async () => {
-    const { data } = await supabase.from("sprite_assets").select("*").order("created_at", { ascending: false });
+    const { data } = await supabase
+      .from("sprite_assets")
+      .select("*")
+      .order("created_at", { ascending: false });
     setList((data ?? []) as Asset[]);
   };
-  useEffect(() => { reload(); }, []);
+  useEffect(() => {
+    reload();
+  }, []);
 
   const filtered = useMemo(() => {
     const s = search.trim().toLowerCase();
@@ -53,24 +58,34 @@ export function AssetLibraryEditor() {
         const url = await uploadAsset("game-icons", file, `${uploadCategory}-${file.name}`);
         const name = file.name.replace(/\.[^.]+$/, "");
         const { error } = await supabase.from("sprite_assets").insert({
-          category: uploadCategory, name, url, tags: [],
+          category: uploadCategory,
+          name,
+          url,
+          tags: [],
         });
         if (error) throw error;
       }
       toast.success(`${files.length} sprite caricati`);
       await reload();
-    } catch (e: any) { toast.error(e.message); }
-    finally { setBusy(false); }
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setBusy(false);
+    }
   };
 
   const remove = async (id: string) => {
     if (!confirm("Eliminare questo sprite?")) return;
     const { error } = await supabase.from("sprite_assets").delete().eq("id", id);
-    if (error) toast.error(error.message); else reload();
+    if (error) toast.error(error.message);
+    else reload();
   };
 
   const updateTags = async (id: string, raw: string) => {
-    const tags = raw.split(",").map((t) => t.trim()).filter(Boolean);
+    const tags = raw
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean);
     setList((p) => p.map((a) => (a.id === id ? { ...a, tags } : a)));
     await supabase.from("sprite_assets").update({ tags }).eq("id", id);
   };
@@ -83,22 +98,38 @@ export function AssetLibraryEditor() {
   return (
     <div className="flex flex-col gap-3">
       <p className="text-[11px] text-muted-foreground panel p-2">
-        Libreria generica di sprite: carica decorazioni, oggetti, effetti, icone, avatar.
-        Ogni asset è riutilizzabile in tutto il gioco tramite URL pubblico.
+        Libreria generica di sprite: carica decorazioni, oggetti, effetti, icone, avatar. Ogni asset
+        è riutilizzabile in tutto il gioco tramite URL pubblico.
       </p>
 
       {/* Upload */}
       <div className="panel-strong p-3 flex flex-wrap items-center gap-2">
         <label className="text-xs">
           Categoria upload:
-          <select className="input ml-1" value={uploadCategory} onChange={(e) => setUploadCategory(e.target.value)}>
-            {CATEGORIES.map((c) => <option key={c.key} value={c.key}>{c.emoji} {c.label}</option>)}
+          <select
+            className="input ml-1"
+            value={uploadCategory}
+            onChange={(e) => setUploadCategory(e.target.value)}
+          >
+            {CATEGORIES.map((c) => (
+              <option key={c.key} value={c.key}>
+                {c.emoji} {c.label}
+              </option>
+            ))}
           </select>
         </label>
         <label className="panel-strong px-3 py-2 cursor-pointer text-xs flex items-center gap-1">
           <Upload className="h-3 w-3" /> {busy ? "Caricamento…" : "Carica immagini"}
-          <input type="file" accept="image/*" multiple className="hidden"
-            onChange={(e) => { onUpload(e.target.files); e.target.value = ""; }} />
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            className="hidden"
+            onChange={(e) => {
+              onUpload(e.target.files);
+              e.target.value = "";
+            }}
+          />
         </label>
       </div>
 
@@ -106,14 +137,18 @@ export function AssetLibraryEditor() {
       <div className="flex flex-wrap gap-2 items-center">
         <button
           onClick={() => setFilter("all")}
-          className={`px-3 py-1 rounded-full text-xs ${filter === "all" ? "bg-primary text-primary-foreground" : "panel"}`}>
+          className={`px-3 py-1 rounded-full text-xs ${filter === "all" ? "bg-primary text-primary-foreground" : "panel"}`}
+        >
           Tutti ({list.length})
         </button>
         {CATEGORIES.map((c) => {
           const n = list.filter((a) => a.category === c.key).length;
           return (
-            <button key={c.key} onClick={() => setFilter(c.key)}
-              className={`px-3 py-1 rounded-full text-xs ${filter === c.key ? "bg-primary text-primary-foreground" : "panel"}`}>
+            <button
+              key={c.key}
+              onClick={() => setFilter(c.key)}
+              className={`px-3 py-1 rounded-full text-xs ${filter === c.key ? "bg-primary text-primary-foreground" : "panel"}`}
+            >
               {c.emoji} {c.label} ({n})
             </button>
           );
@@ -134,23 +169,48 @@ export function AssetLibraryEditor() {
         {filtered.map((a) => (
           <div key={a.id} className="panel p-2 flex flex-col gap-1">
             <div className="aspect-square bg-black/30 flex items-center justify-center overflow-hidden rounded">
-              <img src={a.url} alt={a.name} className="w-full h-full object-contain"
-                onError={(e) => { (e.currentTarget as HTMLImageElement).src = ""; }} />
+              <img
+                src={a.url}
+                alt={a.name}
+                className="w-full h-full object-contain"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = "";
+                }}
+              />
             </div>
-            <p className="text-[10px] truncate" title={a.name}>{a.name}</p>
-            <select className="input text-[10px] py-0.5" value={a.category}
-              onChange={(e) => updateCategory(a.id, e.target.value)}>
-              {CATEGORIES.map((c) => <option key={c.key} value={c.key}>{c.label}</option>)}
+            <p className="text-[10px] truncate" title={a.name}>
+              {a.name}
+            </p>
+            <select
+              className="input text-[10px] py-0.5"
+              value={a.category}
+              onChange={(e) => updateCategory(a.id, e.target.value)}
+            >
+              {CATEGORIES.map((c) => (
+                <option key={c.key} value={c.key}>
+                  {c.label}
+                </option>
+              ))}
             </select>
-            <input className="input text-[10px] py-0.5" placeholder="tag, csv"
+            <input
+              className="input text-[10px] py-0.5"
+              placeholder="tag, csv"
               defaultValue={a.tags.join(",")}
-              onBlur={(e) => updateTags(a.id, e.target.value)} />
+              onBlur={(e) => updateTags(a.id, e.target.value)}
+            />
             <button
-              onClick={() => { navigator.clipboard.writeText(a.url); toast.success("URL copiato"); }}
-              className="text-[9px] panel-strong py-0.5 hover:bg-primary/20">
+              onClick={() => {
+                navigator.clipboard.writeText(a.url);
+                toast.success("URL copiato");
+              }}
+              className="text-[9px] panel-strong py-0.5 hover:bg-primary/20"
+            >
               Copia URL
             </button>
-            <button onClick={() => remove(a.id)} className="text-[9px] text-destructive flex items-center justify-center gap-1">
+            <button
+              onClick={() => remove(a.id)}
+              className="text-[9px] text-destructive flex items-center justify-center gap-1"
+            >
               <Trash2 className="h-2.5 w-2.5" /> Elimina
             </button>
           </div>

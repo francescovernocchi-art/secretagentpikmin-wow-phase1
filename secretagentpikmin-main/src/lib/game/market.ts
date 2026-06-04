@@ -60,12 +60,19 @@ export async function sellInventoryItem(
     payload: { amount: total, item_key: itemKey },
   });
 
-  return { success: true, credits: total, message: `Venduto per ${total} cr — debito planetario ridotto` };
+  return {
+    success: true,
+    credits: total,
+    message: `Venduto per ${total} cr — debito planetario ridotto`,
+  };
 }
 
 async function getProfileCoins(agentKey: string): Promise<number> {
   try {
-    const { data } = await gameTable("player_profiles").select("coins").eq("agent_key", agentKey).maybeSingle();
+    const { data } = await gameTable("player_profiles")
+      .select("coins")
+      .eq("agent_key", agentKey)
+      .maybeSingle();
     return data?.coins ?? 0;
   } catch {
     return 0;
@@ -77,7 +84,9 @@ export type SellableItem = DbInventoryItem & { sellerLabel: string };
 export async function fetchSellableInventory(agentKey: string): Promise<SellableItem[]> {
   const { data } = await fetchInventory(agentKey);
   const label = agentKey === "papa" ? "Francesco" : "Lorenzo";
-  return data.filter((i) => i.quantity > 0 && i.sell_price > 0).map((i) => ({ ...i, sellerLabel: label }));
+  return data
+    .filter((i) => i.quantity > 0 && i.sell_price > 0)
+    .map((i) => ({ ...i, sellerLabel: label }));
 }
 
 export async function fetchRecentTransactions(agentKey: string, limit = 10) {

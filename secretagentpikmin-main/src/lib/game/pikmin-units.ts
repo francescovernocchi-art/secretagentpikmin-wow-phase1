@@ -21,7 +21,9 @@ export function dbToPikminUnit(row: DbPikminUnit): PikminUnit {
   };
 }
 
-export async function fetchPikminUnits(ownerAgent?: string): Promise<{ data: PikminUnit[]; source: "supabase" | "local" }> {
+export async function fetchPikminUnits(
+  ownerAgent?: string,
+): Promise<{ data: PikminUnit[]; source: "supabase" | "local" }> {
   const res = await safeGameQuery(
     () => {
       let q = gameTable("pikmin_units").select("*").order("created_at");

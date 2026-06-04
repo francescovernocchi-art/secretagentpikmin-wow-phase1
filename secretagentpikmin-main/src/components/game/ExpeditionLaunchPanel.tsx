@@ -46,7 +46,9 @@ export function ExpeditionLaunchPanel() {
 
   const togglePikmin = (id: string) => {
     hapticTap();
-    setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : prev.length >= 5 ? prev : [...prev, id]));
+    setSelected((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : prev.length >= 5 ? prev : [...prev, id],
+    );
   };
 
   const launch = async () => {
@@ -78,7 +80,9 @@ export function ExpeditionLaunchPanel() {
   return (
     <section className="space-y-4">
       <header>
-        <p className="text-[10px] uppercase tracking-[0.35em] text-primary/80">// Spedizioni Pikmin</p>
+        <p className="text-[10px] uppercase tracking-[0.35em] text-primary/80">
+          // Spedizioni Pikmin
+        </p>
         <h2 className="font-display text-xl text-glow">Lancia una spedizione</h2>
         <p className="text-xs text-muted-foreground mt-1">
           Scegli bioma, obiettivo e squadra. Al rientro: ricompense, XP e progressi missione.
@@ -89,14 +93,22 @@ export function ExpeditionLaunchPanel() {
         <div className="space-y-2">
           <p className="text-[10px] uppercase tracking-widest text-primary/80">In corso</p>
           {running.map((e) => {
-            const left = Math.max(0, Math.ceil((new Date(e.end_at).getTime() - Date.now()) / 60000));
+            const left = Math.max(
+              0,
+              Math.ceil((new Date(e.end_at).getTime() - Date.now()) / 60000),
+            );
             return (
               <div key={e.id} className="panel p-3 text-xs">
                 <div className="flex justify-between items-center">
                   <span className="font-medium">{e.title}</span>
-                  <span className="text-primary flex items-center gap-1"><Clock className="h-3 w-3" />{left}m</span>
+                  <span className="text-primary flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    {left}m
+                  </span>
                 </div>
-                <p className="text-muted-foreground mt-1">{e.pikmin_ids.length} Pikmin · rischio {e.risk}</p>
+                <p className="text-muted-foreground mt-1">
+                  {e.pikmin_ids.length} Pikmin · rischio {e.risk}
+                </p>
               </div>
             );
           })}
@@ -112,12 +124,16 @@ export function ExpeditionLaunchPanel() {
             className="w-full bg-night/60 border border-border rounded-lg px-2 py-1.5 text-xs"
           >
             {BIOMES.map((b) => (
-              <option key={b.key} value={b.key}>{b.emoji} {b.label}</option>
+              <option key={b.key} value={b.key}>
+                {b.emoji} {b.label}
+              </option>
             ))}
           </select>
         </label>
         <label className="panel p-3 space-y-1">
-          <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Obiettivo</span>
+          <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
+            Obiettivo
+          </span>
           <select
             value={objective}
             onChange={(e) => {
@@ -129,17 +145,34 @@ export function ExpeditionLaunchPanel() {
             className="w-full bg-night/60 border border-border rounded-lg px-2 py-1.5 text-xs"
           >
             {EXPEDITION_OBJECTIVES.map((o) => (
-              <option key={o.key} value={o.key}>{o.emoji} {o.label}</option>
+              <option key={o.key} value={o.key}>
+                {o.emoji} {o.label}
+              </option>
             ))}
           </select>
         </label>
         <label className="panel p-3 space-y-1">
-          <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Durata ({duration}m)</span>
-          <input type="range" min={10} max={60} value={duration} onChange={(e) => setDuration(Number(e.target.value))} className="w-full" />
+          <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
+            Durata ({duration}m)
+          </span>
+          <input
+            type="range"
+            min={10}
+            max={60}
+            value={duration}
+            onChange={(e) => setDuration(Number(e.target.value))}
+            className="w-full"
+          />
         </label>
         <label className="panel p-3 space-y-1">
-          <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Rischio</span>
-          <select value={risk} onChange={(e) => setRisk(e.target.value as Phase3Expedition["risk"])} className="w-full bg-night/60 border border-border rounded-lg px-2 py-1.5 text-xs">
+          <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
+            Rischio
+          </span>
+          <select
+            value={risk}
+            onChange={(e) => setRisk(e.target.value as Phase3Expedition["risk"])}
+            className="w-full bg-night/60 border border-border rounded-lg px-2 py-1.5 text-xs"
+          >
             <option value="basso">Basso</option>
             <option value="medio">Medio</option>
             <option value="alto">Alto</option>
@@ -154,7 +187,9 @@ export function ExpeditionLaunchPanel() {
         <div className="grid grid-cols-2 gap-2">
           {available.map((p) => {
             const on = selected.includes(p.id);
-            const bonus = p.specialization && objDef.specBonus.includes(p.specialization as PikminSpecializationKey);
+            const bonus =
+              p.specialization &&
+              objDef.specBonus.includes(p.specialization as PikminSpecializationKey);
             return (
               <button
                 key={p.id}
@@ -162,34 +197,50 @@ export function ExpeditionLaunchPanel() {
                 className={`panel p-2 text-left text-xs transition ${on ? "ring-2 ring-primary bg-primary/10" : ""}`}
               >
                 <span className="font-medium">{p.name}</span>
-                <span className="text-[10px] text-muted-foreground block">Lv{p.level} · {p.specialization}{bonus ? " ★" : ""}</span>
+                <span className="text-[10px] text-muted-foreground block">
+                  Lv{p.level} · {p.specialization}
+                  {bonus ? " ★" : ""}
+                </span>
               </button>
             );
           })}
           {available.length === 0 && (
-            <p className="col-span-2 text-muted-foreground text-xs">Nessun Pikmin disponibile ({availablePikminForExpedition(agent).length} totali)</p>
+            <p className="col-span-2 text-muted-foreground text-xs">
+              Nessun Pikmin disponibile ({availablePikminForExpedition(agent).length} totali)
+            </p>
           )}
         </div>
       </div>
 
       <div className="panel p-3 flex items-center justify-between text-xs">
         <div>
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Ricompensa stimata</p>
-          <p className="text-primary">~{reward.xp} XP · ~{reward.coins} cr · {reward.items} oggetti</p>
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+            Ricompensa stimata
+          </p>
+          <p className="text-primary">
+            ~{reward.xp} XP · ~{reward.coins} cr · {reward.items} oggetti
+          </p>
         </div>
         <Shield className="h-5 w-5 text-primary/50" />
       </div>
 
-      <button onClick={launch} disabled={busy || selected.length === 0} className="btn-neon w-full py-3 text-xs flex items-center justify-center gap-2 disabled:opacity-50">
+      <button
+        onClick={launch}
+        disabled={busy || selected.length === 0}
+        className="btn-neon w-full py-3 text-xs flex items-center justify-center gap-2 disabled:opacity-50"
+      >
         {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Rocket className="h-4 w-4" />}
         Avvia spedizione
       </button>
 
-      {active.filter((e) => e.status !== "active").slice(0, 3).map((e) => (
-        <div key={e.id} className="text-[10px] text-muted-foreground panel p-2">
-          {e.status === "completed" ? "✓" : "✗"} {e.title}: {e.summary}
-        </div>
-      ))}
+      {active
+        .filter((e) => e.status !== "active")
+        .slice(0, 3)
+        .map((e) => (
+          <div key={e.id} className="text-[10px] text-muted-foreground panel p-2">
+            {e.status === "completed" ? "✓" : "✗"} {e.title}: {e.summary}
+          </div>
+        ))}
     </section>
   );
 }

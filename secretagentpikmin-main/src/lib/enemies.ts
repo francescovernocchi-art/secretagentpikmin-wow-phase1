@@ -21,9 +21,28 @@ export type EnemyRow = {
   activity_period?: "diurno" | "notturno" | "crepuscolare" | "sempre" | null;
 };
 
-export type PikminType = "red" | "yellow" | "blue" | "purple" | "white" | "rock" | "wing" | "ice" | "glow";
+export type PikminType =
+  | "red"
+  | "yellow"
+  | "blue"
+  | "purple"
+  | "white"
+  | "rock"
+  | "wing"
+  | "ice"
+  | "glow";
 
-export const PIKMIN_TYPES: PikminType[] = ["red", "yellow", "blue", "purple", "white", "rock", "wing", "ice", "glow"];
+export const PIKMIN_TYPES: PikminType[] = [
+  "red",
+  "yellow",
+  "blue",
+  "purple",
+  "white",
+  "rock",
+  "wing",
+  "ice",
+  "glow",
+];
 
 export const PIKMIN_TYPE_LABEL: Record<PikminType, string> = {
   red: "Rosso",
@@ -51,7 +70,15 @@ export const PIKMIN_TYPE_EMOJI: Record<PikminType, string> = {
 
 /** Base attack power per pikmin type (vs generic enemy). */
 const BASE_ATTACK: Record<PikminType, number> = {
-  red: 2, yellow: 1.4, blue: 1.4, purple: 3, white: 1.2, rock: 2.5, wing: 1.2, ice: 1.6, glow: 1.8,
+  red: 2,
+  yellow: 1.4,
+  blue: 1.4,
+  purple: 3,
+  white: 1.2,
+  rock: 2.5,
+  wing: 1.2,
+  ice: 1.6,
+  glow: 1.8,
 };
 
 /** Pondera la probabilità di spawn: più forte = più raro (già nella prob). Restituisce un nemico pesato o null. */
@@ -101,7 +128,9 @@ export function simulateBattle(enemy: EnemyRow, squad: BattleSquad): BattleResul
     totalLost = distributeLosses(losses, squad, enemy.recommended_pikmin, pikminLost);
   } else {
     // sconfitta: il nemico mangia tra eat_min e eat_max
-    const losses = enemy.pikmin_eat_min + Math.floor(Math.random() * (enemy.pikmin_eat_max - enemy.pikmin_eat_min + 1));
+    const losses =
+      enemy.pikmin_eat_min +
+      Math.floor(Math.random() * (enemy.pikmin_eat_max - enemy.pikmin_eat_min + 1));
     totalLost = distributeLosses(losses, squad, enemy.recommended_pikmin, pikminLost);
   }
 
@@ -117,7 +146,14 @@ export function simulateBattle(enemy: EnemyRow, squad: BattleSquad): BattleResul
     ? `Vittoria! ${enemy.name} sconfitto.${lostParts ? ` Perdite: ${lostParts}.` : " Nessuna perdita."} +${rewards.xp} XP, +${rewards.coins} 🪙.`
     : `Sconfitta. ${enemy.name} ha mangiato ${lostParts || `${totalLost} Pikmin`}.`;
 
-  return { outcome: win ? "vittoria" : "sconfitta", damageDealt: dmg, pikminLost, totalLost, rewards, summary };
+  return {
+    outcome: win ? "vittoria" : "sconfitta",
+    damageDealt: dmg,
+    pikminLost,
+    totalLost,
+    rewards,
+    summary,
+  };
 }
 
 function distributeLosses(
@@ -155,7 +191,7 @@ export async function applyPikminLosses(losses: BattleSquad, agent: string) {
         p_delta: -qty,
         p_reason: "battle_loss",
         p_agent: agent,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         p_meta: { type } as any,
       });
     } catch {
@@ -170,7 +206,7 @@ export async function getPikminBreakdown(): Promise<BattleSquad> {
     .select("count, breakdown")
     .eq("id", "team")
     .maybeSingle();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   const bk = ((data as any)?.breakdown ?? {}) as BattleSquad;
   const total = (data?.count as number) ?? 0;
   const sum = Object.values(bk).reduce((s, n) => s + (n ?? 0), 0);

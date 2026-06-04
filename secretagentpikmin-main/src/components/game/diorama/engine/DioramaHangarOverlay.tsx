@@ -16,7 +16,14 @@ interface Props {
 }
 
 /** Hangar evolutivo — sprite da asset se disponibile, altrimenti fallback CSS navicella */
-export function DioramaHangarOverlay({ hangarAssets, shipPct, parts, compact, scale = 1, onClick }: Props) {
+export function DioramaHangarOverlay({
+  hangarAssets,
+  shipPct,
+  parts,
+  compact,
+  scale = 1,
+  onClick,
+}: Props) {
   const stage = resolveHangarStage(shipPct);
   const rawSrc = resolveHangarSprite(hangarAssets, stage);
   const src = useResolvedAssetUrl(rawSrc);

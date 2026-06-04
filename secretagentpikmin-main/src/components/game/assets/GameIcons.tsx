@@ -18,40 +18,88 @@ interface IconProps {
   className?: string;
 }
 
-export function BuildingIconSvg({ buildingKey, size = 40, color }: IconProps & { buildingKey: BuildingKey; color?: string }) {
+export function BuildingIconSvg({
+  buildingKey,
+  size = 40,
+  color,
+}: IconProps & { buildingKey: BuildingKey; color?: string }) {
   const c = color ?? ART_PALETTE.nature.primary;
   const icons: Record<BuildingKey, React.ReactNode> = {
     centro_controllo: (
       <>
-        <rect x="8" y="14" width="24" height="18" rx="2" fill={`${c}33`} stroke={c} strokeWidth="1.5" />
+        <rect
+          x="8"
+          y="14"
+          width="24"
+          height="18"
+          rx="2"
+          fill={`${c}33`}
+          stroke={c}
+          strokeWidth="1.5"
+        />
         <circle cx="20" cy="20" r="4" fill={c} opacity="0.8" />
         <path d="M14 10 L20 4 L26 10 Z" fill={c} opacity="0.6" />
       </>
     ),
     magazzino: (
       <>
-        <rect x="6" y="12" width="28" height="20" rx="2" fill={`${c}22`} stroke={c} strokeWidth="1.5" />
+        <rect
+          x="6"
+          y="12"
+          width="28"
+          height="20"
+          rx="2"
+          fill={`${c}22`}
+          stroke={c}
+          strokeWidth="1.5"
+        />
         <path d="M6 16 L20 10 L34 16" fill="none" stroke={c} strokeWidth="1" />
         <rect x="14" y="20" width="8" height="8" fill={`${c}44`} />
       </>
     ),
     accademia: (
       <>
-        <rect x="10" y="16" width="20" height="14" rx="1" fill={`${c}33`} stroke={c} strokeWidth="1.5" />
+        <rect
+          x="10"
+          y="16"
+          width="20"
+          height="14"
+          rx="1"
+          fill={`${c}33`}
+          stroke={c}
+          strokeWidth="1.5"
+        />
         <path d="M12 16 L20 8 L28 16" fill={`${c}55`} stroke={c} strokeWidth="1" />
         <circle cx="20" cy="22" r="2" fill="#fde047" />
       </>
     ),
     laboratorio: (
       <>
-        <rect x="12" y="20" width="6" height="10" rx="1" fill={`${ART_PALETTE.alien.primary}66`} stroke={ART_PALETTE.alien.primary} />
+        <rect
+          x="12"
+          y="20"
+          width="6"
+          height="10"
+          rx="1"
+          fill={`${ART_PALETTE.alien.primary}66`}
+          stroke={ART_PALETTE.alien.primary}
+        />
         <path d="M18 24 L24 12" stroke={c} strokeWidth="2" strokeLinecap="round" />
         <circle cx="26" cy="10" r="3" fill={ART_PALETTE.alien.primary} opacity="0.7" />
       </>
     ),
     mercato: (
       <>
-        <rect x="8" y="18" width="24" height="12" rx="2" fill={`${ART_PALETTE.mission.primary}33`} stroke={ART_PALETTE.mission.primary} strokeWidth="1.5" />
+        <rect
+          x="8"
+          y="18"
+          width="24"
+          height="12"
+          rx="2"
+          fill={`${ART_PALETTE.mission.primary}33`}
+          stroke={ART_PALETTE.mission.primary}
+          strokeWidth="1.5"
+        />
         <path d="M8 18 L20 10 L32 18" fill={`${ART_PALETTE.mission.primary}44`} />
       </>
     ),
@@ -73,7 +121,13 @@ export function BuildingIconSvg({ buildingKey, size = 40, color }: IconProps & {
 export function ShipPreviewSvg({ percent = 0, size = 120 }: { percent?: number; size?: number }) {
   const glow = percent >= 40;
   return (
-    <svg width={size} height={size * 0.75} viewBox="0 0 120 90" className={glow ? "drop-shadow-[0_0_12px_rgba(56,189,248,0.6)]" : ""} aria-hidden>
+    <svg
+      width={size}
+      height={size * 0.75}
+      viewBox="0 0 120 90"
+      className={glow ? "drop-shadow-[0_0_12px_rgba(56,189,248,0.6)]" : ""}
+      aria-hidden
+    >
       <defs>
         <linearGradient id="previewHull" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#38bdf8" />
@@ -81,11 +135,27 @@ export function ShipPreviewSvg({ percent = 0, size = 120 }: { percent?: number; 
         </linearGradient>
       </defs>
       <ellipse cx="60" cy="72" rx="38" ry="10" fill="rgba(0,0,0,0.35)" />
-      <path d="M60 12 L95 58 L60 78 L25 58 Z" fill="url(#previewHull)" stroke="#38bdf8" strokeWidth="2" />
+      <path
+        d="M60 12 L95 58 L60 78 L25 58 Z"
+        fill="url(#previewHull)"
+        stroke="#38bdf8"
+        strokeWidth="2"
+      />
       <ellipse cx="60" cy="42" rx="10" ry="14" fill="rgba(186,230,253,0.85)" />
       <path d="M25 54 L8 64 L25 58 Z" fill="#0284c7" />
       <path d="M95 54 L112 64 L95 58 Z" fill="#0284c7" />
-      {glow && <circle cx="60" cy="45" r="35" fill="none" stroke="#38bdf8" strokeWidth="1" opacity="0.3" className="animate-pulse-slow" />}
+      {glow && (
+        <circle
+          cx="60"
+          cy="45"
+          r="35"
+          fill="none"
+          stroke="#38bdf8"
+          strokeWidth="1"
+          opacity="0.3"
+          className="animate-pulse-slow"
+        />
+      )}
     </svg>
   );
 }
@@ -114,8 +184,20 @@ export function ResourceIconSvg({ kind = "berry", size = 28 }: IconProps & { kin
 export function MissionIconSvg({ size = 28 }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 28 28" aria-hidden>
-      <circle cx="14" cy="14" r="12" fill={`${ART_PALETTE.mission.primary}22`} stroke={ART_PALETTE.mission.primary} strokeWidth="1.5" />
-      <path d="M14 8 L14 16 M14 16 L18 20" stroke={ART_PALETTE.mission.primary} strokeWidth="2" strokeLinecap="round" />
+      <circle
+        cx="14"
+        cy="14"
+        r="12"
+        fill={`${ART_PALETTE.mission.primary}22`}
+        stroke={ART_PALETTE.mission.primary}
+        strokeWidth="1.5"
+      />
+      <path
+        d="M14 8 L14 16 M14 16 L18 20"
+        stroke={ART_PALETTE.mission.primary}
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
       <circle cx="14" cy="8" r="2" fill={ART_PALETTE.mission.primary} />
     </svg>
   );
@@ -123,7 +205,10 @@ export function MissionIconSvg({ size = 28 }: IconProps) {
 
 export type CoreMissionKey = "ship" | "debt" | "planet" | "bestiary";
 
-export function CoreMissionIconSvg({ missionKey, size = 40 }: IconProps & { missionKey: CoreMissionKey }) {
+export function CoreMissionIconSvg({
+  missionKey,
+  size = 40,
+}: IconProps & { missionKey: CoreMissionKey }) {
   const palette: Record<CoreMissionKey, { fill: string; stroke: string }> = {
     ship: { fill: "rgba(56, 189, 248, 0.35)", stroke: "#38bdf8" },
     debt: { fill: `${ART_PALETTE.mission.primary}33`, stroke: ART_PALETTE.mission.primary },
@@ -144,7 +229,9 @@ export function CoreMissionIconSvg({ missionKey, size = 40 }: IconProps & { miss
     return (
       <svg width={size} height={size} viewBox="0 0 40 40" aria-hidden>
         <circle cx="20" cy="20" r="14" fill={fill} stroke={stroke} strokeWidth="1.5" />
-        <text x="20" y="25" textAnchor="middle" fontSize="14" fill={stroke}>₡</text>
+        <text x="20" y="25" textAnchor="middle" fontSize="14" fill={stroke}>
+          ₡
+        </text>
       </svg>
     );
   }
@@ -159,7 +246,16 @@ export function CoreMissionIconSvg({ missionKey, size = 40 }: IconProps & { miss
   }
   return (
     <svg width={size} height={size} viewBox="0 0 40 40" aria-hidden>
-      <rect x="8" y="10" width="24" height="22" rx="6" fill={fill} stroke={stroke} strokeWidth="1.5" />
+      <rect
+        x="8"
+        y="10"
+        width="24"
+        height="22"
+        rx="6"
+        fill={fill}
+        stroke={stroke}
+        strokeWidth="1.5"
+      />
       <circle cx="16" cy="18" r="3" fill={stroke} />
       <circle cx="26" cy="18" r="2" fill={stroke} opacity="0.7" />
       <path d="M14 26 Q20 30 26 26" fill="none" stroke={stroke} strokeWidth="1.5" />
@@ -207,7 +303,16 @@ export function CreaturePortraitSvg({
       style={{ width: size, height: size, ["--portrait-glow" as string]: `${c}44` }}
     >
       <svg width={size} height={size} viewBox="0 0 64 64" className="absolute inset-0" aria-hidden>
-        <rect x="4" y="4" width="56" height="56" rx="10" fill={`${c}18`} stroke={c} strokeWidth="1.5" />
+        <rect
+          x="4"
+          y="4"
+          width="56"
+          height="56"
+          rx="10"
+          fill={`${c}18`}
+          stroke={c}
+          strokeWidth="1.5"
+        />
         <path d="M12 48 Q32 20 52 48" fill="none" stroke={c} strokeWidth="1" opacity="0.4" />
         <circle cx="32" cy="28" r="12" fill={`${c}33`} />
       </svg>

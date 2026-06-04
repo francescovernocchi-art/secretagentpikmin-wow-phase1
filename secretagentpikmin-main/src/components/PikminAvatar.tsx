@@ -24,13 +24,14 @@ async function loadSpecies(): Promise<Map<string, SpeciesLite>> {
     const { data } = await supabase
       .from("pikmin_species")
       .select("key,name,color,image_url,abilities");
-    const map = new Map<string, SpeciesLite>((data ?? []).map((r: any) => [r.key, r as SpeciesLite]));
+    const map = new Map<string, SpeciesLite>(
+      (data ?? []).map((r: any) => [r.key, r as SpeciesLite]),
+    );
     CACHE = map;
     return map;
   })();
   return LOADING;
 }
-
 
 export function invalidatePikminCache() {
   CACHE = null;
@@ -40,10 +41,17 @@ export function invalidatePikminCache() {
 export function usePikminSpecies(speciesKey: string | null | undefined): SpeciesLite | null {
   const [s, setS] = useState<SpeciesLite | null>(null);
   useEffect(() => {
-    if (!speciesKey) { setS(null); return; }
+    if (!speciesKey) {
+      setS(null);
+      return;
+    }
     let active = true;
-    loadSpecies().then((m) => { if (active) setS(m.get(speciesKey) ?? null); });
-    return () => { active = false; };
+    loadSpecies().then((m) => {
+      if (active) setS(m.get(speciesKey) ?? null);
+    });
+    return () => {
+      active = false;
+    };
   }, [speciesKey]);
   return s;
 }
@@ -55,7 +63,12 @@ interface Props {
   fallbackEmoji?: string;
 }
 
-export function PikminAvatar({ speciesKey, size = 32, fallbackEmoji = "🌱", className = "" }: Props) {
+export function PikminAvatar({
+  speciesKey,
+  size = 32,
+  fallbackEmoji = "🌱",
+  className = "",
+}: Props) {
   const s = usePikminSpecies(speciesKey);
   const style = { width: size, height: size };
   if (s?.image_url) {

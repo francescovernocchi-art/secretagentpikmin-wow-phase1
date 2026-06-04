@@ -34,12 +34,16 @@ export function ScoutingMissionPanel({
   useEffect(() => {
     if (!open) return;
     setCount(3);
-    getPikminCount().then(setHave).catch(() => setHave(0));
+    getPikminCount()
+      .then(setHave)
+      .catch(() => setHave(0));
   }, [open]);
 
   if (!enemy || !enemyPos) return null;
 
-  const dist = player ? calculateDistanceMeters(player.lat, player.lng, enemyPos.lat, enemyPos.lng) : 0;
+  const dist = player
+    ? calculateDistanceMeters(player.lat, player.lng, enemyPos.lat, enemyPos.lng)
+    : 0;
   const seconds = scoutingDurationSeconds(dist);
   const risk = enemy.danger_level >= 4 ? "alto" : enemy.danger_level >= 2 ? "medio" : "basso";
   const recommended = Math.max(3, enemy.danger_level * 2);
@@ -99,7 +103,11 @@ export function ScoutingMissionPanel({
           </div>
 
           <p className="text-sm">
-            Bersaglio: <b>{enemy.emoji} {enemy.name}</b> a {Math.round(dist)}m
+            Bersaglio:{" "}
+            <b>
+              {enemy.emoji} {enemy.name}
+            </b>{" "}
+            a {Math.round(dist)}m
           </p>
 
           <div className="grid grid-cols-3 gap-2 text-center text-[11px]">
@@ -153,10 +161,7 @@ async function resolveScout(
   agent: string,
 ): Promise<Record<string, unknown> & { summary: string }> {
   const efficiency = Math.min(1.5, sent / Math.max(1, recommended));
-  const reveals: string[] = [
-    `Tipo: ${enemy.name}`,
-    `Livello pericolo: ${enemy.danger_level}/5`,
-  ];
+  const reveals: string[] = [`Tipo: ${enemy.name}`, `Livello pericolo: ${enemy.danger_level}/5`];
   const weak = (enemy as any).weaknesses as string[] | undefined;
   if (weak && weak.length) {
     reveals.push(`Debolezze: ${weak.join(", ")}`);

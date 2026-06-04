@@ -30,7 +30,9 @@ export function MissionProgressPanel({ compact = false }: MissionProgressPanelPr
     <section className="space-y-3">
       {!compact && (
         <header>
-          <p className="text-[10px] uppercase tracking-[0.35em] text-primary/80">// Missioni principali</p>
+          <p className="text-[10px] uppercase tracking-[0.35em] text-primary/80">
+            // Missioni principali
+          </p>
           <h2 className="font-display text-xl text-glow">Salvare il pianeta originario</h2>
           <p className="text-xs text-muted-foreground mt-1">
             Quattro grandi missioni famiglia: navicella, debito, cibo/energia, bestiario.
@@ -53,16 +55,22 @@ export function MissionProgressPanel({ compact = false }: MissionProgressPanelPr
           let detail = loading ? "…" : "";
           if (progress) {
             if (m.key === "ship") {
-              pct = progress.shipTotal ? Math.round((progress.shipCollected / progress.shipTotal) * 100) : 0;
+              pct = progress.shipTotal
+                ? Math.round((progress.shipCollected / progress.shipTotal) * 100)
+                : 0;
               detail = `${progress.shipCollected}/${progress.shipTotal} pezzi`;
             } else if (m.key === "debt") {
-              pct = progress.debtTotal ? Math.round((progress.debtPaid / progress.debtTotal) * 100) : 0;
+              pct = progress.debtTotal
+                ? Math.round((progress.debtPaid / progress.debtTotal) * 100)
+                : 0;
               detail = `${progress.debtPaid} / ${progress.debtTotal} cr · restano ${progress.debtTotal - progress.debtPaid}`;
             } else if (m.key === "planet") {
               pct = Math.round((progress.food + progress.energy) / 2);
               detail = `${pct}% riserve`;
             } else {
-              pct = progress.bestiaryTotal ? Math.round((progress.bestiaryCount / progress.bestiaryTotal) * 100) : 0;
+              pct = progress.bestiaryTotal
+                ? Math.round((progress.bestiaryCount / progress.bestiaryTotal) * 100)
+                : 0;
               detail = `${progress.bestiaryCount}/${progress.bestiaryTotal} schede`;
             }
           }
@@ -88,11 +96,19 @@ export function MissionProgressPanel({ compact = false }: MissionProgressPanelPr
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">
-                      <p className="text-[10px] uppercase tracking-widest text-primary/80">{m.progressLabel}</p>
-                      <span className={`text-[9px] uppercase tracking-wider ${status.tone}`}>{status.label}</span>
+                      <p className="text-[10px] uppercase tracking-widest text-primary/80">
+                        {m.progressLabel}
+                      </p>
+                      <span className={`text-[9px] uppercase tracking-wider ${status.tone}`}>
+                        {status.label}
+                      </span>
                     </div>
-                    <h3 className="font-display text-base text-glow leading-tight mt-1">{m.title}</h3>
-                    {!compact && <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{m.short}</p>}
+                    <h3 className="font-display text-base text-glow leading-tight mt-1">
+                      {m.title}
+                    </h3>
+                    {!compact && (
+                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{m.short}</p>
+                    )}
                     <div className="mt-2 progress-mission">
                       <div
                         className={progressFillClass(m.key as CoreMissionKey)}

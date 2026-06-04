@@ -41,7 +41,11 @@ function TrafficAgent({
         zIndex: 58 + (agent.id.charCodeAt(6) % 8),
       }}
       aria-hidden={!debug}
-      title={debug ? `${agent.id} · ${agent.currentTask} · ${agent.homeStructure}→${agent.destination}` : undefined}
+      title={
+        debug
+          ? `${agent.id} · ${agent.currentTask} · ${agent.homeStructure}→${agent.destination}`
+          : undefined
+      }
     >
       <span className={styles.pikminShadow} />
       <span
@@ -57,11 +61,7 @@ function TrafficAgent({
           {CARGO_ICON[agent.cargo]}
         </span>
       )}
-      {debug && (
-        <span className={styles.trafficAgentLabel}>
-          {agent.currentTask}
-        </span>
-      )}
+      {debug && <span className={styles.trafficAgentLabel}>{agent.currentTask}</span>}
     </div>
   );
 }
@@ -70,7 +70,9 @@ const MemoAgent = memo(TrafficAgent);
 
 export function PikminTrafficLayer({ layout, compact, size = 20, agentCount, debug }: Props) {
   const count = agentCount ?? readTrafficCountOverride() ?? undefined;
-  const maxAgents = compact ? Math.min(12, layout.trafficConfig?.maxCount ?? 30) : (layout.trafficConfig?.maxCount ?? 30);
+  const maxAgents = compact
+    ? Math.min(12, layout.trafficConfig?.maxCount ?? 30)
+    : (layout.trafficConfig?.maxCount ?? 30);
   const effectiveCount = Math.min(maxAgents, count ?? layout.trafficConfig?.initialCount ?? 10);
 
   const agents = useMemo(
@@ -94,7 +96,12 @@ export function PikminTrafficLayer({ layout, compact, size = 20, agentCount, deb
 }
 
 /** Overlay debug — route e destinazioni */
-export function PikminTrafficDebugOverlay({ agents }: { layout: DioramaLayout; agents: PikminTrafficAgent[] }) {
+export function PikminTrafficDebugOverlay({
+  agents,
+}: {
+  layout: DioramaLayout;
+  agents: PikminTrafficAgent[];
+}) {
   return (
     <div className={styles.trafficDebugOverlay} aria-hidden>
       <svg className={styles.trafficDebugSvg} viewBox="0 0 100 100" preserveAspectRatio="none">

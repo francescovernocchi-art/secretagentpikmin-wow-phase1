@@ -57,7 +57,10 @@ function MercatoPage() {
     }
     const [{ data: ing }, { data: rec }, { data: unl }] = await Promise.all([
       supabase.from("ingredients").select("key, name, emoji, rarity, price_coins").order("rarity"),
-      supabase.from("recipes").select("id, result_name, result_emoji, description, xp, price_coins, locked").order("created_at", { ascending: false }),
+      supabase
+        .from("recipes")
+        .select("id, result_name, result_emoji, description, xp, price_coins, locked")
+        .order("created_at", { ascending: false }),
       supabase.from("recipe_unlocks").select("recipe_id").eq("agent", agent),
     ]);
     setIngredients((ing ?? []) as Ingredient[]);
@@ -71,10 +74,14 @@ function MercatoPage() {
     if (!isSupabaseConfigured() || isDemoModeActive()) return;
     const ch = supabase
       .channel("market-rt")
-      .on("postgres_changes", { event: "*", schema: "public", table: "agent_coins" }, () => getCoins(agent).then(setCoinsState))
+      .on("postgres_changes", { event: "*", schema: "public", table: "agent_coins" }, () =>
+        getCoins(agent).then(setCoinsState),
+      )
       .on("postgres_changes", { event: "*", schema: "public", table: "recipes" }, () => load())
       .on("postgres_changes", { event: "*", schema: "public", table: "ingredients" }, () => load())
-      .on("postgres_changes", { event: "*", schema: "public", table: "recipe_unlocks" }, () => load())
+      .on("postgres_changes", { event: "*", schema: "public", table: "recipe_unlocks" }, () =>
+        load(),
+      )
       .subscribe();
     return () => {
       supabase.removeChannel(ch);
@@ -197,7 +204,9 @@ function MercatoPage() {
 
       {tab === "ingredients" ? (
         ingredientsForSale.length === 0 ? (
-          <p className="text-center text-xs text-muted-foreground py-10">Nessun ingrediente in vendita.</p>
+          <p className="text-center text-xs text-muted-foreground py-10">
+            Nessun ingrediente in vendita.
+          </p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {ingredientsForSale.map((ing) => {
@@ -243,7 +252,9 @@ function MercatoPage() {
           </div>
         )
       ) : recipesForSale.length === 0 ? (
-        <p className="text-center text-xs text-muted-foreground py-10">Nessuna ricetta in vendita.</p>
+        <p className="text-center text-xs text-muted-foreground py-10">
+          Nessuna ricetta in vendita.
+        </p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {recipesForSale.map((r) => {
@@ -259,7 +270,13 @@ function MercatoPage() {
                 rarity={rarity}
                 subtitle={r.description ?? `+${r.xp} XP`}
                 iconKind="crystal"
-                badge={owned ? <Check className="h-3 w-3 text-primary" /> : <Lock className="h-3 w-3 text-muted-foreground" />}
+                badge={
+                  owned ? (
+                    <Check className="h-3 w-3 text-primary" />
+                  ) : (
+                    <Lock className="h-3 w-3 text-muted-foreground" />
+                  )
+                }
                 value={
                   <span className="text-amber-300 text-xs flex items-center gap-1">
                     <Coins className="h-3 w-3" /> {price || "—"}
@@ -333,19 +350,23 @@ function PriceEditor({
   onSaved: () => void;
 }) {
   const target =
-    kind === "ing"
-      ? ingredients.find((i) => i.key === id)
-      : recipes.find((r) => r.id === id);
+    kind === "ing" ? ingredients.find((i) => i.key === id) : recipes.find((r) => r.id === id);
   const initialPrice = target ? (("price_coins" in target ? target.price_coins : 0) ?? 0) : 0;
-  const initialLocked = kind === "rec" ? (target as Recipe | undefined)?.locked ?? false : false;
+  const initialLocked = kind === "rec" ? ((target as Recipe | undefined)?.locked ?? false) : false;
   const [price, setPrice] = useState<number>(initialPrice);
   const [locked, setLocked] = useState<boolean>(initialLocked);
 
   const save = async () => {
     if (kind === "ing") {
-      await supabase.from("ingredients").update({ price_coins: price || null }).eq("key", id);
+      await supabase
+        .from("ingredients")
+        .update({ price_coins: price || null })
+        .eq("key", id);
     } else {
-      await supabase.from("recipes").update({ price_coins: price || null, locked }).eq("id", id);
+      await supabase
+        .from("recipes")
+        .update({ price_coins: price || null, locked })
+        .eq("id", id);
     }
     onSaved();
   };
@@ -368,7 +389,9 @@ function PriceEditor({
           <h2 className="font-display text-base text-glow">
             Prezzo {kind === "ing" ? "ingrediente" : "ricetta"}
           </h2>
-          <button onClick={onClose} className="text-muted-foreground"><X /></button>
+          <button onClick={onClose} className="text-muted-foreground">
+            <X />
+          </button>
         </div>
         <label className="block text-xs text-muted-foreground">
           Costo in monete (0 = non in vendita)
@@ -391,7 +414,9 @@ function PriceEditor({
             Ricetta bloccata (visibile solo dopo l'acquisto)
           </label>
         )}
-        <button onClick={save} className="btn-neon w-full py-2.5 text-sm">Salva</button>
+        <button onClick={save} className="btn-neon w-full py-2.5 text-sm">
+          Salva
+        </button>
       </motion.div>
     </motion.div>
   );

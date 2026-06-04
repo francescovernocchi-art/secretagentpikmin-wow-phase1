@@ -131,7 +131,13 @@ function HotspotMarker({
   }
 
   return (
-    <button type="button" className={styles.engineHotspot} style={style} onClick={handleInspect} aria-label={hs.label ?? hs.id}>
+    <button
+      type="button"
+      className={styles.engineHotspot}
+      style={style}
+      onClick={handleInspect}
+      aria-label={hs.label ?? hs.id}
+    >
       {iconContent}
     </button>
   );

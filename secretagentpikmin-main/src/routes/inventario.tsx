@@ -34,8 +34,7 @@ const RARITY_LABEL: Record<string, string> = {
 const RARITY_STYLE: Record<string, string> = {
   comune: "border-primary/30 bg-night/60",
   rara: "border-cyan-400/40 bg-cyan-500/10 shadow-[0_0_18px_-6px_hsl(190_90%_60%/0.6)]",
-  epica:
-    "border-fuchsia-400/50 bg-fuchsia-500/10 shadow-[0_0_22px_-4px_hsl(300_90%_70%/0.7)]",
+  epica: "border-fuchsia-400/50 bg-fuchsia-500/10 shadow-[0_0_22px_-4px_hsl(300_90%_70%/0.7)]",
 };
 const RARITY_BADGE: Record<string, string> = {
   comune: "text-muted-foreground",
@@ -66,11 +65,7 @@ function InventarioPage() {
     load();
     const ch = supabase
       .channel("inventario-rt")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "inventory" },
-        () => load(),
-      )
+      .on("postgres_changes", { event: "*", schema: "public", table: "inventory" }, () => load())
       .subscribe();
     return () => {
       supabase.removeChannel(ch);
@@ -79,10 +74,7 @@ function InventarioPage() {
   }, []);
 
   const rows = useMemo(
-    () =>
-      inventory
-        .map((r) => ({ ...r, meta: catalog[r.ingredient_key] }))
-        .filter((r) => r.meta),
+    () => inventory.map((r) => ({ ...r, meta: catalog[r.ingredient_key] })).filter((r) => r.meta),
     [inventory, catalog],
   );
 
@@ -122,16 +114,11 @@ function InventarioPage() {
         <div className="absolute -right-4 -top-4 opacity-30">
           <Backpack size={120} />
         </div>
-        <p className="text-[10px] uppercase tracking-[0.4em] text-primary/80">
-          // Sacca operativa
-        </p>
+        <p className="text-[10px] uppercase tracking-[0.4em] text-primary/80">// Sacca operativa</p>
         <div className="mt-3 grid grid-cols-3 gap-3">
           <Stat label="Pezzi" value={String(totals.totalQty)} />
           <Stat label="Tipi" value={String(totals.collected)} />
-          <Stat
-            label="Catalogo"
-            value={`${totals.collected}/${totals.uniqueCatalog || "—"}`}
-          />
+          <Stat label="Catalogo" value={`${totals.collected}/${totals.uniqueCatalog || "—"}`} />
         </div>
       </div>
 
@@ -156,8 +143,7 @@ function InventarioPage() {
                 {RARITY_LABEL[rarity]}
               </p>
               <p className={`text-[10px] uppercase tracking-widest ${RARITY_BADGE[rarity]}`}>
-                {grouped[rarity].length} tipi ·{" "}
-                {grouped[rarity].reduce((s, r) => s + r.qty, 0)} pz
+                {grouped[rarity].length} tipi · {grouped[rarity].reduce((s, r) => s + r.qty, 0)} pz
               </p>
             </div>
             <div className="grid grid-cols-3 gap-2">
@@ -211,8 +197,8 @@ function InventarioPage() {
               {sel.meta.source === "radar" ? "Radar" : "Missione"}
             </p>
             <p className="text-xs text-muted-foreground mt-1">
-              Disponibili: <span className="text-primary text-glow">×{sel.qty}</span> ·
-              chiave <span className="font-mono">{sel.meta.key}</span>
+              Disponibili: <span className="text-primary text-glow">×{sel.qty}</span> · chiave{" "}
+              <span className="font-mono">{sel.meta.key}</span>
             </p>
           </div>
         </motion.div>

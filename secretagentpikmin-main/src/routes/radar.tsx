@@ -66,16 +66,25 @@ function RadarPage() {
     >
       <div className="panel-strong scanline relative overflow-hidden p-6 flex flex-col items-center gap-4">
         <ParticleEffect variant="radar" />
-        <p className="text-[10px] uppercase tracking-[0.4em] text-primary/80">// Energia ambientale</p>
+        <p className="text-[10px] uppercase tracking-[0.4em] text-primary/80">
+          // Energia ambientale
+        </p>
         <Radar size={240} />
         <p className="text-xs text-muted-foreground text-center max-w-[260px]">
-          Apri lo scanner e muovi il telefono nello spazio. Il segnale aumenta quando ti avvicini a una traccia energetica.
+          Apri lo scanner e muovi il telefono nello spazio. Il segnale aumenta quando ti avvicini a
+          una traccia energetica.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-2">
-          <button onClick={() => setScanOpen(true)} className="btn-neon px-6 py-3 text-sm flex items-center gap-2">
+          <button
+            onClick={() => setScanOpen(true)}
+            className="btn-neon px-6 py-3 text-sm flex items-center gap-2"
+          >
             <ScanLine className="h-4 w-4" /> Avvia scanner
           </button>
-          <button onClick={() => setScanOpen(true)} className="panel-strong px-6 py-3 text-sm flex items-center gap-2">
+          <button
+            onClick={() => setScanOpen(true)}
+            className="panel-strong px-6 py-3 text-sm flex items-center gap-2"
+          >
             <Camera className="h-4 w-4 text-primary" /> Scansiona area
           </button>
         </div>
@@ -83,7 +92,12 @@ function RadarPage() {
 
       <AnimatePresence>
         {last && (
-          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="panel p-4 space-y-3">
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="panel p-4 space-y-3"
+          >
             <p className="text-[10px] uppercase tracking-widest text-primary/80 flex items-center gap-1">
               <Sparkles className="h-3 w-3" /> Ultima cattura
             </p>
@@ -98,7 +112,9 @@ function RadarPage() {
                 🌱
               </div>
               <div>
-                <p className="font-display text-lg text-glow">{lastLabel || `Pikmin ${last.type.toUpperCase()}`}</p>
+                <p className="font-display text-lg text-glow">
+                  {lastLabel || `Pikmin ${last.type.toUpperCase()}`}
+                </p>
                 <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
                   {lastEffects.join(" · ") || "Aggiunto alla squadra"}
                 </p>
@@ -116,7 +132,10 @@ function RadarPage() {
         )}
       </AnimatePresence>
 
-      <RadarScannerPanel biomeScan onScanComplete={(r) => toast.success(`${r.emoji} ${r.label} — ${r.effects.join(", ")}`)} />
+      <RadarScannerPanel
+        biomeScan
+        onScanComplete={(r) => toast.success(`${r.emoji} ${r.label} — ${r.effects.join(", ")}`)}
+      />
 
       <BiomeMapPanel showActions={false} />
 

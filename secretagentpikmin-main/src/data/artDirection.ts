@@ -46,14 +46,7 @@ export const ART_PALETTE = {
   },
 } as const;
 
-export type SectionTheme =
-  | "home"
-  | "village"
-  | "mission"
-  | "map"
-  | "market"
-  | "chat"
-  | "bestiary";
+export type SectionTheme = "home" | "village" | "mission" | "map" | "market" | "chat" | "bestiary";
 
 export const SECTION_THEMES: Record<SectionTheme, keyof typeof ART_PALETTE> = {
   home: "nature",

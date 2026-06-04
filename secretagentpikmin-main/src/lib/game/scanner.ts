@@ -28,7 +28,9 @@ const PIKMIN_TYPE_MAP: Record<string, string> = {
   glow: "luminoso",
 };
 
-export async function fetchCurrentBiome(agentKey?: string): Promise<{ biome: BiomeKey; source: "supabase" | "local" }> {
+export async function fetchCurrentBiome(
+  agentKey?: string,
+): Promise<{ biome: BiomeKey; source: "supabase" | "local" }> {
   const agent = agentKey ?? agentKeyFromSession(getSession()?.role);
   const loc = await fetchPlayerLocation(agent);
   return { biome: loc.current_biome as BiomeKey, source: "local" };
@@ -105,8 +107,11 @@ export async function processScanDiscovery(
       break;
     }
     default: {
-      const category = (discovery.payload.category as "oggetto" | "materiale" | "ingrediente") ?? "oggetto";
-      const itemKey = (discovery.payload.item_key as string) ?? discovery.label.replace(/\s+/g, "_").toLowerCase();
+      const category =
+        (discovery.payload.category as "oggetto" | "materiale" | "ingrediente") ?? "oggetto";
+      const itemKey =
+        (discovery.payload.item_key as string) ??
+        discovery.label.replace(/\s+/g, "_").toLowerCase();
       await addInventoryItem({
         agentKey: agent,
         itemKey,
@@ -125,7 +130,9 @@ export async function processScanDiscovery(
 }
 
 /** Legacy EnergyScanner catch — maps color type to biome-aware flow */
-export async function processEnergyScannerCatch(type: string): Promise<{ discovery: ScanDiscovery; effects: string[] }> {
+export async function processEnergyScannerCatch(
+  type: string,
+): Promise<{ discovery: ScanDiscovery; effects: string[] }> {
   const { biome } = await fetchCurrentBiome();
   const discovery: ScanDiscovery = {
     targetType: "pikmin_selvatico",
@@ -145,15 +152,21 @@ export async function runWeightedAreaScan(agentKey?: string): Promise<{
 }> {
   const agent = agentKey ?? agentKeyFromSession(getSession()?.role);
   const { biome } = await fetchCurrentBiome(agent);
-  const squad = localStore.getPikminUnits(agent).filter((u) => u.status === "disponibile").slice(0, 3);
+  const squad = localStore
+    .getPikminUnits(agent)
+    .filter((u) => u.status === "disponibile")
+    .slice(0, 3);
   const discovery = generateBiomeDiscovery(biome, squad);
   const { scan, effects } = await processScanDiscovery(discovery, biome, agent);
   return { discovery, scan, effects, biome };
 }
 
-export async function fetchRecentScans(limit = 10): Promise<{ data: DbScanResult[]; source: "supabase" | "local" }> {
+export async function fetchRecentScans(
+  limit = 10,
+): Promise<{ data: DbScanResult[]; source: "supabase" | "local" }> {
   return safeGameQuery(
-    () => gameTable("scan_results").select("*").order("created_at", { ascending: false }).limit(limit),
+    () =>
+      gameTable("scan_results").select("*").order("created_at", { ascending: false }).limit(limit),
     () => localStore.getScans(limit),
   );
 }
@@ -185,7 +198,10 @@ export function getNextShipHint(): { partName: string; hint: string } | null {
   if (!missing.length) return null;
   const next = missing.sort((a, b) => a.sort_order - b.sort_order)[0];
   const fallback = SHIP_PARTS.find((p) => p.key === next.key);
-  return { partName: next.name, hint: next.location_hint ?? fallback?.locationHint ?? "Esplora biomi vicini" };
+  return {
+    partName: next.name,
+    hint: next.location_hint ?? fallback?.locationHint ?? "Esplora biomi vicini",
+  };
 }
 
 export { setManualBiome } from "@/lib/game/player-location";

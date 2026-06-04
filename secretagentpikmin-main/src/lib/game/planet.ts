@@ -2,14 +2,19 @@ import { agentKeyFromSession, gameTable, safeGameQuery, isSupabaseConfigured } f
 import { localStore } from "@/lib/game/local-store";
 import type { DbPlanetStatus, MissionProgressData } from "@/types/phase2-db";
 
-export async function fetchPlanetStatus(): Promise<{ data: DbPlanetStatus; source: "supabase" | "local" }> {
+export async function fetchPlanetStatus(): Promise<{
+  data: DbPlanetStatus;
+  source: "supabase" | "local";
+}> {
   return safeGameQuery(
     () => gameTable("planet_status").select("*").eq("id", "origin").maybeSingle(),
     () => localStore.getPlanet(),
   );
 }
 
-export async function payPlanetDebt(amount: number): Promise<{ data: DbPlanetStatus; source: "supabase" | "local" }> {
+export async function payPlanetDebt(
+  amount: number,
+): Promise<{ data: DbPlanetStatus; source: "supabase" | "local" }> {
   return withFallbackPay(amount);
 }
 
@@ -42,13 +47,22 @@ async function withFallbackPay(amount: number) {
   }
 }
 
-export async function fetchMissionProgress(): Promise<{ data: MissionProgressData; source: "supabase" | "local" }> {
-  const [planetRes, partsRes] = await Promise.all([fetchPlanetStatus(), import("@/lib/game/spaceship").then((m) => m.fetchSpaceshipParts())]);
+export async function fetchMissionProgress(): Promise<{
+  data: MissionProgressData;
+  source: "supabase" | "local";
+}> {
+  const [planetRes, partsRes] = await Promise.all([
+    fetchPlanetStatus(),
+    import("@/lib/game/spaceship").then((m) => m.fetchSpaceshipParts()),
+  ]);
 
   let bestiaryCount = planetRes.data.bestiary_count;
   if (isSupabaseConfigured()) {
     try {
-      const { count } = await gameTable("bestiary_entries").select("*", { count: "exact", head: true });
+      const { count } = await gameTable("bestiary_entries").select("*", {
+        count: "exact",
+        head: true,
+      });
       if (typeof count === "number") bestiaryCount = count;
     } catch {
       bestiaryCount = localStore.getBestiary().length;

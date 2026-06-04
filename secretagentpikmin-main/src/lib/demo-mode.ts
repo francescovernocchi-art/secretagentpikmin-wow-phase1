@@ -5,7 +5,11 @@ import { isSupabaseConfigured } from "@/lib/game/db";
 import { localStore } from "@/lib/game/local-store";
 import { getSession, setSession, type Role, type Session } from "@/lib/session";
 import type { DbChatMessage, DbInventoryItem } from "@/types/phase2-db";
-import type { DbFamilyTradeItem, DbFamilyTradeOffer, FamilyTradeOfferFull } from "@/types/phase4-db";
+import type {
+  DbFamilyTradeItem,
+  DbFamilyTradeOffer,
+  FamilyTradeOfferFull,
+} from "@/types/phase4-db";
 import { SHIP_PARTS } from "@/data/secretPikminWorld";
 
 const DEMO_FLAG = "secretPikmin.demo.active";
@@ -20,7 +24,13 @@ export const DEMO_INGREDIENTS = [
   { key: "miele_dorato", name: "Miele dorato", emoji: "🍯", rarity: "comune", price_coins: 25 },
   { key: "seme_rosso", name: "Seme rosso", emoji: "🔴", rarity: "comune", price_coins: 15 },
   { key: "cristallo_verde", name: "Cristallo verde", emoji: "💚", rarity: "raro", price_coins: 55 },
-  { key: "fungo_luminoso", name: "Fungo luminoso", emoji: "🍄", rarity: "inusuale", price_coins: 35 },
+  {
+    key: "fungo_luminoso",
+    name: "Fungo luminoso",
+    emoji: "🍄",
+    rarity: "inusuale",
+    price_coins: 35,
+  },
 ];
 
 export const DEMO_RECIPES = [
@@ -75,28 +85,88 @@ export function enterDemoSession(role: Role): Session {
   setSession(session);
   try {
     localStorage.setItem(DEMO_FLAG, "1");
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
   return session;
 }
 
 export function exitDemoMode(): void {
   try {
     localStorage.removeItem(DEMO_FLAG);
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
 }
 
 function richInventory(agent: string): DbInventoryItem[] {
   const papaItems: Omit<DbInventoryItem, "id" | "agent_key">[] = [
-    { item_key: "cristallo_rame", item_name: "Cristallo di rame", emoji: "💎", category: "oggetto", quantity: 2, sell_price: 120 },
-    { item_key: "miele_dorato", item_name: "Miele dorato", emoji: "🍯", category: "ingrediente", quantity: 5, sell_price: 30 },
-    { item_key: "frutta_bosco", item_name: "Frutta di bosco", emoji: "🫐", category: "ingrediente", quantity: 6, sell_price: 18 },
-    { item_key: "batteria_piccola", item_name: "Batteria piccola", emoji: "🔋", category: "materiale", quantity: 2, sell_price: 40 },
+    {
+      item_key: "cristallo_rame",
+      item_name: "Cristallo di rame",
+      emoji: "💎",
+      category: "oggetto",
+      quantity: 2,
+      sell_price: 120,
+    },
+    {
+      item_key: "miele_dorato",
+      item_name: "Miele dorato",
+      emoji: "🍯",
+      category: "ingrediente",
+      quantity: 5,
+      sell_price: 30,
+    },
+    {
+      item_key: "frutta_bosco",
+      item_name: "Frutta di bosco",
+      emoji: "🫐",
+      category: "ingrediente",
+      quantity: 6,
+      sell_price: 18,
+    },
+    {
+      item_key: "batteria_piccola",
+      item_name: "Batteria piccola",
+      emoji: "🔋",
+      category: "materiale",
+      quantity: 2,
+      sell_price: 40,
+    },
   ];
   const lorenzoItems: Omit<DbInventoryItem, "id" | "agent_key">[] = [
-    { item_key: "batteria_usata", item_name: "Batteria usata", emoji: "🔋", category: "materiale", quantity: 3, sell_price: 45 },
-    { item_key: "seme_rosso", item_name: "Seme rosso", emoji: "🔴", category: "ingrediente", quantity: 8, sell_price: 15 },
-    { item_key: "reliquia_antica", item_name: "Reliquia antica", emoji: "🏺", category: "oggetto", quantity: 1, sell_price: 90 },
-    { item_key: "cristallo_energia", item_name: "Cristallo energia", emoji: "💠", category: "materiale", quantity: 4, sell_price: 55 },
+    {
+      item_key: "batteria_usata",
+      item_name: "Batteria usata",
+      emoji: "🔋",
+      category: "materiale",
+      quantity: 3,
+      sell_price: 45,
+    },
+    {
+      item_key: "seme_rosso",
+      item_name: "Seme rosso",
+      emoji: "🔴",
+      category: "ingrediente",
+      quantity: 8,
+      sell_price: 15,
+    },
+    {
+      item_key: "reliquia_antica",
+      item_name: "Reliquia antica",
+      emoji: "🏺",
+      category: "oggetto",
+      quantity: 1,
+      sell_price: 90,
+    },
+    {
+      item_key: "cristallo_energia",
+      item_name: "Cristallo energia",
+      emoji: "💠",
+      category: "materiale",
+      quantity: 4,
+      sell_price: 55,
+    },
   ];
   const base = agent === "papa" ? papaItems : lorenzoItems;
   return base.map((b, i) => ({
@@ -188,14 +258,20 @@ export function ensureDemoSeed(): void {
   try {
     const v = localStorage.getItem(DEMO_SEED_VERSION);
     if (v === "1") return;
-  } catch { /* continue */ }
+  } catch {
+    /* continue */
+  }
 
   localStore.setInventory("papa", richInventory("papa"));
   localStore.setInventory("lorenzo", richInventory("lorenzo"));
 
-  const parts = localStore.getShipParts().map((p, i) =>
-    i < 2 ? { ...p, collected: true, collected_by: "papa", collected_at: new Date().toISOString() } : p,
-  );
+  const parts = localStore
+    .getShipParts()
+    .map((p, i) =>
+      i < 2
+        ? { ...p, collected: true, collected_by: "papa", collected_at: new Date().toISOString() }
+        : p,
+    );
   localStore.setShipParts(parts);
 
   seedDemoChat();
@@ -203,7 +279,9 @@ export function ensureDemoSeed(): void {
 
   try {
     localStorage.setItem(DEMO_SEED_VERSION, "1");
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
 }
 
 export function demoShipProgressLabel(): string {

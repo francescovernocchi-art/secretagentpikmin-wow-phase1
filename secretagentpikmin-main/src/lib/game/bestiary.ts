@@ -38,7 +38,10 @@ export async function recordMonsterEncounter(opts: {
   let existing: DbBestiaryEntry | null = null;
   try {
     if (isSupabaseConfigured()) {
-      const { data } = await gameTable("bestiary_entries").select("*").eq("creature_key", opts.creatureKey).maybeSingle();
+      const { data } = await gameTable("bestiary_entries")
+        .select("*")
+        .eq("creature_key", opts.creatureKey)
+        .maybeSingle();
       existing = data as DbBestiaryEntry | null;
     }
   } catch {}
@@ -63,7 +66,7 @@ export async function recordMonsterEncounter(opts: {
     biome_key: opts.biomeKey,
     rarity: existing?.rarity ?? "comune",
     danger_level: existing?.danger_level ?? 2,
-    weakness: weaknessUnlocked ? weaknessBase : existing?.weakness ?? null,
+    weakness: weaknessUnlocked ? weaknessBase : (existing?.weakness ?? null),
     discovered_by: existing?.discovered_by ?? opts.discoveredBy,
     scan_count: scanCount,
     study_status: studyStatus,
@@ -74,14 +77,16 @@ export async function recordMonsterEncounter(opts: {
   try {
     if (isSupabaseConfigured()) {
       if (existing?.id && !isNew) {
-        await gameTable("bestiary_entries").update({
-          scan_count: scanCount,
-          data_points: dataPoints,
-          study_status: studyStatus,
-          weakness: entry.weakness,
-          weakness_unlocked: weaknessUnlocked,
-          updated_at: new Date().toISOString(),
-        }).eq("id", existing.id);
+        await gameTable("bestiary_entries")
+          .update({
+            scan_count: scanCount,
+            data_points: dataPoints,
+            study_status: studyStatus,
+            weakness: entry.weakness,
+            weakness_unlocked: weaknessUnlocked,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", existing.id);
       } else {
         await gameTable("bestiary_entries").insert({
           creature_key: entry.creature_key,
@@ -116,15 +121,24 @@ export async function recordMonsterEncounter(opts: {
   }
 
   const statusLabel =
-    studyStatus === "classificato" ? "Classificato" : studyStatus === "studiato" ? "Studiato" : "Avvistato";
+    studyStatus === "classificato"
+      ? "Classificato"
+      : studyStatus === "studiato"
+        ? "Studiato"
+        : "Avvistato";
 
   return { entry, statusLabel, weaknessUnlocked };
 }
 
-export async function fetchBestiaryEntries(): Promise<{ data: DbBestiaryEntry[]; source: "supabase" | "local" }> {
+export async function fetchBestiaryEntries(): Promise<{
+  data: DbBestiaryEntry[];
+  source: "supabase" | "local";
+}> {
   try {
     if (isSupabaseConfigured()) {
-      const { data, error } = await gameTable("bestiary_entries").select("*").order("scan_count", { ascending: false });
+      const { data, error } = await gameTable("bestiary_entries")
+        .select("*")
+        .order("scan_count", { ascending: false });
       if (error) throw error;
       return { data: (data ?? []) as DbBestiaryEntry[], source: "supabase" };
     }

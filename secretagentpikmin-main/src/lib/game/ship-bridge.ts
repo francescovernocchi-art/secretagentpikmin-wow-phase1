@@ -38,7 +38,9 @@ export async function collectShipPartUnified(opts: {
 }): Promise<{ alreadyCollected: boolean; partKey: string; parts: DbSpaceshipPart[] }> {
   const spaceshipKey = resolveSpaceshipKey(opts.partKey);
   const agent =
-    opts.collectedBy === "Francesco" || opts.collectedBy === "papa" || opts.collectedBy === "francesco"
+    opts.collectedBy === "Francesco" ||
+    opts.collectedBy === "papa" ||
+    opts.collectedBy === "francesco"
       ? "papa"
       : "lorenzo";
 
@@ -90,14 +92,13 @@ export async function fetchUnifiedShipParts(): Promise<DbSpaceshipPart[]> {
 export async function syncLegacyCollectedToSpaceship(): Promise<void> {
   if (!isSupabaseConfigured()) return;
   try {
-    const { data: collected } = await supabase.from("ship_parts_collected").select("part_key, collected_by, collected_at");
+    const { data: collected } = await supabase
+      .from("ship_parts_collected")
+      .select("part_key, collected_by, collected_at");
     if (!collected?.length) return;
     for (const c of collected) {
       const key = resolveSpaceshipKey(c.part_key);
-      await collectSpaceshipPart(
-        key,
-        c.collected_by === "Francesco" ? "papa" : c.collected_by,
-      );
+      await collectSpaceshipPart(key, c.collected_by === "Francesco" ? "papa" : c.collected_by);
     }
   } catch {}
 }

@@ -1,9 +1,15 @@
 /** GPS point in WGS84 degrees. */
-export interface GeoPoint { lat: number; lng: number; }
+export interface GeoPoint {
+  lat: number;
+  lng: number;
+}
 
 /** Haversine distance in metres between (lat1,lng1) and (lat2,lng2). */
 export function calculateDistanceMeters(
-  lat1: number, lng1: number, lat2: number, lng2: number,
+  lat1: number,
+  lng1: number,
+  lat2: number,
+  lng2: number,
 ): number {
   const R = 6371000;
   const toRad = (d: number) => (d * Math.PI) / 180;
@@ -25,9 +31,7 @@ export function isWithin(a: GeoPoint, b: GeoPoint, meters: number): boolean {
 }
 
 /** Sposta un punto GPS di (dx_meters East, dy_meters North). */
-export function offsetMeters(
-  origin: GeoPoint, dxMeters: number, dyMeters: number,
-): GeoPoint {
+export function offsetMeters(origin: GeoPoint, dxMeters: number, dyMeters: number): GeoPoint {
   const R = 6371000;
   const dLat = dyMeters / R;
   const dLng = dxMeters / (R * Math.cos((origin.lat * Math.PI) / 180));

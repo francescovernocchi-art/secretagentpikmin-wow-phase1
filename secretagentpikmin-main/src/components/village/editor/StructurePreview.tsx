@@ -52,9 +52,7 @@ export function StructurePreview({
   const slotTop = (STAGE - slotDrawH) / 2;
 
   // Fit dell'asset dentro lo slot
-  const fit = imgSize
-    ? Math.min(slotDrawW / imgSize.w, slotDrawH / imgSize.h) * slotFitScale
-    : 1;
+  const fit = imgSize ? Math.min(slotDrawW / imgSize.w, slotDrawH / imgSize.h) * slotFitScale : 1;
   const assetW = imgSize ? imgSize.w * fit : 0;
   const assetH = imgSize ? imgSize.h * fit : 0;
 

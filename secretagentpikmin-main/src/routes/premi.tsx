@@ -61,8 +61,12 @@ function PremiPage() {
       .then(({ data }) => setRewards((data ?? []) as Reward[]));
   }, []);
 
-  const grant = async (p: typeof PRESETS[number]) => {
-    const { data } = await supabase.from("rewards").insert({ ...p, agent: "lorenzo" }).select().single();
+  const grant = async (p: (typeof PRESETS)[number]) => {
+    const { data } = await supabase
+      .from("rewards")
+      .insert({ ...p, agent: "lorenzo" })
+      .select()
+      .single();
     if (data) setRewards((r) => [data as Reward, ...r]);
   };
 
@@ -109,10 +113,16 @@ function PremiPage() {
 
       {isAdmin && (
         <div>
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2">Assegna premio</p>
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
+            Assegna premio
+          </p>
           <div className="grid grid-cols-2 gap-2">
             {PRESETS.map((p) => (
-              <button key={p.title} onClick={() => grant(p)} className="panel p-3 text-left flex items-center gap-2">
+              <button
+                key={p.title}
+                onClick={() => grant(p)}
+                className="panel p-3 text-left flex items-center gap-2"
+              >
                 <img src={PIKMIN_MAP[p.icon]} alt="" className="h-8 w-8 object-contain" />
                 <span className="text-sm">{p.title}</span>
                 <Plus className="h-4 w-4 ml-auto text-primary" />

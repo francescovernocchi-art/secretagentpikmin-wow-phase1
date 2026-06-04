@@ -10,7 +10,14 @@ interface Props {
 }
 
 /** Disegna due cerchi attorno al Campo Base: raggio d'azione e raggio di minaccia. */
-export function BaseRadiusLayer({ mapRef, ready, center, actionRadius, threatRadius, show }: Props) {
+export function BaseRadiusLayer({
+  mapRef,
+  ready,
+  center,
+  actionRadius,
+  threatRadius,
+  show,
+}: Props) {
   const actionRef = useRef<any>(null);
   const threatRef = useRef<any>(null);
 
@@ -18,12 +25,18 @@ export function BaseRadiusLayer({ mapRef, ready, center, actionRadius, threatRad
     if (!ready) return;
     (async () => {
       const L = await import("leaflet");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       const map = mapRef.current as any;
       if (!map) return;
       if (!center || !show) {
-        if (actionRef.current) { map.removeLayer(actionRef.current); actionRef.current = null; }
-        if (threatRef.current) { map.removeLayer(threatRef.current); threatRef.current = null; }
+        if (actionRef.current) {
+          map.removeLayer(actionRef.current);
+          actionRef.current = null;
+        }
+        if (threatRef.current) {
+          map.removeLayer(threatRef.current);
+          threatRef.current = null;
+        }
         return;
       }
       if (!actionRef.current) {
@@ -55,7 +68,6 @@ export function BaseRadiusLayer({ mapRef, ready, center, actionRadius, threatRad
 
   useEffect(() => {
     return () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const map = mapRef.current as any;
       if (!map) return;
       if (actionRef.current) map.removeLayer(actionRef.current);

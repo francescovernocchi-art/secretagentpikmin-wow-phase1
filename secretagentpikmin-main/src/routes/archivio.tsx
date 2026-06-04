@@ -8,12 +8,7 @@ import { getSession } from "@/lib/session";
 import { PikminSpecializationPanel } from "@/components/game/PikminSpecializationPanel";
 import { GAME_IDENTITY } from "@/data/secretPikminWorld";
 import { Search, ExternalLink, BookOpen, Pencil, Save } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export const Route = createFileRoute("/archivio")({
   component: ArchivioPage,
@@ -48,11 +43,7 @@ function ArchivioPage() {
   const [draft, setDraft] = useState<Species | null>(null);
 
   const load = async () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data } = await (supabase as any)
-      .from("pikmin_species")
-      .select("*")
-      .order("sort_order");
+    const { data } = await (supabase as any).from("pikmin_species").select("*").order("sort_order");
     setItems((data ?? []) as Species[]);
   };
 
@@ -90,7 +81,7 @@ function ArchivioPage() {
 
   const saveDraft = async () => {
     if (!draft) return;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     await (supabase as any)
       .from("pikmin_species")
       .update({
@@ -132,7 +123,9 @@ function ArchivioPage() {
         <button
           onClick={() => setFilter("")}
           className={`shrink-0 rounded-full px-3 py-1 text-[11px] uppercase tracking-wider border ${
-            filter === "" ? "bg-primary text-primary-foreground border-primary" : "panel text-muted-foreground border-transparent"
+            filter === ""
+              ? "bg-primary text-primary-foreground border-primary"
+              : "panel text-muted-foreground border-transparent"
           }`}
         >
           Tutti
@@ -142,7 +135,9 @@ function ArchivioPage() {
             key={f}
             onClick={() => setFilter(f === filter ? "" : f)}
             className={`shrink-0 rounded-full px-3 py-1 text-[11px] uppercase tracking-wider border ${
-              filter === f ? "bg-primary text-primary-foreground border-primary" : "panel text-muted-foreground border-transparent"
+              filter === f
+                ? "bg-primary text-primary-foreground border-primary"
+                : "panel text-muted-foreground border-transparent"
             }`}
           >
             {f.startsWith("resiste:") ? `🛡️ ${f.slice("resiste:".length)}` : f}
@@ -160,17 +155,24 @@ function ArchivioPage() {
             onClick={() => openDetail(s)}
             className="panel p-3 text-left flex flex-col gap-2 active:scale-[0.98] transition-transform"
             style={{
-              boxShadow: s.color ? `inset 0 0 0 1px ${s.color}55, 0 0 18px ${s.color}22` : undefined,
+              boxShadow: s.color
+                ? `inset 0 0 0 1px ${s.color}55, 0 0 18px ${s.color}22`
+                : undefined,
             }}
           >
             <WikiImage src={s.image_url} alt={s.name} fallback="🌱" className="w-full h-28 p-2" />
             <div>
               <p className="font-display text-sm text-glow leading-tight">{s.name}</p>
-              <p className="text-[10px] text-muted-foreground line-clamp-2 mt-0.5">{s.description}</p>
+              <p className="text-[10px] text-muted-foreground line-clamp-2 mt-0.5">
+                {s.description}
+              </p>
             </div>
             <div className="flex flex-wrap gap-1">
               {(s.abilities ?? []).slice(0, 2).map((a) => (
-                <span key={a} className="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-primary/15 text-primary">
+                <span
+                  key={a}
+                  className="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-primary/15 text-primary"
+                >
                   {a}
                 </span>
               ))}
@@ -184,10 +186,17 @@ function ArchivioPage() {
           {selected && (
             <>
               <DialogHeader>
-                <DialogTitle className="font-display text-xl text-glow">{selected.name}</DialogTitle>
+                <DialogTitle className="font-display text-xl text-glow">
+                  {selected.name}
+                </DialogTitle>
               </DialogHeader>
 
-              <WikiImage src={selected.image_url} alt={selected.name} fallback="🌱" className="w-full h-44 p-3" />
+              <WikiImage
+                src={selected.image_url}
+                alt={selected.name}
+                fallback="🌱"
+                className="w-full h-44 p-3"
+              />
 
               {!editing ? (
                 <div className="space-y-3 mt-2 text-sm">
@@ -241,21 +250,73 @@ function ArchivioPage() {
               ) : (
                 draft && (
                   <div className="space-y-2 mt-2 text-xs">
-                    <EditField label="Nome" value={draft.name} onChange={(v) => setDraft({ ...draft, name: v })} />
-                    <EditField label="URL immagine" value={draft.image_url ?? ""} onChange={(v) => setDraft({ ...draft, image_url: v })} />
-                    <EditField label="Descrizione" textarea value={draft.description ?? ""} onChange={(v) => setDraft({ ...draft, description: v })} />
-                    <EditArray label="Abilità (virgola)" value={draft.abilities} onChange={(v) => setDraft({ ...draft, abilities: v })} />
-                    <EditArray label="Resistenze (virgola)" value={draft.resistances} onChange={(v) => setDraft({ ...draft, resistances: v })} />
-                    <EditArray label="Punti deboli (virgola)" value={draft.weaknesses} onChange={(v) => setDraft({ ...draft, weaknesses: v })} />
-                    <EditField label="Prima apparizione" value={draft.first_appearance ?? ""} onChange={(v) => setDraft({ ...draft, first_appearance: v })} />
-                    <EditField label="Esplorazione" textarea value={draft.exploration_use ?? ""} onChange={(v) => setDraft({ ...draft, exploration_use: v })} />
-                    <EditField label="Combattimento" textarea value={draft.combat_use ?? ""} onChange={(v) => setDraft({ ...draft, combat_use: v })} />
-                    <EditField label="URL fonte" value={draft.source_url ?? ""} onChange={(v) => setDraft({ ...draft, source_url: v })} />
+                    <EditField
+                      label="Nome"
+                      value={draft.name}
+                      onChange={(v) => setDraft({ ...draft, name: v })}
+                    />
+                    <EditField
+                      label="URL immagine"
+                      value={draft.image_url ?? ""}
+                      onChange={(v) => setDraft({ ...draft, image_url: v })}
+                    />
+                    <EditField
+                      label="Descrizione"
+                      textarea
+                      value={draft.description ?? ""}
+                      onChange={(v) => setDraft({ ...draft, description: v })}
+                    />
+                    <EditArray
+                      label="Abilità (virgola)"
+                      value={draft.abilities}
+                      onChange={(v) => setDraft({ ...draft, abilities: v })}
+                    />
+                    <EditArray
+                      label="Resistenze (virgola)"
+                      value={draft.resistances}
+                      onChange={(v) => setDraft({ ...draft, resistances: v })}
+                    />
+                    <EditArray
+                      label="Punti deboli (virgola)"
+                      value={draft.weaknesses}
+                      onChange={(v) => setDraft({ ...draft, weaknesses: v })}
+                    />
+                    <EditField
+                      label="Prima apparizione"
+                      value={draft.first_appearance ?? ""}
+                      onChange={(v) => setDraft({ ...draft, first_appearance: v })}
+                    />
+                    <EditField
+                      label="Esplorazione"
+                      textarea
+                      value={draft.exploration_use ?? ""}
+                      onChange={(v) => setDraft({ ...draft, exploration_use: v })}
+                    />
+                    <EditField
+                      label="Combattimento"
+                      textarea
+                      value={draft.combat_use ?? ""}
+                      onChange={(v) => setDraft({ ...draft, combat_use: v })}
+                    />
+                    <EditField
+                      label="URL fonte"
+                      value={draft.source_url ?? ""}
+                      onChange={(v) => setDraft({ ...draft, source_url: v })}
+                    />
                     <div className="flex gap-2 pt-2">
-                      <button onClick={() => { setEditing(false); setDraft(selected); }} className="flex-1 panel py-2 text-xs">
+                      <button
+                        onClick={() => {
+                          setEditing(false);
+                          setDraft(selected);
+                        }}
+                        className="flex-1 panel py-2 text-xs"
+                      >
                         Annulla
                       </button>
-                      <button onClick={saveDraft} className="flex-1 btn-neon py-2 text-xs flex items-center justify-center gap-1">
+                      <button
+                        onClick={saveDraft}
+                        className="flex-1 btn-neon py-2 text-xs flex items-center justify-center gap-1"
+                      >
                         <Save className="h-3 w-3" /> Salva
                       </button>
                     </div>
@@ -281,7 +342,13 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-function ChipList({ items, tone }: { items: string[]; tone: "primary" | "emerald" | "destructive" }) {
+function ChipList({
+  items,
+  tone,
+}: {
+  items: string[];
+  tone: "primary" | "emerald" | "destructive";
+}) {
   if (!items || items.length === 0) return <p className="text-muted-foreground">—</p>;
   const cls =
     tone === "primary"
@@ -292,7 +359,10 @@ function ChipList({ items, tone }: { items: string[]; tone: "primary" | "emerald
   return (
     <div className="flex flex-wrap gap-1">
       {items.map((it) => (
-        <span key={it} className={`text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full ${cls}`}>
+        <span
+          key={it}
+          className={`text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full ${cls}`}
+        >
           {it}
         </span>
       ))}
@@ -332,12 +402,27 @@ function EditField({
   );
 }
 
-function EditArray({ label, value, onChange }: { label: string; value: string[]; onChange: (v: string[]) => void }) {
+function EditArray({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string[];
+  onChange: (v: string[]) => void;
+}) {
   return (
     <EditField
       label={label}
       value={value.join(", ")}
-      onChange={(v) => onChange(v.split(",").map((s) => s.trim()).filter(Boolean))}
+      onChange={(v) =>
+        onChange(
+          v
+            .split(",")
+            .map((s) => s.trim())
+            .filter(Boolean),
+        )
+      }
     />
   );
 }

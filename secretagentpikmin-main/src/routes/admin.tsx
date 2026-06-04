@@ -24,19 +24,29 @@ function AdminPage() {
         <Crown className="h-5 w-5 text-amber-400" />
         <div>
           <h1 className="font-display text-lg">Pannello Admin</h1>
-          <p className="text-[11px] text-muted-foreground">Personalizza ogni cosa del gioco. Le immagini caricate qui sono usate ovunque appaiano pikmin, mostri, edifici, carte e premi.</p>
+          <p className="text-[11px] text-muted-foreground">
+            Personalizza ogni cosa del gioco. Le immagini caricate qui sono usate ovunque appaiano
+            pikmin, mostri, edifici, carte e premi.
+          </p>
         </div>
       </header>
-      <AdminTabs tabs={[
-        { key: "pikmin", label: "Pikmin", icon: "🌱", render: () => <PikminEditor /> },
-        { key: "mostri", label: "Mostri", icon: "👾", render: () => <MonstersEditor /> },
-        { key: "strutture", label: "Strutture", icon: "🏛️", render: () => <BuildingsEditor /> },
-        { key: "sprite", label: "Libreria Sprite", icon: "🖼️", render: () => <AssetLibraryEditor /> },
-        { key: "carte", label: "Carte", icon: "🃏", render: () => <CardsEditor /> },
-        { key: "missioni", label: "Missioni", icon: "🎯", render: () => <MissionsEditor /> },
-        { key: "premi", label: "Premi", icon: "🏆", render: () => <RewardsEditor /> },
-        { key: "audio", label: "Audio", icon: "🎵", render: () => <AudioEditor /> },
-      ]} />
+      <AdminTabs
+        tabs={[
+          { key: "pikmin", label: "Pikmin", icon: "🌱", render: () => <PikminEditor /> },
+          { key: "mostri", label: "Mostri", icon: "👾", render: () => <MonstersEditor /> },
+          { key: "strutture", label: "Strutture", icon: "🏛️", render: () => <BuildingsEditor /> },
+          {
+            key: "sprite",
+            label: "Libreria Sprite",
+            icon: "🖼️",
+            render: () => <AssetLibraryEditor />,
+          },
+          { key: "carte", label: "Carte", icon: "🃏", render: () => <CardsEditor /> },
+          { key: "missioni", label: "Missioni", icon: "🎯", render: () => <MissionsEditor /> },
+          { key: "premi", label: "Premi", icon: "🏆", render: () => <RewardsEditor /> },
+          { key: "audio", label: "Audio", icon: "🎵", render: () => <AudioEditor /> },
+        ]}
+      />
     </div>
   );
 }

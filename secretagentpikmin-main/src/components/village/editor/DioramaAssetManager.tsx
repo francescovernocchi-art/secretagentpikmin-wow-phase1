@@ -144,23 +144,49 @@ export function DioramaAssetManager({ biomeKey }: Props) {
           Upload locale (IndexedDB) — collegamento automatico al layout. Futuro: Supabase Storage.
         </p>
         <div className="flex flex-wrap gap-2">
-          <button type="button" className="btn-neon px-3 py-2 text-[10px] inline-flex items-center gap-1.5" onClick={handleUploadClick}>
+          <button
+            type="button"
+            className="btn-neon px-3 py-2 text-[10px] inline-flex items-center gap-1.5"
+            onClick={handleUploadClick}
+          >
             <ImagePlus className="h-3.5 w-3.5" /> Carica asset
           </button>
-          <button type="button" className="panel px-3 py-2 text-[10px] inline-flex items-center gap-1.5" onClick={() => exportPack()}>
+          <button
+            type="button"
+            className="panel px-3 py-2 text-[10px] inline-flex items-center gap-1.5"
+            onClick={() => exportPack()}
+          >
             <Download className="h-3.5 w-3.5" /> Esporta pacchetto
           </button>
-          <button type="button" className="panel px-3 py-2 text-[10px] inline-flex items-center gap-1.5" onClick={() => packRef.current?.click()}>
+          <button
+            type="button"
+            className="panel px-3 py-2 text-[10px] inline-flex items-center gap-1.5"
+            onClick={() => packRef.current?.click()}
+          >
             <Upload className="h-3.5 w-3.5" /> Importa pacchetto
           </button>
         </div>
-        <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
-        <input ref={packRef} type="file" accept="application/json,.json" className="hidden" onChange={handleImportPack} />
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleFile}
+        />
+        <input
+          ref={packRef}
+          type="file"
+          accept="application/json,.json"
+          className="hidden"
+          onChange={handleImportPack}
+        />
       </div>
 
       <div className="grid gap-3 lg:grid-cols-2">
         <div className="panel p-3 space-y-3">
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Nuovo upload</p>
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+            Nuovo upload
+          </p>
 
           <label className="block text-[10px]">
             Tipo asset
@@ -170,7 +196,9 @@ export function DioramaAssetManager({ biomeKey }: Props) {
               onChange={(e) => setAssetType(e.target.value as DioramaAssetType)}
             >
               {ASSET_TYPES.map((t) => (
-                <option key={t.value} value={t.value}>{t.label}</option>
+                <option key={t.value} value={t.value}>
+                  {t.label}
+                </option>
               ))}
             </select>
           </label>
@@ -184,7 +212,9 @@ export function DioramaAssetManager({ biomeKey }: Props) {
                 onChange={(e) => setBuildingKey(e.target.value as BuildingKey | "serra")}
               >
                 {UPLOAD_BUILDING_KEYS.map((k) => (
-                  <option key={k} value={k}>{buildingLabel(k)}</option>
+                  <option key={k} value={k}>
+                    {buildingLabel(k)}
+                  </option>
                 ))}
               </select>
             </label>
@@ -199,7 +229,9 @@ export function DioramaAssetManager({ biomeKey }: Props) {
                 onChange={(e) => setHangarStage(e.target.value as DioramaHangarStage)}
               >
                 {HANGAR_SLOT_OPTIONS.map((o) => (
-                  <option key={o.value} value={o.value}>{o.label}</option>
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
                 ))}
               </select>
             </label>
@@ -214,7 +246,9 @@ export function DioramaAssetManager({ biomeKey }: Props) {
                 onChange={(e) => setVisualState(e.target.value as DioramaBuildingVisualState)}
               >
                 {BUILDING_SLOT_OPTIONS.map((o) => (
-                  <option key={o.value} value={o.value}>{o.label}</option>
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
                 ))}
               </select>
             </label>
@@ -229,7 +263,9 @@ export function DioramaAssetManager({ biomeKey }: Props) {
                 onChange={(e) => setHotspotId(e.target.value)}
               >
                 {draft.hotspots.map((h) => (
-                  <option key={h.id} value={h.id}>{h.label ?? h.id}</option>
+                  <option key={h.id} value={h.id}>
+                    {h.label ?? h.id}
+                  </option>
                 ))}
               </select>
             </label>
@@ -241,12 +277,18 @@ export function DioramaAssetManager({ biomeKey }: Props) {
             </p>
           )}
 
-          <button type="button" className="btn-neon w-full py-2 text-[10px]" onClick={handleUploadClick}>
+          <button
+            type="button"
+            className="btn-neon w-full py-2 text-[10px]"
+            onClick={handleUploadClick}
+          >
             Scegli file immagine…
           </button>
         </div>
 
-        <div className={`${styles.assetManagerPreview} rounded-xl overflow-hidden border border-border/40`}>
+        <div
+          className={`${styles.assetManagerPreview} rounded-xl overflow-hidden border border-border/40`}
+        >
           <DioramaEngine
             mode={engineMode}
             layout={draft}
@@ -265,12 +307,18 @@ export function DioramaAssetManager({ biomeKey }: Props) {
 
       <div className="panel p-3 space-y-3">
         <div className="flex items-center justify-between gap-2">
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Asset Library</p>
-          <span className="text-[9px] text-muted-foreground">{loading ? "…" : `${assets.length} asset`}</span>
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+            Asset Library
+          </p>
+          <span className="text-[9px] text-muted-foreground">
+            {loading ? "…" : `${assets.length} asset`}
+          </span>
         </div>
 
         {assets.length === 0 && !loading && (
-          <p className="text-[10px] text-muted-foreground text-center py-4">Nessun asset locale — carica il primo sprite.</p>
+          <p className="text-[10px] text-muted-foreground text-center py-4">
+            Nessun asset locale — carica il primo sprite.
+          </p>
         )}
 
         <div className={styles.assetLibraryGrid}>
@@ -280,7 +328,9 @@ export function DioramaAssetManager({ biomeKey }: Props) {
               <div className="min-w-0 flex-1 space-y-0.5">
                 <p className="text-[10px] font-medium truncate">{a.name}</p>
                 <p className="text-[9px] text-primary truncate">{a.type}</p>
-                <p className="text-[9px] text-muted-foreground truncate">{describeAssetBinding(a)}</p>
+                <p className="text-[9px] text-muted-foreground truncate">
+                  {describeAssetBinding(a)}
+                </p>
               </div>
               <div className="flex flex-col gap-1 shrink-0">
                 <button
@@ -312,8 +362,8 @@ export function DioramaAssetManager({ biomeKey }: Props) {
       </div>
 
       <p className="text-[9px] text-muted-foreground px-1">
-        Edificio attivo: {buildingLabel(buildingKey)} ({normalizeBuildingKey(buildingKey)}) ·
-        Bioma: {layoutBiome}
+        Edificio attivo: {buildingLabel(buildingKey)} ({normalizeBuildingKey(buildingKey)}) · Bioma:{" "}
+        {layoutBiome}
       </p>
     </div>
   );

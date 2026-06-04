@@ -29,13 +29,29 @@ export function DioramaRoadPreview({ roads, editorMode, selectedRoadId, onSelect
           <div
             key={road.id}
             className={`${styles.engineRoadGroup} ${selected ? styles.engineRoadSelected : ""}`}
-            onClick={editorMode ? (e) => { e.stopPropagation(); onSelectRoad?.(road.id); } : undefined}
+            onClick={
+              editorMode
+                ? (e) => {
+                    e.stopPropagation();
+                    onSelectRoad?.(road.id);
+                  }
+                : undefined
+            }
             role={editorMode ? "button" : undefined}
             aria-label={editorMode ? road.id : undefined}
           >
             {points.length > 0 && (
-              <svg className={styles.engineRoadSvg} viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
-                <polyline points={points} className={`${styles.engineRoadPolyline} ${roadClass}`} fill="none" />
+              <svg
+                className={styles.engineRoadSvg}
+                viewBox="0 0 100 100"
+                preserveAspectRatio="none"
+                aria-hidden
+              >
+                <polyline
+                  points={points}
+                  className={`${styles.engineRoadPolyline} ${roadClass}`}
+                  fill="none"
+                />
               </svg>
             )}
             {editorMode &&

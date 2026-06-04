@@ -35,18 +35,27 @@ export function FamilyTradePanel({ compact = false }: { compact?: boolean }) {
   const [requestKey, setRequestKey] = useState("");
   const [message, setMessage] = useState("");
 
-  const load = () => fetchFamilyTrades(agent).then((r) => {
-    setIncoming(r.incoming);
-    setOutgoing(r.outgoing);
-    setHistory(r.history);
-  });
+  const load = () =>
+    fetchFamilyTrades(agent).then((r) => {
+      setIncoming(r.incoming);
+      setOutgoing(r.outgoing);
+      setHistory(r.history);
+    });
 
-  useEffect(() => { load(); }, [agent]);
+  useEffect(() => {
+    load();
+  }, [agent]);
 
   const sendTrade = async () => {
-    if (!selectedKey) { toast.error("Seleziona un oggetto"); return; }
+    if (!selectedKey) {
+      toast.error("Seleziona un oggetto");
+      return;
+    }
     const item = items.find((i) => i.item_key === selectedKey);
-    if (!item || item.quantity < qty) { toast.error("Quantità insufficiente"); return; }
+    if (!item || item.quantity < qty) {
+      toast.error("Quantità insufficiente");
+      return;
+    }
     setBusy(true);
     try {
       const requestItem = requestKey ? items.find((i) => i.item_key === requestKey) : null;
@@ -54,8 +63,28 @@ export function FamilyTradePanel({ compact = false }: { compact?: boolean }) {
         fromAgent: agent,
         toAgent: partner,
         message,
-        offerItems: [{ item_key: item.item_key, item_name: item.item_name, emoji: item.emoji, category: item.category, quantity: qty, sell_price: item.sell_price }],
-        requestItems: requestItem ? [{ item_key: requestItem.item_key, item_name: requestItem.item_name, emoji: requestItem.emoji, category: requestItem.category, quantity: 1, sell_price: requestItem.sell_price }] : [],
+        offerItems: [
+          {
+            item_key: item.item_key,
+            item_name: item.item_name,
+            emoji: item.emoji,
+            category: item.category,
+            quantity: qty,
+            sell_price: item.sell_price,
+          },
+        ],
+        requestItems: requestItem
+          ? [
+              {
+                item_key: requestItem.item_key,
+                item_name: requestItem.item_name,
+                emoji: requestItem.emoji,
+                category: requestItem.category,
+                quantity: 1,
+                sell_price: requestItem.sell_price,
+              },
+            ]
+          : [],
       });
       if (result.success) {
         triggerGameFx("pickup");
@@ -65,7 +94,9 @@ export function FamilyTradePanel({ compact = false }: { compact?: boolean }) {
         setMessage("");
         await Promise.all([load(), reload()]);
       } else toast.error(result.message);
-    } finally { setBusy(false); }
+    } finally {
+      setBusy(false);
+    }
   };
 
   const handleAccept = async (id: string) => {
@@ -78,7 +109,9 @@ export function FamilyTradePanel({ compact = false }: { compact?: boolean }) {
         toast.success(r.message);
       } else toast.error(r.message);
       await Promise.all([load(), reload()]);
-    } finally { setBusy(false); }
+    } finally {
+      setBusy(false);
+    }
   };
 
   const handleReject = async (id: string) => {
@@ -94,7 +127,9 @@ export function FamilyTradePanel({ compact = false }: { compact?: boolean }) {
     <section className="space-y-3">
       {!compact && (
         <header>
-          <p className="text-[10px] uppercase tracking-[0.35em] text-primary/80">// Scambio Famiglia</p>
+          <p className="text-[10px] uppercase tracking-[0.35em] text-primary/80">
+            // Scambio Famiglia
+          </p>
           <h2 className="font-display text-xl text-glow">P2P con {displayAgentName(partner)}</h2>
         </header>
       )}
@@ -144,7 +179,9 @@ export function FamilyTradePanel({ compact = false }: { compact?: boolean }) {
                   rarity={rarity}
                   subtitle={`x${i.quantity} · ${i.category}`}
                   iconKind={i.category === "materiale" ? "crystal" : "berry"}
-                  value={<span className="text-primary font-display text-sm">{i.sell_price} cr</span>}
+                  value={
+                    <span className="text-primary font-display text-sm">{i.sell_price} cr</span>
+                  }
                 />
               </button>
             );
@@ -173,10 +210,16 @@ export function FamilyTradePanel({ compact = false }: { compact?: boolean }) {
         >
           <option value="">— richiedi in cambio (opzionale) —</option>
           {items.map((i) => (
-            <option key={`req-${i.item_key}`} value={i.item_key}>{i.emoji} {i.item_name}</option>
+            <option key={`req-${i.item_key}`} value={i.item_key}>
+              {i.emoji} {i.item_name}
+            </option>
           ))}
         </select>
-        <button onClick={sendTrade} disabled={busy || !selectedKey} className="btn-neon w-full py-2 flex items-center justify-center gap-1 disabled:opacity-50">
+        <button
+          onClick={sendTrade}
+          disabled={busy || !selectedKey}
+          className="btn-neon w-full py-2 flex items-center justify-center gap-1 disabled:opacity-50"
+        >
           {busy ? <Loader2 className="h-3 w-3 animate-spin" /> : <Handshake className="h-3 w-3" />}
           Invia scambio a {them.name}
         </button>
@@ -186,7 +229,13 @@ export function FamilyTradePanel({ compact = false }: { compact?: boolean }) {
         <div className="space-y-2">
           <p className="text-[10px] uppercase tracking-widest text-primary/80">Ricevuti</p>
           {incoming.map((o) => (
-            <TradeCard key={o.id} offer={o} onAccept={() => handleAccept(o.id)} onReject={() => handleReject(o.id)} busy={busy} />
+            <TradeCard
+              key={o.id}
+              offer={o}
+              onAccept={() => handleAccept(o.id)}
+              onReject={() => handleReject(o.id)}
+              busy={busy}
+            />
           ))}
         </div>
       )}
@@ -195,7 +244,13 @@ export function FamilyTradePanel({ compact = false }: { compact?: boolean }) {
         <div className="space-y-2">
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Inviati</p>
           {outgoing.map((o) => (
-            <TradeCard key={o.id} offer={o} onReject={() => handleReject(o.id)} busy={busy} outgoing />
+            <TradeCard
+              key={o.id}
+              offer={o}
+              onReject={() => handleReject(o.id)}
+              busy={busy}
+              outgoing
+            />
           ))}
         </div>
       )}
@@ -233,8 +288,14 @@ function TradeCard({
   const requested = offer.items.filter((i) => i.side === "request");
 
   return (
-    <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} className="market-card p-3 space-y-2">
-      {offer.message && <p className="text-[10px] text-muted-foreground italic">"{offer.message}"</p>}
+    <motion.div
+      initial={{ opacity: 0, y: 4 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="market-card p-3 space-y-2"
+    >
+      {offer.message && (
+        <p className="text-[10px] text-muted-foreground italic">"{offer.message}"</p>
+      )}
       <div className="flex flex-wrap gap-2">
         {offered.map((i) => (
           <span key={i.id} className="text-xs flex items-center gap-1 panel px-2 py-1">
@@ -243,15 +304,25 @@ function TradeCard({
         ))}
       </div>
       {requested.length > 0 && (
-        <p className="text-[10px] text-primary">Richiede: {requested.map((i) => `${i.emoji} ${i.item_name}`).join(", ")}</p>
+        <p className="text-[10px] text-primary">
+          Richiede: {requested.map((i) => `${i.emoji} ${i.item_name}`).join(", ")}
+        </p>
       )}
       <div className="flex gap-2">
         {!outgoing && onAccept && (
-          <button onClick={onAccept} disabled={busy} className="btn-neon flex-1 py-1.5 text-xs flex items-center justify-center gap-1">
+          <button
+            onClick={onAccept}
+            disabled={busy}
+            className="btn-neon flex-1 py-1.5 text-xs flex items-center justify-center gap-1"
+          >
             <Check className="h-3 w-3" /> Accetta
           </button>
         )}
-        <button onClick={onReject} disabled={busy} className="panel flex-1 py-1.5 text-xs flex items-center justify-center gap-1 text-destructive">
+        <button
+          onClick={onReject}
+          disabled={busy}
+          className="panel flex-1 py-1.5 text-xs flex items-center justify-center gap-1 text-destructive"
+        >
           <X className="h-3 w-3" /> {outgoing ? "Annulla" : "Rifiuta"}
         </button>
       </div>

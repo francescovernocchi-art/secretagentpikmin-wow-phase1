@@ -21,7 +21,10 @@ export function useActiveVillageEvents(biome: string | null | undefined) {
   const [events, setEvents] = useState<VillageEventRow[]>([]);
 
   const load = useCallback(async () => {
-    if (!biome) { setEvents([]); return; }
+    if (!biome) {
+      setEvents([]);
+      return;
+    }
     const { data } = await supabase
       .from("village_diorama_events")
       .select("*")
@@ -32,10 +35,17 @@ export function useActiveVillageEvents(biome: string | null | undefined) {
 
   useEffect(() => {
     load();
-    const ch = supabase.channel(`village_events:${biome ?? "all"}:${Math.random().toString(36).slice(2)}`);
-    ch.on("postgres_changes" as any, { event: "*", schema: "public", table: "village_diorama_events" }, () => load())
-      .subscribe();
-    return () => { supabase.removeChannel(ch); };
+    const ch = supabase.channel(
+      `village_events:${biome ?? "all"}:${Math.random().toString(36).slice(2)}`,
+    );
+    ch.on(
+      "postgres_changes" as any,
+      { event: "*", schema: "public", table: "village_diorama_events" },
+      () => load(),
+    ).subscribe();
+    return () => {
+      supabase.removeChannel(ch);
+    };
   }, [biome, load]);
 
   return { events, reload: load };
@@ -57,6 +67,8 @@ export function useAllVillageEvents() {
     setLoading(false);
   }, []);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    load();
+  }, [load]);
   return { events, loading, reload: load };
 }

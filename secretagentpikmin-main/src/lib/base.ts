@@ -60,17 +60,25 @@ export interface BaseGift {
   id: string;
   from_agent: string;
   to_agent: string;
-  payload: { coins?: number; ingredients?: string[]; boost_building_id?: string; boost_minutes?: number };
+  payload: {
+    coins?: number;
+    ingredients?: string[];
+    boost_building_id?: string;
+    boost_minutes?: number;
+  };
   message: string | null;
   created_at: string;
   claimed_at: string | null;
 }
 
-export const THEMES: Record<string, { label: string; sky: string; ground: string; accent: string }> = {
+export const THEMES: Record<
+  string,
+  { label: string; sky: string; ground: string; accent: string }
+> = {
   foresta: { label: "Foresta", sky: "#7ec8a8", ground: "#3d6b4d", accent: "#a8e063" },
-  lago:    { label: "Lago",    sky: "#7ec0e8", ground: "#3b6b88", accent: "#bfe9ff" },
+  lago: { label: "Lago", sky: "#7ec0e8", ground: "#3b6b88", accent: "#bfe9ff" },
   deserto: { label: "Deserto", sky: "#f3c98b", ground: "#a87241", accent: "#ffd98a" },
-  notte:   { label: "Notte",   sky: "#2a3157", ground: "#1a1f3a", accent: "#a78bfa" },
+  notte: { label: "Notte", sky: "#2a3157", ground: "#1a1f3a", accent: "#a78bfa" },
 };
 
 // ---- Cost scaling ----
@@ -79,7 +87,10 @@ export function costForLevel(catalog: BuildingCatalog, targetLevel: number) {
   return {
     coins: Math.round(catalog.base_cost_coins * mult),
     ingredients: catalog.base_cost_ingredients ?? [],
-    minutes: Math.max(1, Math.round(catalog.base_duration_minutes * Math.pow(1.4, targetLevel - 1))),
+    minutes: Math.max(
+      1,
+      Math.round(catalog.base_duration_minutes * Math.pow(1.4, targetLevel - 1)),
+    ),
   };
 }
 
@@ -102,23 +113,41 @@ export async function getBase(agent: string): Promise<BaseRow | null> {
 }
 
 export async function listBuildings(agent: string): Promise<BaseBuilding[]> {
-  const { data } = await supabase.from("base_buildings").select("*").eq("agent", agent).order("created_at");
+  const { data } = await supabase
+    .from("base_buildings")
+    .select("*")
+    .eq("agent", agent)
+    .order("created_at");
   return (data ?? []) as unknown as BaseBuilding[];
 }
 
-export async function createBase(agent: string, params: { name: string; theme: string; lat?: number | null; lng?: number | null }) {
+export async function createBase(
+  agent: string,
+  params: { name: string; theme: string; lat?: number | null; lng?: number | null },
+) {
   const { data, error } = await supabase
     .from("bases")
-    .insert({ agent, name: params.name, theme: params.theme, lat: params.lat ?? null, lng: params.lng ?? null })
+    .insert({
+      agent,
+      name: params.name,
+      theme: params.theme,
+      lat: params.lat ?? null,
+      lng: params.lng ?? null,
+    })
     .select("*")
     .single();
   if (error) throw error;
-  await supabase.from("base_events").insert({ agent, type: "base_created", payload: { name: params.name } });
+  await supabase
+    .from("base_events")
+    .insert({ agent, type: "base_created", payload: { name: params.name } });
   return data as unknown as BaseRow;
 }
 
 export async function updateBase(agent: string, patch: Partial<Pick<BaseRow, "name" | "theme">>) {
-  await supabase.from("bases").update({ ...patch, updated_at: new Date().toISOString() }).eq("agent", agent);
+  await supabase
+    .from("bases")
+    .update({ ...patch, updated_at: new Date().toISOString() })
+    .eq("agent", agent);
 }
 
 /** Avvia costruzione di una nuova struttura. */
@@ -153,12 +182,18 @@ export async function startBuilding(
     .select("*")
     .single();
   if (error) throw error;
-  await supabase.from("base_events").insert({ agent, type: "build_started", payload: { type: catalog.key } });
+  await supabase
+    .from("base_events")
+    .insert({ agent, type: "build_started", payload: { type: catalog.key } });
   return data as unknown as BaseBuilding;
 }
 
 /** Avvia upgrade di una struttura idle. */
-export async function startUpgrade(agent: string, building: BaseBuilding, catalog: BuildingCatalog) {
+export async function startUpgrade(
+  agent: string,
+  building: BaseBuilding,
+  catalog: BuildingCatalog,
+) {
   if (building.level >= catalog.max_level) throw new Error("Livello massimo.");
   const cost = costForLevel(catalog, building.level + 1);
   const ok = await spendCoins(agent, cost.coins, "base_upgrade", { id: building.id });
@@ -171,7 +206,12 @@ export async function startUpgrade(agent: string, building: BaseBuilding, catalo
   const end = new Date(now.getTime() + cost.minutes * 60_000);
   await supabase
     .from("base_buildings")
-    .update({ status: "upgrading", started_at: now.toISOString(), build_end_at: end.toISOString(), updated_at: now.toISOString() })
+    .update({
+      status: "upgrading",
+      started_at: now.toISOString(),
+      build_end_at: end.toISOString(),
+      updated_at: now.toISOString(),
+    })
     .eq("id", building.id);
 }
 
@@ -180,10 +220,17 @@ export async function completeBuilding(building: BaseBuilding) {
   if (building.status === "idle") return;
   if (!building.build_end_at) return;
   if (new Date(building.build_end_at).getTime() > Date.now()) return;
-  const newLevel = building.status === "building" ? Math.max(1, building.level + 1) : building.level + 1;
+  const newLevel =
+    building.status === "building" ? Math.max(1, building.level + 1) : building.level + 1;
   await supabase
     .from("base_buildings")
-    .update({ status: "idle", level: newLevel, started_at: null, build_end_at: null, updated_at: new Date().toISOString() })
+    .update({
+      status: "idle",
+      level: newLevel,
+      started_at: null,
+      build_end_at: null,
+      updated_at: new Date().toISOString(),
+    })
     .eq("id", building.id);
   await supabase.from("base_events").insert({
     agent: building.agent,
@@ -192,18 +239,28 @@ export async function completeBuilding(building: BaseBuilding) {
   });
   // bonus XP base
   await supabase.rpc; // noop placeholder
-  const { data: base } = await supabase.from("bases").select("xp,level").eq("agent", building.agent).maybeSingle();
+  const { data: base } = await supabase
+    .from("bases")
+    .select("xp,level")
+    .eq("agent", building.agent)
+    .maybeSingle();
   if (base) {
     const xp = (base.xp ?? 0) + 20 * newLevel;
     const lvl = Math.max(base.level, Math.floor(xp / 100) + 1);
-    await supabase.from("bases").update({ xp, level: lvl, updated_at: new Date().toISOString() }).eq("agent", building.agent);
+    await supabase
+      .from("bases")
+      .update({ xp, level: lvl, updated_at: new Date().toISOString() })
+      .eq("agent", building.agent);
   }
 }
 
 export async function boostBuilding(agent: string, building: BaseBuilding, minutes: number) {
   if (!building.build_end_at) return;
   const end = new Date(new Date(building.build_end_at).getTime() - minutes * 60_000);
-  await supabase.from("base_buildings").update({ build_end_at: end.toISOString() }).eq("id", building.id);
+  await supabase
+    .from("base_buildings")
+    .update({ build_end_at: end.toISOString() })
+    .eq("id", building.id);
   await supabase.from("base_events").insert({
     agent: building.agent,
     type: "boost_received",
@@ -258,7 +315,10 @@ export async function claimGift(agent: string, gift: BaseGift) {
   if (gift.payload.ingredients?.length) {
     await grantIngredients(agent, gift.payload.ingredients);
   }
-  await supabase.from("base_gifts").update({ claimed_at: new Date().toISOString() }).eq("id", gift.id);
+  await supabase
+    .from("base_gifts")
+    .update({ claimed_at: new Date().toISOString() })
+    .eq("id", gift.id);
 }
 
 /** Helper: formatta secondi rimanenti. */

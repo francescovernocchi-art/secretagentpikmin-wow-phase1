@@ -1,6 +1,11 @@
 import { motion } from "framer-motion";
 import { AnimatedPikmin } from "@/components/pikmin/AnimatedPikmin";
-import { PIKMIN_TYPE_TO_SPRITE, statusToAnimation, statusToRoleLabel, PIKMIN_PATROL_POINTS } from "./diorama-data";
+import {
+  PIKMIN_TYPE_TO_SPRITE,
+  statusToAnimation,
+  statusToRoleLabel,
+  PIKMIN_PATROL_POINTS,
+} from "./diorama-data";
 import type { PikminUnit } from "@/types/secretPikmin";
 import styles from "@/styles/village-diorama.module.css";
 
@@ -11,7 +16,12 @@ interface DioramaPikminActorProps {
   hideBadges?: boolean;
 }
 
-export function DioramaPikminActor({ pikmin, index, compact, hideBadges }: DioramaPikminActorProps) {
+export function DioramaPikminActor({
+  pikmin,
+  index,
+  compact,
+  hideBadges,
+}: DioramaPikminActorProps) {
   const spriteType = PIKMIN_TYPE_TO_SPRITE[pikmin.type] ?? "red";
   const anim = statusToAnimation(pikmin.status, pikmin.specialization);
   const role = statusToRoleLabel(pikmin.status, pikmin.specialization);
@@ -53,7 +63,9 @@ export function DioramaPikminActor({ pikmin, index, compact, hideBadges }: Diora
 
       <div className={styles.pikminTooltip}>
         <p className="font-medium">{pikmin.name}</p>
-        <p className="text-muted-foreground">Lv{pikmin.level} · {pikmin.type}</p>
+        <p className="text-muted-foreground">
+          Lv{pikmin.level} · {pikmin.type}
+        </p>
         <p className="text-primary">{role}</p>
       </div>
     </motion.div>

@@ -118,7 +118,6 @@ export function useStructureAssets(biomeKey?: string) {
     return data as unknown as StructureAsset;
   }, []);
 
-
   const deleteAsset = useCallback(async (id: string) => {
     const { error } = await supabase.from("village_structure_assets").delete().eq("id", id);
     if (error) throw error;

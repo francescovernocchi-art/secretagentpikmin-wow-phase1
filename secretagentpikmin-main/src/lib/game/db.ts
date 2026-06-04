@@ -2,7 +2,9 @@ import { supabase } from "@/integrations/supabase/client";
 import type { DataSource } from "@/types/phase2-db";
 
 export function isSupabaseConfigured(): boolean {
-  const url = import.meta.env.VITE_SUPABASE_URL || (typeof process !== "undefined" ? process.env.SUPABASE_URL : undefined);
+  const url =
+    import.meta.env.VITE_SUPABASE_URL ||
+    (typeof process !== "undefined" ? process.env.SUPABASE_URL : undefined);
   const key =
     import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
     (typeof process !== "undefined" ? process.env.SUPABASE_PUBLISHABLE_KEY : undefined);
@@ -32,12 +34,12 @@ export async function withFallback<T>(
 }
 
 /** Typed table access — Phase 2 tables not yet in generated types */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 export function gameTable(name: string): any {
   if (!isSupabaseConfigured()) {
     throw new Error("Supabase not configured");
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   return (supabase as any).from(name);
 }
 

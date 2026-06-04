@@ -41,7 +41,13 @@ function ProfiloPage() {
     <PageShell title="Profilo Agente" subtitle="Dossier riservato">
       <div className="panel-strong p-5 flex flex-col items-center text-center gap-3">
         <div className="relative">
-          <img src="/icon-512.png" alt="" width={96} height={96} className="rounded-2xl glow-ring" />
+          <img
+            src="/icon-512.png"
+            alt=""
+            width={96}
+            height={96}
+            className="rounded-2xl glow-ring"
+          />
           <span className="absolute -bottom-2 -right-2 panel px-2 py-0.5 text-[10px] font-display text-primary">
             Lv {level}
           </span>
@@ -57,7 +63,8 @@ function ProfiloPage() {
 
         <div className="w-full mt-2">
           <div className="flex justify-between text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
-            <span>{stats.xp} XP</span><span>{next} XP</span>
+            <span>{stats.xp} XP</span>
+            <span>{next} XP</span>
           </div>
           <div className="h-2 rounded-full bg-night/80 overflow-hidden border border-primary/20">
             <div className="h-full bg-primary glow-soft" style={{ width: `${progress}%` }} />
@@ -83,7 +90,6 @@ function ProfiloPage() {
           <AdminGodPanel />
         </>
       )}
-
 
       <button
         onClick={() => {

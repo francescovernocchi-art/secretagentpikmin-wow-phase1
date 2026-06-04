@@ -58,7 +58,10 @@ export async function listRecentEvents(agent: string, limit = 8): Promise<Villag
 }
 
 export async function resolveEvent(id: string) {
-  await supabase.from("village_events").update({ resolved_at: new Date().toISOString() }).eq("id", id);
+  await supabase
+    .from("village_events")
+    .update({ resolved_at: new Date().toISOString() })
+    .eq("id", id);
 }
 
 /** Scansiona nemici vicini e crea/risolve eventi minaccia. */
@@ -96,11 +99,10 @@ export async function scanThreats(params: {
   if (!spawns || spawns.length === 0) return { created: 0, auto: 0, threats: [] };
 
   const enemyIds = Array.from(new Set(spawns.map((s) => s.enemy_id)));
-  const { data: enemies } = await supabase
-    .from("enemies")
-    .select("*")
-    .in("id", enemyIds);
-  const enemyMap = new Map<string, EnemyRow>((enemies ?? []).map((e: any) => [e.id, e as EnemyRow]));
+  const { data: enemies } = await supabase.from("enemies").select("*").in("id", enemyIds);
+  const enemyMap = new Map<string, EnemyRow>(
+    (enemies ?? []).map((e: any) => [e.id, e as EnemyRow]),
+  );
 
   const base = { lat: params.baseLat, lng: params.baseLng };
   const threatRadius = (params as any).threatRadius ?? BASE_THREAT_RADIUS_DEFAULT;
@@ -135,7 +137,8 @@ export async function scanThreats(params: {
     const autoDefend = params.totalDefense >= dangerScore;
 
     // Auto-difesa: muri/torri abbattono la minaccia, niente notifica panic
-    const severity = t.enemy.danger_level >= 4 ? "critical" : t.enemy.danger_level >= 2 ? "high" : "normal";
+    const severity =
+      t.enemy.danger_level >= 4 ? "critical" : t.enemy.danger_level >= 2 ? "high" : "normal";
 
     await supabase.from("village_events").insert({
       agent: params.agent,

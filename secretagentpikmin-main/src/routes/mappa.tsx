@@ -2,14 +2,33 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
-import { MapPin, Crosshair, Plus, X, Loader2, Gift, Sparkles, Trash2, ScrollText, Hand, Zap, Rocket } from "lucide-react";
+import {
+  MapPin,
+  Crosshair,
+  Plus,
+  X,
+  Loader2,
+  Gift,
+  Sparkles,
+  Trash2,
+  ScrollText,
+  Hand,
+  Zap,
+  Rocket,
+} from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { supabase } from "@/integrations/supabase/client";
 import { getSession } from "@/lib/session";
 import { grantIngredients } from "@/lib/ingredients";
 import { collectShipPart } from "@/lib/ship";
 import { triggerGameFx } from "@/lib/game-event-fx";
-import { spendPikmin, pikminCostFor, RARITY_LABEL, RARITY_COLOR, getPikminCount } from "@/lib/pikmin";
+import {
+  spendPikmin,
+  pikminCostFor,
+  RARITY_LABEL,
+  RARITY_COLOR,
+  getPikminCount,
+} from "@/lib/pikmin";
 import { PikminCounter } from "@/components/PikminCounter";
 import { BiomeMapPanel } from "@/components/game/BiomeMapPanel";
 import { RadarScannerPanel } from "@/components/game/RadarScannerPanel";
@@ -199,7 +218,7 @@ function MappaPage() {
         zoomControl: false,
       });
       L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-        attribution: '&copy; OpenStreetMap &copy; CARTO',
+        attribution: "&copy; OpenStreetMap &copy; CARTO",
         subdomains: "abcd",
         maxZoom: 19,
       }).addTo(map);
@@ -228,7 +247,11 @@ function MappaPage() {
     }
     const id = navigator.geolocation.watchPosition(
       (pos) => {
-        const next = { lat: pos.coords.latitude, lng: pos.coords.longitude, acc: pos.coords.accuracy };
+        const next = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+          acc: pos.coords.accuracy,
+        };
         setMe(next);
       },
       (err) => {
@@ -308,7 +331,9 @@ function MappaPage() {
     load();
     const ch = supabase
       .channel("agent-positions-realtime")
-      .on("postgres_changes", { event: "*", schema: "public", table: "agent_positions" }, () => load())
+      .on("postgres_changes", { event: "*", schema: "public", table: "agent_positions" }, () =>
+        load(),
+      )
       .subscribe();
     return () => {
       mounted = false;
@@ -330,10 +355,8 @@ function MappaPage() {
     const ch = supabase
       .channel("mappa-ship-rt")
       .on("postgres_changes", { event: "*", schema: "public", table: "ship_parts" }, () => load())
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "ship_parts_collected" },
-        () => load(),
+      .on("postgres_changes", { event: "*", schema: "public", table: "ship_parts_collected" }, () =>
+        load(),
       )
       .subscribe();
     return () => {
@@ -372,7 +395,9 @@ function MappaPage() {
           const icon = L.divIcon({ className: "", html, iconSize: [90, 36], iconAnchor: [45, 28] });
           const marker = L.marker([a.lat, a.lng], { icon, zIndexOffset: 800 }).addTo(map);
           const updated = new Date(a.updated_at).toLocaleTimeString();
-          marker.bindPopup(`<div style="min-width:140px"><b>${safeEmoji} ${safeName}</b><br/><span style="opacity:.7">${safeRole}</span><br/><span style="opacity:.7">aggiornato ${updated}</span>${a.accuracy ? `<br/><span style="opacity:.7">±${Math.round(a.accuracy)}m</span>` : ""}</div>`);
+          marker.bindPopup(
+            `<div style="min-width:140px"><b>${safeEmoji} ${safeName}</b><br/><span style="opacity:.7">${safeRole}</span><br/><span style="opacity:.7">aggiornato ${updated}</span>${a.accuracy ? `<br/><span style="opacity:.7">±${Math.round(a.accuracy)}m</span>` : ""}</div>`,
+          );
           let accuracy: any = null;
           if (a.accuracy && a.accuracy > 0) {
             accuracy = L.circle([a.lat, a.lng], {
@@ -525,7 +550,8 @@ function MappaPage() {
       name: tpl.name,
       emoji: tpl.emoji,
       xp: tpl.xp,
-      note: tpl.kind === "mission" ? missionText.trim() || note.trim() || null : note.trim() || null,
+      note:
+        tpl.kind === "mission" ? missionText.trim() || note.trim() || null : note.trim() || null,
     };
     const { error } = await supabase.from("drops").insert(payload);
     setSaving(false);
@@ -552,7 +578,9 @@ function MappaPage() {
         );
         if (!ok) return;
       } else {
-        toast.warning(`Sei troppo lontano: ${Math.round(dist)}m (devi essere entro ${d.radius_m}m)`);
+        toast.warning(
+          `Sei troppo lontano: ${Math.round(dist)}m (devi essere entro ${d.radius_m}m)`,
+        );
         return;
       }
     }
@@ -573,10 +601,7 @@ function MappaPage() {
     await runCollect(d, { manual: !!opts?.manual, dist, shipCost: 0 });
   };
 
-  const runCollect = async (
-    d: Drop,
-    ctx: { manual: boolean; dist: number; shipCost: number },
-  ) => {
+  const runCollect = async (d: Drop, ctx: { manual: boolean; dist: number; shipCost: number }) => {
     if (!me) return;
     setCollecting(d.id);
     try {
@@ -706,11 +731,14 @@ function MappaPage() {
     }
   }, [me, drops, isPapa]);
 
-
   return (
     <PageShell
       title="Mappa tattica"
-      subtitle={isPapa ? "Biomi, basi, drop e spedizioni Pikmin" : "Trova oggetti, mostri, biomi e missioni vicine"}
+      subtitle={
+        isPapa
+          ? "Biomi, basi, drop e spedizioni Pikmin"
+          : "Trova oggetti, mostri, biomi e missioni vicine"
+      }
       theme="map"
       action={<PikminCounter compact />}
     >
@@ -720,7 +748,10 @@ function MappaPage() {
 
       <div className="space-y-3">
         {/* Mappa */}
-        <div className="panel-strong relative overflow-hidden rounded-2xl" style={{ isolation: "isolate", zIndex: 0 }}>
+        <div
+          className="panel-strong relative overflow-hidden rounded-2xl"
+          style={{ isolation: "isolate", zIndex: 0 }}
+        >
           <div ref={mapEl} className="w-full h-[55vh] min-h-[360px] rounded-2xl" />
           <EnemyLayer mapRef={mapRef} ready={ready} me={me} />
 
@@ -951,7 +982,11 @@ function MappaPage() {
                   disabled={saving}
                   className="btn-neon flex-1 py-2.5 text-sm flex items-center justify-center gap-2 disabled:opacity-60"
                 >
-                  {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Gift className="h-4 w-4" />}
+                  {saving ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Gift className="h-4 w-4" />
+                  )}
                   Piazza qui
                 </button>
               </div>
@@ -990,8 +1025,11 @@ function MappaPage() {
                     <p className="text-sm text-foreground truncate flex items-center gap-1.5">
                       {d.name}
                       {d.kind === "ship_part" && d.payload_key && (
-                        <span className={`text-[9px] uppercase tracking-wider ${RARITY_COLOR[shipParts.find((p) => p.key === d.payload_key)?.rarity ?? "comune"]}`}>
-                          🚀 {pikminCostFor(shipParts.find((p) => p.key === d.payload_key)?.rarity)} 🌱
+                        <span
+                          className={`text-[9px] uppercase tracking-wider ${RARITY_COLOR[shipParts.find((p) => p.key === d.payload_key)?.rarity ?? "comune"]}`}
+                        >
+                          🚀 {pikminCostFor(shipParts.find((p) => p.key === d.payload_key)?.rarity)}{" "}
+                          🌱
                         </span>
                       )}
                     </p>
@@ -1032,11 +1070,11 @@ function MappaPage() {
         {/* Lista drop piazzati (papà) */}
         {isPapa && (
           <div className="panel-strong p-3 space-y-2">
-            <p className="text-[10px] uppercase tracking-[0.3em] text-primary/80">
-              // I tuoi drop
-            </p>
+            <p className="text-[10px] uppercase tracking-[0.3em] text-primary/80">// I tuoi drop</p>
             {drops.length === 0 && (
-              <p className="text-xs text-muted-foreground">Ancora nessun drop. Tocca "Piazza drop" sulla mappa per crearne uno.</p>
+              <p className="text-xs text-muted-foreground">
+                Ancora nessun drop. Tocca "Piazza drop" sulla mappa per crearne uno.
+              </p>
             )}
             {drops.slice(0, 8).map((d) => (
               <div
@@ -1051,7 +1089,9 @@ function MappaPage() {
                       {d.status === "collected" ? "· raccolto ✓" : "· in attesa"}
                     </span>
                   </p>
-                  {d.note && <p className="text-[10px] text-muted-foreground truncate">"{d.note}"</p>}
+                  {d.note && (
+                    <p className="text-[10px] text-muted-foreground truncate">"{d.note}"</p>
+                  )}
                 </div>
                 <button
                   onClick={() => mapRef.current?.setView([d.lat, d.lng], 18)}
@@ -1129,9 +1169,7 @@ function MappaPage() {
                       <p className="text-xs text-muted-foreground">
                         La squadra di {shipConfirm.cost} 🌱 partirà subito per recuperare il pezzo.
                         Dopo la missione resteranno{" "}
-                        <b className="text-primary">
-                          {shipConfirm.have - shipConfirm.cost} 🌱
-                        </b>{" "}
+                        <b className="text-primary">{shipConfirm.have - shipConfirm.cost} 🌱</b>{" "}
                         Pikmin alla base.
                       </p>
                     ) : (
@@ -1145,9 +1183,7 @@ function MappaPage() {
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>
-                  {enough ? "Annulla" : "Chiudi"}
-                </AlertDialogCancel>
+                <AlertDialogCancel>{enough ? "Annulla" : "Chiudi"}</AlertDialogCancel>
                 {enough && (
                   <AlertDialogAction
                     onClick={confirmShipDispatch}

@@ -42,7 +42,9 @@ export function RadarScannerPanel({
   return (
     <div className="space-y-4">
       <section className="panel-strong relative overflow-hidden p-5 flex flex-col items-center gap-3">
-        <p className="text-[10px] uppercase tracking-[0.4em] text-primary/80">// Radar + Scanner Area</p>
+        <p className="text-[10px] uppercase tracking-[0.4em] text-primary/80">
+          // Radar + Scanner Area
+        </p>
         {biomeDef && (
           <p className="text-xs text-primary">
             Bioma attivo: {biomeDef.emoji} {biomeDef.label}
@@ -50,14 +52,23 @@ export function RadarScannerPanel({
         )}
         <Radar size={compact ? 160 : 200} />
         <p className="text-xs text-muted-foreground text-center max-w-xs">
-          Il radar rileva tracce nel bioma corrente. Lo scanner genera ritrovamenti coerenti e li salva.
+          Il radar rileva tracce nel bioma corrente. Lo scanner genera ritrovamenti coerenti e li
+          salva.
         </p>
-        <button onClick={handleScan} disabled={busy} className="btn-neon px-5 py-2.5 text-xs flex items-center gap-2">
+        <button
+          onClick={handleScan}
+          disabled={busy}
+          className="btn-neon px-5 py-2.5 text-xs flex items-center gap-2"
+        >
           <ScanLine className={`h-4 w-4 ${busy ? "animate-pulse" : ""}`} />
           {busy ? "Scansione…" : "Scansiona Area"}
         </button>
         {!biomeScan && !onScan && (
-          <Link to="/radar" onClick={hapticTap} className="text-[10px] text-primary uppercase tracking-widest">
+          <Link
+            to="/radar"
+            onClick={hapticTap}
+            className="text-[10px] text-primary uppercase tracking-widest"
+          >
             Apri scanner fotocamera →
           </Link>
         )}
@@ -106,7 +117,9 @@ export function RadarScannerPanel({
               <span
                 key={b.key}
                 className={`rounded-full px-2 py-0.5 text-[10px] border ${
-                  b.key === biome ? "border-primary bg-primary/10 text-primary" : "bg-night/60 border-border"
+                  b.key === biome
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "bg-night/60 border-border"
                 }`}
               >
                 {b.emoji} {b.label}

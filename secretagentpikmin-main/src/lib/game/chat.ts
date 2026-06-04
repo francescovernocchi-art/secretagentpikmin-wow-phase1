@@ -5,10 +5,15 @@ import type { ChatChannelKey } from "@/types/secretPikmin";
 import { supabase } from "@/integrations/supabase/client";
 import { isSupabaseConfigured } from "@/lib/game/db";
 
-export async function fetchChatMessages(channel?: ChatChannelKey): Promise<{ data: DbChatMessage[]; source: "supabase" | "local" }> {
+export async function fetchChatMessages(
+  channel?: ChatChannelKey,
+): Promise<{ data: DbChatMessage[]; source: "supabase" | "local" }> {
   const res = await safeGameQuery(
     () => {
-      let q = gameTable("family_chat_messages").select("*").order("created_at", { ascending: true }).limit(200);
+      let q = gameTable("family_chat_messages")
+        .select("*")
+        .order("created_at", { ascending: true })
+        .limit(200);
       if (channel) q = q.eq("channel", channel);
       return q;
     },
@@ -18,14 +23,20 @@ export async function fetchChatMessages(channel?: ChatChannelKey): Promise<{ dat
 }
 
 /** Fallback to legacy messages table if family_chat_messages empty */
-export async function fetchChatMessagesWithLegacy(channel?: ChatChannelKey): Promise<DbChatMessage[]> {
+export async function fetchChatMessagesWithLegacy(
+  channel?: ChatChannelKey,
+): Promise<DbChatMessage[]> {
   const { data } = await fetchChatMessages(channel);
   if (data.length > 0) return data;
 
   if (!isSupabaseConfigured()) return data;
 
   try {
-    const { data: legacy } = await supabase.from("messages").select("*").order("created_at", { ascending: true }).limit(200);
+    const { data: legacy } = await supabase
+      .from("messages")
+      .select("*")
+      .order("created_at", { ascending: true })
+      .limit(200);
     return (legacy ?? []).map((m) => ({
       id: m.id,
       channel: "famiglia" as ChatChannelKey,
@@ -53,7 +64,10 @@ export async function sendChatMessage(opts: {
   };
 
   try {
-    const { data, error } = await gameTable("family_chat_messages").insert(row).select("*").single();
+    const { data, error } = await gameTable("family_chat_messages")
+      .insert(row)
+      .select("*")
+      .single();
     if (error) throw error;
     return data as DbChatMessage;
   } catch {

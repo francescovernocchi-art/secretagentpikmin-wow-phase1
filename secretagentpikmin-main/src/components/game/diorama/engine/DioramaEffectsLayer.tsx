@@ -97,7 +97,12 @@ export function DioramaEffectsLayer({ effects }: { effects: DioramaEffect[] }) {
         }
         if (fx.type === "hangar-lights") {
           return (
-            <div key={fx.id} className={styles.engineHangarLights} style={{ zIndex: fx.z ?? 88 }} aria-hidden>
+            <div
+              key={fx.id}
+              className={styles.engineHangarLights}
+              style={{ zIndex: fx.z ?? 88 }}
+              aria-hidden
+            >
               <span className={styles.engineHangarLight} style={{ left: "18%" }} />
               <span className={styles.engineHangarLight} style={{ left: "50%" }} />
               <span className={styles.engineHangarLight} style={{ left: "82%" }} />

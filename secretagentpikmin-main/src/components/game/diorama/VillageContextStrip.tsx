@@ -14,7 +14,11 @@ export function VillageContextStrip() {
   const { biome, location } = usePlayerBiome(agent);
   const { controlLevel, villageName, loading } = useVillageDiorama(agent);
   const { data } = useHomeDashboard();
-  const [remote, setRemote] = useState<{ allowed: boolean; inRange: boolean; reason: string } | null>(null);
+  const [remote, setRemote] = useState<{
+    allowed: boolean;
+    inRange: boolean;
+    reason: string;
+  } | null>(null);
   const [radiusM, setRadiusM] = useState(500);
 
   const biomeDef = getBiomeByKey(biome);
@@ -34,11 +38,11 @@ export function VillageContextStrip() {
         {biomeDef?.emoji ?? "🌍"} {biomeDef?.label ?? biome}
       </span>
 
-      <span className={styles.contextChip}>
-        📡 Raggio {radiusM}m
-      </span>
+      <span className={styles.contextChip}>📡 Raggio {radiusM}m</span>
 
-      <span className={`${styles.contextChip} ${remote?.allowed ? styles.contextChipActive : styles.contextChipWarn}`}>
+      <span
+        className={`${styles.contextChip} ${remote?.allowed ? styles.contextChipActive : styles.contextChipWarn}`}
+      >
         {remote?.inRange ? "📍 In zona" : remote?.allowed ? "📶 Remoto OK" : "🔒 Remoto off"}
       </span>
 
@@ -47,7 +51,11 @@ export function VillageContextStrip() {
       </span>
 
       {activeExpeditions.length > 0 && (
-        <Link to="/spedizioni" onClick={hapticTap} className={`${styles.contextChip} ${styles.contextChipActive}`}>
+        <Link
+          to="/spedizioni"
+          onClick={hapticTap}
+          className={`${styles.contextChip} ${styles.contextChipActive}`}
+        >
           🚀 {activeExpeditions.length} spedizioni
         </Link>
       )}
@@ -58,9 +66,7 @@ export function VillageContextStrip() {
         </span>
       )}
 
-      {location?.source === "gps" && (
-        <span className={styles.contextChip}>GPS attivo</span>
-      )}
+      {location?.source === "gps" && <span className={styles.contextChip}>GPS attivo</span>}
     </div>
   );
 }

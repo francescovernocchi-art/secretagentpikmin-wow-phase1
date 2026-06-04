@@ -49,7 +49,14 @@ const VISUAL_STATES: DioramaBuildingVisualState[] = [
   "level_5",
 ];
 
-const HOTSPOT_KINDS: DioramaHotspotKind[] = ["wreck", "rare_flower", "fruit", "cave", "mission_entrance", "custom"];
+const HOTSPOT_KINDS: DioramaHotspotKind[] = [
+  "wreck",
+  "rare_flower",
+  "fruit",
+  "cave",
+  "mission_entrance",
+  "custom",
+];
 
 const ROAD_TYPES: DioramaRoadType[] = ["main", "forest_trail", "hangar_path"];
 
@@ -59,9 +66,14 @@ export function DioramaLayoutEditor({ biomeKey }: Props) {
   const [draft, setDraft] = useState<DioramaLayout>(() => structuredClone(layout));
   const [section, setSection] = useState<EditorSection>("buildings");
   const [selectedKey, setSelectedKey] = useState<string | null>("accademia");
-  const [selectedHotspotId, setSelectedHotspotId] = useState<string | null>(draft.hotspots[0]?.id ?? null);
-  const [selectedRoadId, setSelectedRoadId] = useState<string | null>(draft.roadNetwork?.[0]?.id ?? null);
-  const [previewVisualState, setPreviewVisualState] = useState<DioramaBuildingVisualState>("level_1");
+  const [selectedHotspotId, setSelectedHotspotId] = useState<string | null>(
+    draft.hotspots[0]?.id ?? null,
+  );
+  const [selectedRoadId, setSelectedRoadId] = useState<string | null>(
+    draft.roadNetwork?.[0]?.id ?? null,
+  );
+  const [previewVisualState, setPreviewVisualState] =
+    useState<DioramaBuildingVisualState>("level_1");
   const [clickMarker, setClickMarker] = useState<{ x: number; y: number } | null>(null);
   const [bgInput, setBgInput] = useState(layout.backgroundImage ?? "");
   const [forceCss, setForceCss] = useState(layout.forceCssFallback ?? false);
@@ -76,13 +88,17 @@ export function DioramaLayoutEditor({ biomeKey }: Props) {
   const theme = BIOME_DIORAMA_THEMES[layoutBiome as BiomeKey] ?? BIOME_DIORAMA_THEMES.bosco;
   const { buildings: gameBuildings } = useVillageDiorama();
   const selectedGameBuilding = gameBuildings.find((b) => b.building_key === selectedKey);
-  const gameStatus = selectedGameBuilding ? normalizeBuildingStatus(selectedGameBuilding.status) : null;
-  const gameBonus = selectedGameBuilding && gameStatus
-    ? getCurrentBonus(selectedGameBuilding.building_key, selectedGameBuilding.level, gameStatus)
+  const gameStatus = selectedGameBuilding
+    ? normalizeBuildingStatus(selectedGameBuilding.status)
     : null;
-  const nextLevel = selectedGameBuilding && gameStatus
-    ? getNextTargetLevel(selectedGameBuilding.level, gameStatus)
-    : null;
+  const gameBonus =
+    selectedGameBuilding && gameStatus
+      ? getCurrentBonus(selectedGameBuilding.building_key, selectedGameBuilding.level, gameStatus)
+      : null;
+  const nextLevel =
+    selectedGameBuilding && gameStatus
+      ? getNextTargetLevel(selectedGameBuilding.level, gameStatus)
+      : null;
   const nextLevelCfg = selectedKey && nextLevel ? getLevelConfig(selectedKey, nextLevel) : null;
 
   const sceneBuildings = useMemo(
@@ -102,7 +118,9 @@ export function DioramaLayoutEditor({ biomeKey }: Props) {
         }
         return {
           def,
-          level: previewVisualState.startsWith("level_") ? Number(previewVisualState.split("_")[1]) : 1,
+          level: previewVisualState.startsWith("level_")
+            ? Number(previewVisualState.split("_")[1])
+            : 1,
           status: (previewVisualState === "locked"
             ? "locked"
             : previewVisualState === "under_construction"
@@ -265,7 +283,8 @@ export function DioramaLayoutEditor({ biomeKey }: Props) {
       <div className="panel p-3 space-y-3">
         <p className="text-xs font-display text-primary">Diorama Engine · {draft.label}</p>
         <p className="text-[10px] text-muted-foreground">
-          Layout: <strong>{draft.id}</strong> · Bioma: <strong>{layoutBiome}</strong> · Modalità: <strong>{engineMode}</strong>
+          Layout: <strong>{draft.id}</strong> · Bioma: <strong>{layoutBiome}</strong> · Modalità:{" "}
+          <strong>{engineMode}</strong>
           {hasOverride && " · override locale"}
         </p>
 
@@ -280,25 +299,51 @@ export function DioramaLayoutEditor({ biomeKey }: Props) {
         </label>
 
         <label className="flex items-center gap-2 text-[10px]">
-          <input type="checkbox" checked={forceCss} onChange={(e) => setForceCss(e.target.checked)} />
+          <input
+            type="checkbox"
+            checked={forceCss}
+            onChange={(e) => setForceCss(e.target.checked)}
+          />
           Forza fallback CSS
         </label>
 
         <div className="flex flex-wrap gap-2">
-          <button type="button" onClick={handleSave} className="btn-neon px-3 py-1.5 text-[10px] inline-flex items-center gap-1">
+          <button
+            type="button"
+            onClick={handleSave}
+            className="btn-neon px-3 py-1.5 text-[10px] inline-flex items-center gap-1"
+          >
             <Save className="h-3 w-3" /> Salva locale
           </button>
-          <button type="button" onClick={handleExport} className="panel px-3 py-1.5 text-[10px] inline-flex items-center gap-1">
+          <button
+            type="button"
+            onClick={handleExport}
+            className="panel px-3 py-1.5 text-[10px] inline-flex items-center gap-1"
+          >
             <Download className="h-3 w-3" /> Esporta JSON
           </button>
           <label className="panel px-3 py-1.5 text-[10px] inline-flex items-center gap-1 cursor-pointer">
             <Upload className="h-3 w-3" /> Importa JSON
-            <input type="file" accept="application/json,.json" className="sr-only" onChange={handleImport} />
+            <input
+              type="file"
+              accept="application/json,.json"
+              className="sr-only"
+              onChange={handleImport}
+            />
           </label>
-          <button type="button" onClick={handleCopyCoords} className="panel px-3 py-1.5 text-[10px] inline-flex items-center gap-1" disabled={!clickMarker}>
+          <button
+            type="button"
+            onClick={handleCopyCoords}
+            className="panel px-3 py-1.5 text-[10px] inline-flex items-center gap-1"
+            disabled={!clickMarker}
+          >
             <Copy className="h-3 w-3" /> Copia coords
           </button>
-          <button type="button" onClick={handleReset} className="panel px-3 py-1.5 text-[10px] inline-flex items-center gap-1">
+          <button
+            type="button"
+            onClick={handleReset}
+            className="panel px-3 py-1.5 text-[10px] inline-flex items-center gap-1"
+          >
             <RotateCcw className="h-3 w-3" /> Reset
           </button>
         </div>
@@ -311,10 +356,18 @@ export function DioramaLayoutEditor({ biomeKey }: Props) {
             type="button"
             onClick={() => setSection(s)}
             className={`shrink-0 px-3 py-2 rounded-xl text-[10px] uppercase tracking-wider border min-h-[36px] ${
-              section === s ? "border-primary bg-primary/20 text-primary" : "border-border/50 text-muted-foreground"
+              section === s
+                ? "border-primary bg-primary/20 text-primary"
+                : "border-border/50 text-muted-foreground"
             }`}
           >
-            {s === "buildings" ? "Buildings" : s === "hotspots" ? "Hotspots" : s === "roads" ? "Roads" : "Traffic"}
+            {s === "buildings"
+              ? "Buildings"
+              : s === "hotspots"
+                ? "Hotspots"
+                : s === "roads"
+                  ? "Roads"
+                  : "Traffic"}
           </button>
         ))}
       </div>
@@ -367,7 +420,9 @@ export function DioramaLayoutEditor({ biomeKey }: Props) {
                 type="button"
                 onClick={() => setSelectedKey(b.key)}
                 className={`px-2 py-1 rounded-lg text-[10px] border inline-flex items-center gap-1 ${
-                  selectedKey === b.key ? "border-primary bg-primary/20 text-primary" : "border-border/50 text-muted-foreground"
+                  selectedKey === b.key
+                    ? "border-primary bg-primary/20 text-primary"
+                    : "border-border/50 text-muted-foreground"
                 }`}
               >
                 {b.hidden ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3 opacity-40" />}
@@ -394,7 +449,9 @@ export function DioramaLayoutEditor({ biomeKey }: Props) {
               onChange={(e) => setPreviewVisualState(e.target.value as DioramaBuildingVisualState)}
             >
               {VISUAL_STATES.map((s) => (
-                <option key={s} value={s}>{s}</option>
+                <option key={s} value={s}>
+                  {s}
+                </option>
               ))}
             </select>
           </label>
@@ -403,14 +460,22 @@ export function DioramaLayoutEditor({ biomeKey }: Props) {
             <div className="grid grid-cols-2 gap-3 text-[10px]">
               {selectedGameBuilding && (
                 <div className="col-span-2 panel px-3 py-2 space-y-1 border border-primary/20">
-                  <p className="text-[9px] uppercase tracking-widest text-primary">Building System · V2.5</p>
-                  <p>Livello: {selectedGameBuilding.level} / {selectedGameBuilding.max_level}</p>
+                  <p className="text-[9px] uppercase tracking-widest text-primary">
+                    Building System · V2.5
+                  </p>
+                  <p>
+                    Livello: {selectedGameBuilding.level} / {selectedGameBuilding.max_level}
+                  </p>
                   <p>Stato: {gameStatus}</p>
                   {gameBonus && <p>Bonus attivo: {gameBonus.label}</p>}
                   {nextLevelCfg && gameStatus !== "under_construction" && (
                     <>
-                      <p className="text-muted-foreground">Prossimo: {nextLevelCfg.bonus.label} · {nextLevelCfg.buildTimeSec}s</p>
-                      <p className="text-muted-foreground">Costi: {formatBuildingCosts(nextLevelCfg.costs).join(" · ")}</p>
+                      <p className="text-muted-foreground">
+                        Prossimo: {nextLevelCfg.bonus.label} · {nextLevelCfg.buildTimeSec}s
+                      </p>
+                      <p className="text-muted-foreground">
+                        Costi: {formatBuildingCosts(nextLevelCfg.costs).join(" · ")}
+                      </p>
                     </>
                   )}
                 </div>
@@ -419,25 +484,62 @@ export function DioramaLayoutEditor({ biomeKey }: Props) {
                 <input
                   type="checkbox"
                   checked={selectedBuilding.hidden ?? false}
-                  onChange={(e) => updateBuilding(selectedBuilding.key, { hidden: e.target.checked })}
+                  onChange={(e) =>
+                    updateBuilding(selectedBuilding.key, { hidden: e.target.checked })
+                  }
                 />
                 Nascondi overlay
               </label>
               <label>
                 X %
-                <input type="range" min={0} max={100} step={0.5} value={selectedBuilding.x} onChange={(e) => onBuildingDrag(e, "x")} className="w-full" />
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  step={0.5}
+                  value={selectedBuilding.x}
+                  onChange={(e) => onBuildingDrag(e, "x")}
+                  className="w-full"
+                />
               </label>
               <label>
                 Y %
-                <input type="range" min={0} max={100} step={0.5} value={selectedBuilding.y} onChange={(e) => onBuildingDrag(e, "y")} className="w-full" />
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  step={0.5}
+                  value={selectedBuilding.y}
+                  onChange={(e) => onBuildingDrag(e, "y")}
+                  className="w-full"
+                />
               </label>
               <label>
                 Z
-                <input type="range" min={1} max={100} value={selectedBuilding.z} onChange={(e) => updateBuilding(selectedBuilding.key, { z: Number(e.target.value) })} className="w-full" />
+                <input
+                  type="range"
+                  min={1}
+                  max={100}
+                  value={selectedBuilding.z}
+                  onChange={(e) =>
+                    updateBuilding(selectedBuilding.key, { z: Number(e.target.value) })
+                  }
+                  className="w-full"
+                />
               </label>
               <label>
                 Scale
-                <input type="range" min={0.5} max={2} step={0.05} value={selectedBuilding.scale ?? 1} onChange={(e) => updateBuilding(selectedBuilding.key, { scale: Number(e.target.value) })} className="w-full" />
+                <input
+                  type="range"
+                  min={0.5}
+                  max={2}
+                  step={0.05}
+                  value={selectedBuilding.scale ?? 1}
+                  onChange={(e) =>
+                    updateBuilding(selectedBuilding.key, { scale: Number(e.target.value) })
+                  }
+                  className="w-full"
+                />
               </label>
               <label className="col-span-2">
                 Asset basePath
@@ -452,7 +554,11 @@ export function DioramaLayoutEditor({ biomeKey }: Props) {
                   placeholder={buildingAssetBasePath(selectedBuilding.key)}
                 />
               </label>
-              <button type="button" onClick={applyAssetBasePath} className="col-span-2 text-[10px] text-primary underline text-left">
+              <button
+                type="button"
+                onClick={applyAssetBasePath}
+                className="col-span-2 text-[10px] text-primary underline text-left"
+              >
                 Applica path standard /assets/buildings/{selectedBuilding.key}
               </button>
               <label className="col-span-2">
@@ -460,7 +566,9 @@ export function DioramaLayoutEditor({ biomeKey }: Props) {
                 <input
                   className="mt-1 w-full panel px-2 py-1 font-mono text-[10px]"
                   value={selectedBuilding.image ?? ""}
-                  onChange={(e) => updateBuilding(selectedBuilding.key, { image: e.target.value || undefined })}
+                  onChange={(e) =>
+                    updateBuilding(selectedBuilding.key, { image: e.target.value || undefined })
+                  }
                 />
               </label>
             </div>
@@ -478,10 +586,13 @@ export function DioramaLayoutEditor({ biomeKey }: Props) {
                 type="button"
                 onClick={() => setSelectedHotspotId(h.id)}
                 className={`px-2 py-1 rounded-lg text-[10px] border ${
-                  selectedHotspotId === h.id ? "border-primary bg-primary/20 text-primary" : "border-border/50 text-muted-foreground"
+                  selectedHotspotId === h.id
+                    ? "border-primary bg-primary/20 text-primary"
+                    : "border-border/50 text-muted-foreground"
                 }`}
               >
-                {h.hidden ? "🚫 " : ""}{h.label ?? h.id}
+                {h.hidden ? "🚫 " : ""}
+                {h.label ?? h.id}
               </button>
             ))}
           </div>
@@ -489,32 +600,73 @@ export function DioramaLayoutEditor({ biomeKey }: Props) {
           {selectedHotspot && (
             <div className="grid grid-cols-2 gap-3 text-[10px]">
               <label className="col-span-2 flex items-center gap-2">
-                <input type="checkbox" checked={selectedHotspot.hidden ?? false} onChange={(e) => updateHotspot(selectedHotspot.id, { hidden: e.target.checked })} />
+                <input
+                  type="checkbox"
+                  checked={selectedHotspot.hidden ?? false}
+                  onChange={(e) => updateHotspot(selectedHotspot.id, { hidden: e.target.checked })}
+                />
                 Nascondi hotspot
               </label>
               <label>
                 X
-                <input type="range" min={0} max={100} step={0.5} value={selectedHotspot.x} onChange={(e) => updateHotspot(selectedHotspot.id, { x: Number(e.target.value) })} className="w-full" />
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  step={0.5}
+                  value={selectedHotspot.x}
+                  onChange={(e) => updateHotspot(selectedHotspot.id, { x: Number(e.target.value) })}
+                  className="w-full"
+                />
               </label>
               <label>
                 Y
-                <input type="range" min={0} max={100} step={0.5} value={selectedHotspot.y} onChange={(e) => updateHotspot(selectedHotspot.id, { y: Number(e.target.value) })} className="w-full" />
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  step={0.5}
+                  value={selectedHotspot.y}
+                  onChange={(e) => updateHotspot(selectedHotspot.id, { y: Number(e.target.value) })}
+                  className="w-full"
+                />
               </label>
               <label className="col-span-2">
                 Label
-                <input className="mt-1 w-full panel px-2 py-1" value={selectedHotspot.label ?? ""} onChange={(e) => updateHotspot(selectedHotspot.id, { label: e.target.value })} />
+                <input
+                  className="mt-1 w-full panel px-2 py-1"
+                  value={selectedHotspot.label ?? ""}
+                  onChange={(e) => updateHotspot(selectedHotspot.id, { label: e.target.value })}
+                />
               </label>
               <label>
                 Tipo
-                <select className="mt-1 w-full panel px-2 py-1" value={selectedHotspot.kind ?? "custom"} onChange={(e) => updateHotspot(selectedHotspot.id, { kind: e.target.value as DioramaHotspotKind })}>
+                <select
+                  className="mt-1 w-full panel px-2 py-1"
+                  value={selectedHotspot.kind ?? "custom"}
+                  onChange={(e) =>
+                    updateHotspot(selectedHotspot.id, {
+                      kind: e.target.value as DioramaHotspotKind,
+                    })
+                  }
+                >
                   {HOTSPOT_KINDS.map((k) => (
-                    <option key={k} value={k}>{k}</option>
+                    <option key={k} value={k}>
+                      {k}
+                    </option>
                   ))}
                 </select>
               </label>
               <label>
                 Route click
-                <input className="mt-1 w-full panel px-2 py-1 font-mono" value={selectedHotspot.route ?? ""} onChange={(e) => updateHotspot(selectedHotspot.id, { route: e.target.value || undefined })} placeholder="/missioni" />
+                <input
+                  className="mt-1 w-full panel px-2 py-1 font-mono"
+                  value={selectedHotspot.route ?? ""}
+                  onChange={(e) =>
+                    updateHotspot(selectedHotspot.id, { route: e.target.value || undefined })
+                  }
+                  placeholder="/missioni"
+                />
               </label>
             </div>
           )}
@@ -523,7 +675,9 @@ export function DioramaLayoutEditor({ biomeKey }: Props) {
 
       {section === "roads" && (
         <div className="panel p-3 space-y-3">
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Road network</p>
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+            Road network
+          </p>
           <div className="flex flex-wrap gap-1.5">
             {(draft.roadNetwork ?? []).map((r) => (
               <button
@@ -531,26 +685,42 @@ export function DioramaLayoutEditor({ biomeKey }: Props) {
                 type="button"
                 onClick={() => setSelectedRoadId(r.id)}
                 className={`px-2 py-1 rounded-lg text-[10px] border ${
-                  selectedRoadId === r.id ? "border-primary bg-primary/20 text-primary" : "border-border/50 text-muted-foreground"
+                  selectedRoadId === r.id
+                    ? "border-primary bg-primary/20 text-primary"
+                    : "border-border/50 text-muted-foreground"
                 }`}
               >
                 {r.id} ({r.type})
               </button>
             ))}
           </div>
-          <p className="text-[9px] text-muted-foreground">Clicca sullo stage per aggiungere waypoint alla strada selezionata.</p>
+          <p className="text-[9px] text-muted-foreground">
+            Clicca sullo stage per aggiungere waypoint alla strada selezionata.
+          </p>
 
           {selectedRoad && (
             <div className="grid grid-cols-2 gap-3 text-[10px]">
               <label className="col-span-2 flex items-center gap-2">
-                <input type="checkbox" checked={selectedRoad.hidden ?? false} onChange={(e) => updateRoad(selectedRoad.id, { hidden: e.target.checked })} />
+                <input
+                  type="checkbox"
+                  checked={selectedRoad.hidden ?? false}
+                  onChange={(e) => updateRoad(selectedRoad.id, { hidden: e.target.checked })}
+                />
                 Nascondi strada
               </label>
               <label>
                 Tipo
-                <select className="mt-1 w-full panel px-2 py-1" value={selectedRoad.type} onChange={(e) => updateRoad(selectedRoad.id, { type: e.target.value as DioramaRoadType })}>
+                <select
+                  className="mt-1 w-full panel px-2 py-1"
+                  value={selectedRoad.type}
+                  onChange={(e) =>
+                    updateRoad(selectedRoad.id, { type: e.target.value as DioramaRoadType })
+                  }
+                >
                   {ROAD_TYPES.map((t) => (
-                    <option key={t} value={t}>{t}</option>
+                    <option key={t} value={t}>
+                      {t}
+                    </option>
                   ))}
                 </select>
               </label>
@@ -558,7 +728,9 @@ export function DioramaLayoutEditor({ biomeKey }: Props) {
                 <button
                   type="button"
                   className="panel px-2 py-1 w-full"
-                  onClick={() => updateRoad(selectedRoad.id, { waypoints: selectedRoad.waypoints.slice(0, -1) })}
+                  onClick={() =>
+                    updateRoad(selectedRoad.id, { waypoints: selectedRoad.waypoints.slice(0, -1) })
+                  }
                   disabled={selectedRoad.waypoints.length === 0}
                 >
                   Rimuovi ultimo WP
@@ -574,7 +746,9 @@ export function DioramaLayoutEditor({ biomeKey }: Props) {
 
       {section === "traffic" && (
         <div className="panel p-3 space-y-3">
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Pikmin Traffic · Debug</p>
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+            Pikmin Traffic · Debug
+          </p>
 
           <label className="block text-[10px]">
             Agenti attivi: {trafficCount} / {draft.trafficConfig?.maxCount ?? 30}
@@ -593,22 +767,32 @@ export function DioramaLayoutEditor({ biomeKey }: Props) {
           </label>
 
           <label className="flex items-center gap-2 text-[10px]">
-            <input type="checkbox" checked={trafficDebug} onChange={(e) => setTrafficDebug(e.target.checked)} />
+            <input
+              type="checkbox"
+              checked={trafficDebug}
+              onChange={(e) => setTrafficDebug(e.target.checked)}
+            />
             Mostra route, agenti e destinazioni
           </label>
 
           <div className="max-h-48 overflow-y-auto space-y-1">
             {previewAgents.map((a) => (
-              <div key={a.id} className="text-[9px] font-mono panel px-2 py-1 flex justify-between gap-2">
+              <div
+                key={a.id}
+                className="text-[9px] font-mono panel px-2 py-1 flex justify-between gap-2"
+              >
                 <span>{a.id}</span>
                 <span className="text-primary">{a.currentTask}</span>
-                <span className="text-muted-foreground truncate">{a.homeStructure}→{a.destination}</span>
+                <span className="text-muted-foreground truncate">
+                  {a.homeStructure}→{a.destination}
+                </span>
               </div>
             ))}
           </div>
 
           <p className="text-[9px] text-muted-foreground">
-            Pattern: Serra(mercato)→Magazzino, Magazzino→Hangar, Accademia→Piazza, Lab→Piazza, gather hotspot, idle.
+            Pattern: Serra(mercato)→Magazzino, Magazzino→Hangar, Accademia→Piazza, Lab→Piazza,
+            gather hotspot, idle.
           </p>
         </div>
       )}
